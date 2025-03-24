@@ -80,7 +80,7 @@ const MainCalendar = () => {
                 </div>
                 {selectedDate && (
                     <div className="reservation-list">
-                        <h3>{new Date(selectedDate).toLocaleDateString('ja-JP')} 예약 목록</h3>
+                        <h3>{new Date(selectedDate).toLocaleDateString('ja-JP')} 予定目録</h3>
                         {selectedReservations.length > 0 ? (
                             <ul>
                                 {selectedReservations.map(res => (
@@ -88,7 +88,7 @@ const MainCalendar = () => {
                                 ))}
                             </ul>
                         ) : (
-                            <p>예약이 없습니다.</p>
+                            <p>予定がありません。</p>
                         )}
                     </div>
                 )}

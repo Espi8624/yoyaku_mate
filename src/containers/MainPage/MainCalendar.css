@@ -27,9 +27,12 @@
     align-items: center;
     padding: 10px;
     font-size: 1.2em;
-    background-color: #f9f9f9; /* 헤더 배경색 추가 */
-    border-bottom: 1px solid #e2e2e2; /* 구분선 추가 */
-    border-radius: 5px 5px 0 0; /* 상단만 둥글게 */
+    background-color: #f9f9f9;
+    /* 헤더 배경색 추가 */
+    border-bottom: 1px solid #e2e2e2;
+    /* 구분선 추가 */
+    border-radius: 5px 5px 0 0;
+    /* 상단만 둥글게 */
 }
 
 .calendar-header button {
@@ -42,21 +45,26 @@
     font-size: 1.2em;
     font-weight: bold;
     cursor: pointer;
-    transition: background-color 0.3s, transform 0.2s; /* 전환 효과 */
+    transition: background-color 0.3s, transform 0.2s;
+    /* 전환 효과 */
 }
 
 .calendar-header button:hover {
-    color: #1e3575; /* 호버 시 더 어두운 색 */
-    transform: scale(1.1); /* 살짝 커지는 효과 */
+    color: #1e3575;
+    /* 호버 시 더 어두운 색 */
+    transform: scale(1.1);
+    /* 살짝 커지는 효과 */
 }
 
 .calendar-header button:active {
-    transform: scale(0.95); /* 클릭 시 살짝 작아짐 */
+    transform: scale(0.95);
+    /* 클릭 시 살짝 작아짐 */
 }
 
 .calendar-header span {
     font-weight: bold;
-    color: #2E4CA6; /* 월 표시도 테마 색상으로 */
+    color: #2E4CA6;
+    /* 월 표시도 테마 색상으로 */
 }
 
 .calendar-grid {
@@ -75,6 +83,18 @@
     border-radius: 5px;
     position: relative;
     cursor: pointer;
+}
+
+.calendar-day.header {
+    background-color: #2E4CA6;
+    color: #fff;
+    font-weight: bold;
+}
+
+.calendar-day.header:hover {
+    background-color: #2E4CA6;
+    color: #fff;
+    font-weight: bold;
 }
 
 .calendar-day.reserved {
