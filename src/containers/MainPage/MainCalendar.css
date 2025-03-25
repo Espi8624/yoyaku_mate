@@ -1,24 +1,21 @@
-.main-calendar {
-    margin: 10px 0;
-    width: 100%;
-    max-width: 1200px;
-    box-sizing: border-box;
-}
-
 .main-calendar-wrap {
-    border: 1px solid #2E4CA6;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    padding: 10px;
-    width: 100%;
-    box-sizing: border-box;
+    background-color: #cfdaf2;
 }
 
-.main-calendar .title {
+.title-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin-top: 15px;
+    margin-bottom: 5px;
+}
+
+.title {
     text-align: left;
     font-size: 1.6em;
-    margin-bottom: 10px;
-    margin-left: 10px;
+    margin: 0;
+    color: #2E4CA6;
 }
 
 .calendar-header {
@@ -27,12 +24,7 @@
     align-items: center;
     padding: 10px;
     font-size: 1.2em;
-    background-color: #f9f9f9;
-    /* 헤더 배경색 추가 */
     border-bottom: 1px solid #e2e2e2;
-    /* 구분선 추가 */
-    border-radius: 5px 5px 0 0;
-    /* 상단만 둥글게 */
 }
 
 .calendar-header button {
@@ -41,30 +33,25 @@
     margin: 0 17px;
     color: #2E4CA6;
     border: none;
-    background-color: #fff;
+    background-color: transparent;
     font-size: 1.2em;
     font-weight: bold;
     cursor: pointer;
-    transition: background-color 0.3s, transform 0.2s;
-    /* 전환 효과 */
+    transition: color 0.3s, transform 0.2s;
 }
 
 .calendar-header button:hover {
     color: #1e3575;
-    /* 호버 시 더 어두운 색 */
     transform: scale(1.1);
-    /* 살짝 커지는 효과 */
 }
 
 .calendar-header button:active {
     transform: scale(0.95);
-    /* 클릭 시 살짝 작아짐 */
 }
 
 .calendar-header span {
     font-weight: bold;
     color: #2E4CA6;
-    /* 월 표시도 테마 색상으로 */
 }
 
 .calendar-grid {
@@ -72,6 +59,8 @@
     grid-template-columns: repeat(7, 1fr);
     gap: 5px;
     padding: 10px;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .calendar-day {
@@ -85,8 +74,13 @@
     cursor: pointer;
 }
 
+.calendar-day.empty {
+    border: none;
+}
+
 .calendar-day.header {
     background-color: #2E4CA6;
+    border: 1px solid #2E4CA6;
     color: #fff;
     font-weight: bold;
 }
@@ -94,7 +88,6 @@
 .calendar-day.header:hover {
     background-color: #2E4CA6;
     color: #fff;
-    font-weight: bold;
 }
 
 .calendar-day.reserved {
@@ -103,13 +96,11 @@
 
 .calendar-day.selected {
     border: 2px solid #2E4CA6;
-    /* 선택된 날짜 강조 */
     background-color: #d0e0f5;
 }
 
 .calendar-day:hover {
     background-color: #f0f0f0;
-    /* 호버 효과 */
 }
 
 .reservation-marker {
@@ -130,7 +121,9 @@
 .reservation-list {
     margin-top: 15px;
     padding: 10px;
+    background-color: #ffffff;
     border-top: 1px solid #e2e2e2;
+    border-radius: 8px;
     text-align: left;
 }
 
@@ -138,24 +131,37 @@
     margin: 0 0 10px 0;
     font-size: 1.2em;
     color: #2E4CA6;
-    text-align: left;
 }
 
 .reservation-list ul {
     list-style-type: none;
     padding: 0;
     margin: 0;
-    text-align: left;
 }
 
 .reservation-list li {
-    padding: 5px 0;
-    border-bottom: 1px solid #f0f0f0;
-    text-align: left;
+    margin: 17px 0;
 }
 
 .reservation-list p {
     color: #666;
     font-style: italic;
-    text-align: left;
+}
+
+@media (max-width: 768px) {
+    .main-calendar-wrap {
+        padding: 5px;
+    }
+
+    .title {
+        font-size: 1.2em;
+    }
+
+    .calendar-grid {
+        gap: 3px;
+    }
+
+    .calendar-day {
+        height: 40px;
+    }
 }
