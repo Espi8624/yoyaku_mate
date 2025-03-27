@@ -156,23 +156,23 @@
 
 @media (max-width: 768px) {
   .main-page {
-      padding: 20px;
+    padding: 20px;
   }
 
   .main-time-line li,
   .main-frequent-places li {
-      flex: 1 1 100%;
-      margin: 10px 15px;
+    flex: 1 1 100%;
+    margin: 10px 15px;
   }
 
   .main-time-line-wrap,
   .main-frequent-places-wrap,
   .main-calendar-wrap {
-      padding: 5px;
+    padding: 5px;
   }
 
   .main-time-line .title,
   .main-frequent-places .title {
-      font-size: 1.2em;
+    font-size: 1.2em;
   }
 }

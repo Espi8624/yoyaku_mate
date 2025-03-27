@@ -1,4 +1,5 @@
 .main-calendar-wrap {
+    margin-top: 20px;
     background-color: #cfdaf2;
 }
 
@@ -68,14 +69,16 @@
     justify-content: center;
     align-items: center;
     height: 50px;
-    border: 1px solid #e2e2e2;
+    background-color: #ffffff;
+    border: 1px solid #ffffff;
     border-radius: 5px;
     position: relative;
     cursor: pointer;
 }
 
 .calendar-day.empty {
-    border: none;
+    border: 1px solid #cfdaf2;
+    background-color: #cfdaf2;
 }
 
 .calendar-day.header {
@@ -91,11 +94,12 @@
 }
 
 .calendar-day.reserved {
+    border: 1px solid #e6f0fa;
     background-color: #e6f0fa;
 }
 
 .calendar-day.selected {
-    border: 2px solid #2E4CA6;
+    border: 1px solid #2E4CA6;
     background-color: #d0e0f5;
 }
 
