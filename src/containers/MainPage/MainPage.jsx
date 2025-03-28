@@ -1,38 +1,35 @@
+import { useEffect, useState } from 'react';
 import MainCalendar from './MainCalendar';
 import './MainPage.css';
 
-const frequentPlaces = [
-    "Central park",
-    "Times Square",
-    "Empire State Building",
-    "Statue of Liberty",
-    "Brooklyn Bridge",
-];
-
-const timeLineData = [
-    {
-        placeName: "Central park",
-        timestamp: "2025-03-20",
-    },
-    {
-        placeName: "Times Square",
-        timestamp: "2025-03-21",
-    },
-    {
-        placeName: "Central park",
-        timestamp: "2025-03-22",
-    },
-    {
-        placeName: "Empire State Building",
-        timestamp: "2025-03-23",
-    },
-    {
-        placeName: "Empire State Building",
-        timestamp: "2025-03-24",
-    },
-];
-
 function MainPage() {
+    const [frequentPlaces, setFrequentPlaces] = useState([]);
+    const [timeLineData, setTimeLineData] = useState([]);
+
+    useEffect(() => {
+        // Frequent Places 데이터 호출
+        fetch('http://localhost:8080/frequent-places')
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error('Failed to fetch frequent places data');
+                }
+                return response.json();
+            })
+            .then((data) => setFrequentPlaces(data))
+            .catch((error) => console.error('Error fetching frequent places: ', error));
+
+        // TimeLine 데이터 호출
+        fetch('http://localhost:8080/timeline')
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error('Failed to fetch timeline data');
+                }
+                return response.json();
+            })
+            .then((data) => setTimeLineData(data))
+            .catch((error) => console.error('Error fetching timeline: ', error));
+    }, []);
+
     return (
         <div className="main-page">
             <div className="main-time-line">
@@ -42,19 +39,30 @@ function MainPage() {
                 </div>
                 <div className="main-time-line-wrap">
                     <ul>
-                        {[...timeLineData]
-                            .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp))
-                            .map((timeLineData, index) => (
-                                <li key={index} className="timeline-item">
-                                    <div className="timeline-content">
-                                        <div className="place-name">{timeLineData.placeName}</div>
-                                        <div className="timestamp">
-                                            {new Date(timeLineData.timestamp).toLocaleDateString('ja-JP')}
+                        {timeLineData.length > 0 ? (
+                            [...timeLineData]
+                                .sort((a, b) => new Date(b.timeStamp) - new Date(a.timeStamp))
+                                .map((timeLineData, index) => (
+                                    <li key={index} className="timeline-item">
+                                        <div className="timeline-content">
+                                            <div className="place-name">{timeLineData.placeName}</div>
+                                            <div className="timestamp">
+                                                {new Date(timeLineData.timeStamp).toLocaleString('ja-JP', {
+                                                    year: 'numeric',
+                                                    month: '2-digit',
+                                                    day: '2-digit',
+                                                    hour: '2-digit',
+                                                    minute: '2-digit',
+                                                })}
+                                            </div>
+                                            {/* 추후 <icon>으로 변경 */}
+                                            <span className="move-icon">&gt;</span>
                                         </div>
-                                        <span className="move-icon">&gt;</span> {/* <icon> 대신 <span> 사용 */}
-                                    </div>
-                                </li>
-                            ))}
+                                    </li>
+                                ))
+                        ) : (
+                            <li>Loading...</li>
+                        )}
                     </ul>
                 </div>
             </div>
@@ -66,12 +74,16 @@ function MainPage() {
                 </div>
                 <div className="main-frequent-places-wrap">
                     <ul>
-                        {frequentPlaces.map((place, index) => (
-                            <li key={index}>
-                                {place}
-                                <span className="move-icon">&gt;</span>
-                            </li>
-                        ))}
+                        {frequentPlaces.length > 0 ? (
+                            frequentPlaces.map((place, index) => (
+                                <li key={index}>
+                                    {place}
+                                    <span className="move-icon">&gt;</span>
+                                </li>
+                            ))
+                        ) : (
+                            <li>Loading...</li>
+                        )}
                     </ul>
                 </div>
             </div>

@@ -1,18 +1,23 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import './MainCalendar.css';
 
 const MainCalendar = () => {
     const [currentDate, setCurrentDate] = useState(new Date());
     const [selectedDate, setSelectedDate] = useState(null);
+    const [reservations, setReservations] = useState([]);
 
-    const reservations = [
-        { date: "2025-03-20", details: "Central Park 예약 - 회의", id: 1 },
-        { date: "2025-03-23", details: "Empire State Building 예약 - 투어", id: 2 },
-        { date: "2025-03-23", details: "Times Square 예약 - 촬영", id: 3 },
-        { date: "2025-03-24", details: "Brooklyn Bridge 예약 - 사진", id: 4 },
-        { date: "2025-03-24", details: "Central Park 예약 - 피크닉", id: 5 },
-        { date: "2025-03-25", details: "Statue of Liberty 예약 - 방문", id: 6 },
-    ];
+    useEffect(() => {
+            // Reservations 데이터 호출
+            fetch('http://localhost:8080/reservations')
+                .then((response) => {
+                    if (!response.ok) {
+                        throw new Error('Failed to fetch Reservations data');
+                    }
+                    return response.json();
+                })
+                .then((data) => setReservations(data))
+                .catch((error) => console.error('Error fetching Reservations data: ', error));
+        }, []);
 
     const generateCalendar = () => {
         const year = currentDate.getFullYear();
@@ -26,7 +31,7 @@ const MainCalendar = () => {
         }
         for (let day = 1; day <= daysInMonth; day++) {
             const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-            const dayReservations = reservations.filter(res => res.date === dateStr);
+            const dayReservations = reservations.filter(res => res.timeStamp.split(" ")[0] === dateStr);
             const isReserved = dayReservations.length > 0;
             const isSelected = selectedDate === dateStr;
             days.push(
@@ -47,7 +52,7 @@ const MainCalendar = () => {
         return days;
     };
 
-    const selectedReservations = selectedDate ? reservations.filter(res => res.date === selectedDate) : [];
+    const selectedReservations = selectedDate ? reservations.filter(res => res.timeStamp.split(" ")[0] === selectedDate) : [];
 
     return (
         <>
