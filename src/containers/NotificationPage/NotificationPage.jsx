@@ -1,47 +1,31 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import './NotificationPage.css';
 
 
 function NotificationPage() {
     const [activeTab, setActiveTab] = useState('all');
+    const [notifications, setNotifications] = useState([]);
 
-    const notifications = {
-        store: [
-            { id: 1, message: '가게 A에서 새 메뉴가 추가되었습니다.', time: '2시간 전', type: 'store' },
-            { id: 2, message: '가게 B 주문이 준비되었습니다.', time: '4시간 전', type: 'store' }
-        ],
-        coupon: [
-            { id: 3, message: '50% 할인 쿠폰이 발급되었습니다.', time: '1일 전', type: 'coupon' },
-            { id: 4, message: '주말 특가 쿠폰이 도착했습니다.', time: '2일 전', type: 'coupon' }
-        ],
-        system: [
-            { id: 5, message: '시스템 점검이 3월 28일 예정입니다.', time: '3시간 전', type: 'system' },
-            { id: 6, message: '앱이 업데이트되었습니다.', time: '5시간 전', type: 'system' }
-        ]
-    };
-
-    const allNotifications = [
-        ...notifications.store,
-        ...notifications.coupon,
-        ...notifications.system,
-    ].sort((a, b) => b.id - a.id);
-
-    // 표시할 알림
-    const getCurrentNotifications = () => {
-        switch (activeTab) {
-            case 'all':
-                return allNotifications;
-            case 'store':
-                return notifications.store;
-            case 'coupon':
-                return notifications.coupon;
-            case 'system':
-                return notifications.system;
-            default:
-                return [];
-        }
-    };
+    // 알림 데이터 호출
+    // 탭 변경시마다 호출
+    useEffect(() => {
+        const fetchNotifications = async () => {
+            const url = activeTab === 'all'
+                ? `http://localhost:8080/notifications`
+                : `http://localhost:8080/notifications?type=${activeTab}`;
+            try {
+                const response = await fetch(url);
+                const data = await response.json();
+                // 최신순 정렬렬
+                setNotifications(data.sort((a, b) => b.id - a.id));
+            } catch (error) {
+                console.error('Error fetching notifications: ', error);
+                setNotifications([]);
+            }
+        };
+        fetchNotifications();
+    }, [activeTab]);
 
     return (
         <div className="notification-page">
@@ -84,16 +68,17 @@ function NotificationPage() {
                                 activeTab === 'coupon' ? 'クーポンのお知らせ' : 'システムからのお知らせ'}
                     </h2>
                     <ul>
-                        {getCurrentNotifications().map((notification) => (
-                            <li key={notification.id} className="notification-item">
-                                <div className="info-item">
-                                    <span className="value">{notification.message}</span>
-                                    <span className="time">{notification.time}</span>
-                                </div>
-                            </li>
-                        ))}
-                        {getCurrentNotifications().length === 0 && (
-                            <li className="no-notifications">새로운 알림이 없습니다.</li>
+                        {notifications.length > 0 ? (
+                            notifications.map((notification) => (
+                                <li key={notification.id} className="notification-item">
+                                    <div className="info-item">
+                                        <span className="value">{notification.message}</span>
+                                        <span className="time">{notification.time}</span>
+                                    </div>
+                                </li>
+                            ))
+                        ) : (
+                            <li className='no-notifications'>お知らせがありません。</li>
                         )}
                     </ul>
                 </div>

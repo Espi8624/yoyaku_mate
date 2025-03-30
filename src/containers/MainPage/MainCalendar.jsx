@@ -31,7 +31,7 @@ const MainCalendar = () => {
         }
         for (let day = 1; day <= daysInMonth; day++) {
             const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-            const dayReservations = reservations.filter(res => res.timeStamp.split(" ")[0] === dateStr);
+            const dayReservations = reservations.filter(res => res.time_stamp.split(" ")[0] === dateStr);
             const isReserved = dayReservations.length > 0;
             const isSelected = selectedDate === dateStr;
             days.push(
@@ -52,7 +52,7 @@ const MainCalendar = () => {
         return days;
     };
 
-    const selectedReservations = selectedDate ? reservations.filter(res => res.timeStamp.split(" ")[0] === selectedDate) : [];
+    const selectedReservations = selectedDate ? reservations.filter(res => res.time_stamp.split(" ")[0] === selectedDate) : [];
 
     return (
         <>

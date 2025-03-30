@@ -1,18 +1,51 @@
 import './UserPage.css';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 function UserPage() {
     const [activeTab, setActiveTab] = useState('account');
     const [isEditing, setIsEditing] = useState(false);
-    const [userInfo, setUserInfo] = useState({
-        name: '홍길동',
-        email: 'example@email.com',
-        phone: '010-1234-5678'
-    });
+    const [userInfo, setUserInfo] = useState({});
+    const [reservations, setReservations] = useState([]);
+    const [reviews, setReviews] = useState([]);
+
+    useEffect(() => {
+        // 유저 데이터 호출
+        fetch('http://localhost:8080/user-info')
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error('Failed to fetch user data');
+                }
+                return response.json();
+            })
+            .then((data) => setUserInfo(data))
+            .catch((error) => console.error('Error fetching user info data: ', error));
+
+        // 예약 데이터 호출
+        fetch('http://localhost:8080/reservations')
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error('Failed to fetch timeline data');
+                }
+                return response.json();
+            })
+            .then((data) => setReservations(data))
+            .catch((error) => console.error('Error fetching reservations data: ', error));
+
+        // 리뷰 데이터 호출
+        fetch('http://localhost:8080/reviews')
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error('Failed to fetch timeline data');
+                }
+                return response.json();
+            })
+            .then((data) => setReviews(data))
+            .catch((error) => console.error('Error fetching reservations data: ', error));
+    }, []);
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
-        setUserInfo((prev) => ({ ...prev, [name]: value }));
+        setUserInfo((prev) => ({ ...prev || {}, [name]: value }));
     };
 
     const handleSave = () => {
@@ -32,12 +65,12 @@ function UserPage() {
                                 {isEditing ? (
                                     <input
                                         type="text"
-                                        name="name"
-                                        value={userInfo.name}
+                                        name="user_name"
+                                        value={userInfo.user_name}
                                         onChange={handleInputChange}
                                     />
                                 ) : (
-                                    <span className="value">{userInfo.name}</span>
+                                    <span className="value">{userInfo.user_name}</span>
                                 )}
                             </div>
                             <div className="info-item">
@@ -58,12 +91,12 @@ function UserPage() {
                                 {isEditing ? (
                                     <input
                                         type="text"
-                                        name="phone"
-                                        value={userInfo.phone}
+                                        name="phone_number"
+                                        value={userInfo.phone_number}
                                         onChange={handleInputChange}
                                     />
                                 ) : (
-                                    <span className="value">{userInfo.phone}</span>
+                                    <span className="value">{userInfo.phone_number}</span>
                                 )}
                             </div>
                         </div>
@@ -96,8 +129,15 @@ function UserPage() {
                     <div className="tab-content">
                         <h2>予約状況</h2>
                         <ul>
-                            <li>2025-04-01: 호텔 예약 (확정)</li>
-                            <li>2025-04-15: 레스토랑 예약 (대기 중)</li>
+                            {reservations.length > 0 ? (
+                                <ul>
+                                    {reservations.map(res => (
+                                        <li key={res.id}>{res.time_stamp} : {res.details}</li>
+                                    ))}
+                                </ul>
+                            ) : (
+                                <p>予定がありません。</p>
+                            )}
                         </ul>
                     </div>
                 );
@@ -105,10 +145,15 @@ function UserPage() {
                 return (
                     <div className="tab-content">
                         <h2>作成レヴュー</h2>
-                        <ul>
-                            <li>호텔 A: "정말 편안했어요!" (★★★★☆)</li>
-                            <li>레스토랑 B: "음식이 맛있었어요." (★★★★★)</li>
-                        </ul>
+                        {reviews.length > 0 ? (
+                                <ul>
+                                    {reviews.map(res => (
+                                        <li key={res.id}>{res.time_stamp} / {res.store_name} / {res.comments} / {res.rating}</li>
+                                    ))}
+                                </ul>
+                            ) : (
+                                <p>予定がありません。</p>
+                            )}
                     </div>
                 );
             default:

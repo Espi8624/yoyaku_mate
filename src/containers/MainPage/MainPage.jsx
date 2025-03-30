@@ -41,13 +41,13 @@ function MainPage() {
                     <ul>
                         {timeLineData.length > 0 ? (
                             [...timeLineData]
-                                .sort((a, b) => new Date(b.timeStamp) - new Date(a.timeStamp))
-                                .map((timeLineData, index) => (
+                                .sort((a, b) => new Date(b.time_stamp) - new Date(a.time_stamp))
+                                .map((res, index) => (
                                     <li key={index} className="timeline-item">
                                         <div className="timeline-content">
-                                            <div className="place-name">{timeLineData.placeName}</div>
-                                            <div className="timestamp">
-                                                {new Date(timeLineData.timeStamp).toLocaleString('ja-JP', {
+                                            <div className="place-name">{res.store_name}</div>
+                                            <div className="time_stamp">
+                                                {new Date(res.time_stamp).toLocaleString('ja-JP', {
                                                     year: 'numeric',
                                                     month: '2-digit',
                                                     day: '2-digit',
@@ -75,9 +75,9 @@ function MainPage() {
                 <div className="main-frequent-places-wrap">
                     <ul>
                         {frequentPlaces.length > 0 ? (
-                            frequentPlaces.map((place, index) => (
+                            frequentPlaces.map((res, index) => (
                                 <li key={index}>
-                                    {place}
+                                    {res.store_name}
                                     <span className="move-icon">&gt;</span>
                                 </li>
                             ))
