@@ -1,13 +1,251 @@
-.main-page {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    width: 100%;
-    max-width: 1000px;
-    margin: 0 auto;
-    padding: 50px;
-    box-sizing: border-box;
+/* 공통 스타일 */
+.main-page,
+.provider-main-page {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-start;
+  text-align: left;
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 50px;
+  box-sizing: border-box;
+}
+
+/* 섹션 스타일 */
+.main-time-line,
+.main-frequent-places,
+.main-calendar,
+.dashboard {
+  margin: 20px 0;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* 대시보드 섹션 */
+.dashboard-section {
+  margin: 20px 0;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* 타이틀 컨테이너 */
+.title-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 15px;
+  box-sizing: border-box;
+}
+
+.title {
+  text-align: left;
+  font-size: 1.6em;
+  margin: 0;
+  color: #2E4CA6;
+}
+
+.subtitle {
+  text-align: left;
+  font-size: 1.4em;
+  margin: 0;
+  color: #2E4CA6;
+}
+
+.view-all-btn {
+  margin-left: 20px;
+  padding: 8px 16px;
+  background-color: #2E4CA6;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1em;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+.view-all-btn:hover {
+  background-color: #1e3575;
+  transform: translateY(-2px);
+}
+
+/* 섹션 박스 공통 스타일 */
+.main-time-line-wrap,
+.main-frequent-places-wrap,
+.main-calendar-wrap,
+.graph-wrap,
+.stats-wrap,
+.time-settings {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  border: 1px solid #e2e2e2;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 10px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* 그래프 스타일 */
+.time-graph {
+  display: flex;
+  flex-direction: column;
+  gap: 20px; /* 시간대 간격 */
+  width: 100%;
+}
+
+.graph-slot {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.time-label {
+  width: 80px;
+  padding: 10px;
+  font-weight: bold;
+  color: #2E4CA6;
+  text-align: center;
+}
+
+.bar-container {
+  flex: 1;
+  display: flex;
+  flex-direction: row; /* 좌우로 표시 */
+  gap: 5px;
+  overflow-x: auto; /* 예약이 많을 때 가로 스크롤 */
+  padding: 5px 0;
+}
+
+.bar {
+  min-width: 120px; /* 최소 너비 설정 */
+  height: 40px;
+  display: flex;
+  align-items: center;
+  padding: 0 10px;
+  border-radius: 5px;
+  color: white;
+  cursor: pointer;
+  flex-shrink: 0; /* 크기 줄어들지 않게 */
+}
+
+.bar.confirmed {
+  background-color: #2E4CA6; /* 확정: 파란색 */
+}
+
+.bar.pending {
+  background-color: #f1c40f; /* 대기: 노란색 */
+}
+
+.bar-label {
+  font-size: 1em;
+  cursor: pointer;
+}
+
+.empty-bar {
+  width: 100%;
+  height: 40px;
+  background-color: #f0f0f0;
+  border-radius: 5px;
+}
+
+/* 상태 요약 스타일 */
+.stats {
+  display: flex;
+  gap: 20px;
+  padding: 10px;
+}
+
+.stats span {
+  font-size: 1.1em;
+  color: #333;
+}
+
+/* 시간대 설정 스타일 (테스트용) */
+.time-settings {
+  display: flex;
+  gap: 10px;
+  padding: 10px;
+}
+
+.time-settings button {
+  padding: 8px 16px;
+  background-color: #2E4CA6;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.time-settings button:hover {
+  background-color: #1e3575;
+}
+
+/* 예약 정보 모달 스타일 */
+.info-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.info-modal {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  width: 300px;
+  text-align: left;
+}
+
+.info-modal h3 {
+  margin: 0 0 10px;
+  color: #2E4CA6;
+}
+
+.info-modal p {
+  margin: 5px 0;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end; /* 오른쪽 정렬 */
+  margin-top: 10px;
+}
+
+.info-modal button {
+  /* margin-top */
+}
+
+/* 반응형 */
+@media (max-width: 768px) {
+  .main-page,
+  .provider-main-page {
+    padding: 20px;
+    align-items: flex-start;
   }
-  
+
+  .time-label {
+    width: 60px;
+  }
+
+  .bar {
+    min-width: 100px; /* 모바일에서 조금 작게 */
+  }
+
+  .stats,
+  .time-settings {
+    flex-direction: column;
+    gap: 10px;
+  }
+}

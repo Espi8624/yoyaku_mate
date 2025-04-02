@@ -15,6 +15,7 @@ import ProviderNotificationPage from './containers/ProviderPage/NotificationPage
 import './App.css';
 
 function App() {
+  // 임시 권한 설정
   const user = { role: 'provider' };
 
   return (
