@@ -9,7 +9,7 @@
   width: 100%;
   max-width: 1000px;
   margin: 0 auto;
-  padding: 50px;
+  padding: 30px 50px;
   box-sizing: border-box;
 }
 
@@ -18,7 +18,7 @@
 .main-frequent-places,
 .main-calendar,
 .dashboard {
-  margin: 20px 0;
+  /* margin: 20px 0; */
   width: 100%;
   box-sizing: border-box;
 }
@@ -28,6 +28,18 @@
   margin: 20px 0;
   width: 100%;
   box-sizing: border-box;
+}
+
+.btn-wrap {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 30px;
+}
+
+.dashboard-section button {
+  float: right;
 }
 
 /* 타이틀 컨테이너 */
@@ -93,7 +105,8 @@
 .time-graph {
   display: flex;
   flex-direction: column;
-  gap: 20px; /* 시간대 간격 */
+  gap: 20px;
+  /* 시간대 간격 */
   width: 100%;
 }
 
@@ -114,14 +127,17 @@
 .bar-container {
   flex: 1;
   display: flex;
-  flex-direction: row; /* 좌우로 표시 */
+  flex-direction: row;
+  /* 좌우로 표시 */
   gap: 5px;
-  overflow-x: auto; /* 예약이 많을 때 가로 스크롤 */
+  overflow-x: auto;
+  /* 예약이 많을 때 가로 스크롤 */
   padding: 5px 0;
 }
 
 .bar {
-  min-width: 120px; /* 최소 너비 설정 */
+  min-width: 120px;
+  /* 최소 너비 설정 */
   height: 40px;
   display: flex;
   align-items: center;
@@ -129,15 +145,18 @@
   border-radius: 5px;
   color: white;
   cursor: pointer;
-  flex-shrink: 0; /* 크기 줄어들지 않게 */
+  flex-shrink: 0;
+  /* 크기 줄어들지 않게 */
 }
 
 .bar.confirmed {
-  background-color: #2E4CA6; /* 확정: 파란색 */
+  background-color: #2E4CA6;
+  /* 확정: 파란색 */
 }
 
 .bar.pending {
-  background-color: #f1c40f; /* 대기: 노란색 */
+  background-color: #f1c40f;
+  /* 대기: 노란색 */
 }
 
 .bar-label {
@@ -219,7 +238,8 @@
 
 .modal-actions {
   display: flex;
-  justify-content: flex-end; /* 오른쪽 정렬 */
+  justify-content: flex-end;
+  /* 오른쪽 정렬 */
   margin-top: 10px;
 }
 
@@ -229,6 +249,7 @@
 
 /* 반응형 */
 @media (max-width: 768px) {
+
   .main-page,
   .provider-main-page {
     padding: 20px;
@@ -240,7 +261,8 @@
   }
 
   .bar {
-    min-width: 100px; /* 모바일에서 조금 작게 */
+    min-width: 100px;
+    /* 모바일에서 조금 작게 */
   }
 
   .stats,

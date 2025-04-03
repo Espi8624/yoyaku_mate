@@ -60,11 +60,18 @@ function ProviderMainPage() {
     return (
         <div className="provider-main-page">
             <div className="dashboard">
+                <div className='dashboard-section'>
+                    <div className='btn-wrap'>
+                        <button className="view-all-btn" onClick={() => setIsModalOpen(true)}>
+                            + 新しい予約
+                        </button>
+                    </div>
+                </div>
 
                 {/* 예약 상태 요약 */}
                 <div className="dashboard-section">
                     <div className="title-container">
-                        <h2 className="subtitle">予約状況</h2>
+                        <h2 className="subtitle">本日の予約状況</h2>
                     </div>
                     <div className="stats-wrap">
                         <div className="stats">
@@ -79,9 +86,6 @@ function ProviderMainPage() {
                 <div className="dashboard-section">
                     <div className="title-container">
                         <h2 className="subtitle">本日の予約</h2>
-                        <button className="view-all-btn" onClick={() => setIsModalOpen(true)}>
-                            + 新しい予約
-                        </button>
                     </div>
                     <div className="graph-wrap">
                         <div className="time-graph">
