@@ -4,6 +4,7 @@ import './ReservationModal.css';
 function ReservationModal({ onClose }) {
     const [formData, setFormData] = useState({
         customerName: '',
+        reservationDate: '',
         reservationTime: '',
         notes: '',
     });
@@ -15,18 +16,27 @@ function ReservationModal({ onClose }) {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        // 예약 데이터 전송
+        // 날짜와 시간을 합쳐서 백엔드로 전송
+        const reservationTime = `${formData.reservationDate}T${formData.reservationTime}`;
+        const dataToSend = { ...formData, reservationTime };
         fetch('http://localhost:8080/provider/reservations', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(formData),
+            body: JSON.stringify(dataToSend),
         })
             .then((response) => response.json())
             .then(() => {
-                onClose(); // 모달 닫기
+                onClose();
             })
             .catch((error) => console.error('Error submitting reservation:', error));
     };
+
+    // 5분 단위 시간 옵션 생성 (00:00 ~ 23:55)
+    const timeOptions = Array.from({ length: 24 * 12 }, (_, i) => {
+        const hours = String(Math.floor(i / 12)).padStart(2, '0');
+        const minutes = String((i % 12) * 5).padStart(2, '0');
+        return `${hours}:${minutes}`;
+    });
 
     return (
         <div className="modal-overlay">
@@ -44,14 +54,30 @@ function ReservationModal({ onClose }) {
                         />
                     </label>
                     <label>
-                        予約時間:
+                        予約日付:
                         <input
-                            type="datetime-local"
+                            type="date"
+                            name="reservationDate"
+                            value={formData.reservationDate}
+                            onChange={handleChange}
+                            required
+                        />
+                    </label>
+                    <label>
+                        予約時間:
+                        <select
                             name="reservationTime"
                             value={formData.reservationTime}
                             onChange={handleChange}
                             required
-                        />
+                        >
+                            <option value="">時間を選択</option>
+                            {timeOptions.map((time) => (
+                                <option key={time} value={time}>
+                                    {time}
+                                </option>
+                            ))}
+                        </select>
                     </label>
                     <label>
                         メモ:

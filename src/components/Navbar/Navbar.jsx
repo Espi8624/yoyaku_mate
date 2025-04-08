@@ -13,7 +13,7 @@ function Navbar() {
             </div>
             <div className='navbar-icons'>
                 <Link to='/notification' className='navbar-icon'>🔔</Link>
-                <Link to='/user' className='navbar-icon'>👤</Link>
+                <Link to='/mypage' className='navbar-icon'>👤</Link>
             </div>
         </nav>
     );

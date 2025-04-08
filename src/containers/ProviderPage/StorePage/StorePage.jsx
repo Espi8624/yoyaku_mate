@@ -1,9 +1,276 @@
-import './StorePage.css';
+import TimePicker from 'react-time-picker';
+import './StorePage.css'; // CSS 파일 이름도 변경
+import { useEffect, useState } from 'react';
 
 function StorePage() {
-    return(
-        <div className='store-page'>
-            가게 관리 페이지
+    const [activeTab, setActiveTab] = useState('storeAccount');
+    const [isEditing, setIsEditing] = useState(false);
+    const [storeInfo, setStoreInfo] = useState({});
+    const [storeMenu, setStoreMenu] = useState([]);
+    const [reservations, setReservations] = useState([]);
+    const [reviews, setReviews] = useState([]);
+
+    useEffect(() => {
+        // 스토어 데이터 호출
+        fetch('http://localhost:8080/store-info')
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error('Failed to fetch store data');
+                }
+                return response.json();
+            })
+            .then((data) => setStoreInfo(data))
+            .catch((error) => console.error('Error fetching store info data: ', error));
+
+        // 예약 데이터 호출
+        fetch('http://localhost:8080/reservations')
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error('Failed to fetch reservations data');
+                }
+                return response.json();
+            })
+            .then((data) => setReservations(data))
+            .catch((error) => console.error('Error fetching reservations data: ', error));
+
+        // 리뷰 데이터 호출
+        fetch('http://localhost:8080/reviews')
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error('Failed to fetch reviews data');
+                }
+                return response.json();
+            })
+            .then((data) => setReviews(data))
+            .catch((error) => console.error('Error fetching reviews data: ', error));
+    }, []);
+
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setStoreInfo((prev) => ({ ...prev || {}, [name]: value }));
+    };
+
+    const handleTimeChange = (key, value) => {
+        // console.log(`${key} changed to:`, value); 
+        setStoreInfo((prev) => ({
+          ...prev,
+          [key]: value || "", // null 방지
+        }));
+      };
+
+    const handleSave = () => {
+        setIsEditing(false);
+        console.log('저장된 정보:', storeInfo);
+    };
+
+    const renderTabContent = () => {
+        switch (activeTab) {
+            case 'storeAccount':
+                return (
+                    <div className="tab-content">
+                        <h2>店舗情報</h2>
+                        <div className="info-list">
+                            <div className="info-item">
+                                <span className="label">店舗名</span>
+                                {isEditing ? (
+                                    <input
+                                        type="text"
+                                        name="store_name"
+                                        value={storeInfo.store_name}
+                                        onChange={handleInputChange}
+                                    />
+                                ) : (
+                                    <span className="value">{storeInfo.store_name}</span>
+                                )}
+                            </div>
+                            <div className="info-item">
+                                <span className="label">住所</span>
+                                {isEditing ? (
+                                    <input
+                                        type="text"
+                                        name="address"
+                                        value={storeInfo.address}
+                                        onChange={handleInputChange}
+                                    />
+                                ) : (
+                                    <span className="value">{storeInfo.address}</span>
+                                )}
+                            </div>
+                            <div className="info-item">
+                                <span className="label">電話番号</span>
+                                {isEditing ? (
+                                    <input
+                                        type="text"
+                                        name="phone_number"
+                                        value={storeInfo.phone_number}
+                                        onChange={handleInputChange}
+                                    />
+                                ) : (
+                                    <span className="value">{storeInfo.phone_number}</span>
+                                )}
+                            </div>
+                            <div className="info-item">
+                                <span className="label">メール</span>
+                                {isEditing ? (
+                                    <input
+                                        type="email"
+                                        name="email"
+                                        value={storeInfo.email}
+                                        onChange={handleInputChange}
+                                    />
+                                ) : (
+                                    <span className="value">{storeInfo.email}</span>
+                                )}
+                            </div>
+                            <div className="info-item">
+                                <span className="label">公式サイト</span>
+                                {isEditing ? (
+                                    <input
+                                        type="text"
+                                        name="website"
+                                        value={storeInfo.website}
+                                        onChange={handleInputChange}
+                                    />
+                                ) : (
+                                    <span className="value">{storeInfo.website}</span>
+                                )}
+                            </div>
+                        </div>
+                        <hr className='divider' />
+                        <div className='info-item'>
+                            <span className='label'>営業時間</span>
+                            {isEditing ? (
+                                 <>
+                                 <input
+                                     type="time"
+                                     name="open_time"
+                                     value={storeInfo.open_time || '00:00'}
+                                     onChange={(e) => handleTimeChange('open_time', e.target.value)}
+                                     step="300" // 5분 단위로 설정
+                                 />
+                                 <span> ~ </span>
+                                 <input
+                                     type="time"
+                                     name="close_time"
+                                     value={storeInfo.close_time || '00:00'}
+                                     onChange={(e) => handleTimeChange('close_time', e.target.value)}
+                                     step="300" // 5분 단위로 설정
+                                 />
+                             </>
+                            ) : (
+                                <span className="value">
+                                    {storeInfo.open_time || '未設定'} ~ {storeInfo.close_time || '未設定'}
+                                </span>
+                            )}
+                        </div>
+                        <div className="button-group">
+                            {isEditing ? (
+                                <>
+                                    <button className="save-btn" onClick={handleSave}>
+                                        保存
+                                    </button>
+                                    <button
+                                        className="cancel-btn"
+                                        onClick={() => setIsEditing(false)}
+                                    >
+                                        取消
+                                    </button>
+                                </>
+                            ) : (
+                                <button
+                                    className="edit-btn"
+                                    onClick={() => setIsEditing(true)}
+                                >
+                                    修正
+                                </button>
+                            )}
+                        </div>
+                    </div>
+                );
+            case 'storeMenu':
+                return (
+                    <div className="tab-content">
+                        <h2>店舗メニュー</h2>
+                        <ul>
+                            {storeInfo.menu && storeInfo.menu.length > 0 ? (
+                                storeInfo.menu.map((item, index) => (
+                                    <li key={index}>
+                                        {item.name} - {item.price}
+                                    </li>
+                                ))
+                            ) : (
+                                <p>メニューがありません。</p>
+                            )}
+                        </ul>
+                    </div>
+                );
+            case 'reservations':
+                return (
+                    <div className="tab-content">
+                        <h2>予約状況</h2>
+                        <ul>
+                            {reservations.length > 0 ? (
+                                <ul>
+                                    {reservations.map(res => (
+                                        <li key={res.id}>{res.time_stamp} : {res.details}</li>
+                                    ))}
+                                </ul>
+                            ) : (
+                                <p>予定がありません。</p>
+                            )}
+                        </ul>
+                    </div>
+                );
+            case 'reviews':
+                return (
+                    <div className="tab-content">
+                        <h2>レヴュー</h2>
+                        {reviews.length > 0 ? (
+                            <ul>
+                                {reviews.map(res => (
+                                    <li key={res.id}>{res.time_stamp} / {res.store_name} / {res.comments} / {res.rating}</li>
+                                ))}
+                            </ul>
+                        ) : (
+                            <p>予定がありません。</p>
+                        )}
+                    </div>
+                );
+            default:
+                return null;
+        }
+    };
+
+    return (
+        <div className="store-page">
+            <h1>店舗ページ</h1>
+            <div className="tabs">
+                <button
+                    className={activeTab === 'storeAccount' ? 'active' : ''}
+                    onClick={() => setActiveTab('storeAccount')}
+                >
+                    店舗情報
+                </button>
+                <button
+                    className={activeTab === 'storeMenu' ? 'active' : ''}
+                    onClick={() => setActiveTab('storeMenu')}
+                >
+                    店舗メニュー
+                </button>
+                <button
+                    className={activeTab === 'reservations' ? 'active' : ''}
+                    onClick={() => setActiveTab('reservations')}
+                >
+                    予約状況
+                </button>
+                <button
+                    className={activeTab === 'reviews' ? 'active' : ''}
+                    onClick={() => setActiveTab('reviews')}
+                >
+                    レヴュー
+                </button>
+            </div>
+            <div className="tab-container">{renderTabContent()}</div>
         </div>
     );
 }

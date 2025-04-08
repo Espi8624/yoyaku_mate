@@ -1,12 +1,141 @@
 .store-page {
+  max-width: 800px;
+  margin: 20px auto;
+  padding: 20px;
+}
+
+.store-page h1 {
+  margin-top: 0;
+}
+
+.tabs {
   display: flex;
-  flex-direction: column;
-  justify-content: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.tabs button {
+  padding: 10px 20px;
+  border: none;
+  background-color: #f0f0f0;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.tabs button.active {
+  background-color: #8FA9E0;
+  color: white;
+}
+
+.tabs button:hover {
+  background-color: #d0d8f0;
+}
+
+.tab-container {
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  background-color: #fff;
+}
+
+.tab-content h2 {
+  margin-top: 0;
+  color: #2E4CA6;
+}
+
+.info-list {
+  margin: 20px 0;
+}
+
+.info-item {
+  display: flex;
   align-items: center;
-  text-align: center;
-  width: 100%;
-  max-width: 1000px;
-  margin: 0 auto;
-  padding: 50px;
-  box-sizing: border-box;
+  margin-bottom: 15px;
+}
+
+.info-item input[type="time"] {
+  padding: 5px 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  color: #555;
+  width: auto;
+  margin-right: 5px;
+}
+
+.label {
+  width: 100px;
+  font-weight: bold;
+  color: #333;
+}
+
+.value {
+  flex: 1;
+  padding: 8px 12px;
+  color: #555;
+}
+
+.tab-content input {
+  flex: 1;
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 16px;
+  color: #555;
+}
+
+.button-group {
+  margin-top: 20px;
+}
+
+.edit-btn,
+.save-btn,
+.cancel-btn {
+  padding: 8px 16px;
+  margin-right: 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.edit-btn {
+  background-color: #8FA9E0;
+  color: white;
+}
+
+.save-btn {
+  background-color: #2E4CA6;
+  color: white;
+}
+
+.cancel-btn {
+  background-color: #f0f0f0;
+  color: #333;
+}
+
+.edit-btn:hover,
+.save-btn:hover {
+  opacity: 0.9;
+}
+
+.cancel-btn:hover {
+  background-color: #e0e0e0;
+}
+
+.tab-content ul {
+  list-style: none;
+  padding: 0;
+}
+
+.tab-content li {
+  padding: 10px 0;
+  border-bottom: 1px solid #eee;
+}
+
+/* 구분선 디자인 */
+.divider {
+  margin: 20px 0;
+  border: none;
+  border-top: 1px solid #ddd;
 }

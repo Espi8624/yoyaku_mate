@@ -34,7 +34,7 @@ function App() {
           }
           ></Route>
 
-          <Route path='/user' element={
+          <Route path='/mypage' element={
             user.role === 'client' ? (
               <UserPage />
             ) : user.role === 'provider' ? (
