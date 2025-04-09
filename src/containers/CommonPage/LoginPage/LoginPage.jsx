@@ -1,0 +1,57 @@
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+
+function LoginPage({ setUserRole }) {
+    const [account, setAccount] = useState("");
+    const [password, setPassword] = useState("");
+    const navigate = useNavigate();
+
+    // Dummy user data for demonstration purposes
+    const dummyUsers = {
+        "client1": { password: "1234", role: "client" },
+        "provider1": { password: "1234", role: "provider" },
+    }
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        const user = dummyUsers[account];
+
+        if (user && user.password === password) {
+            setUserRole(user.role);
+            console.log(`Logged in as ${user.role}`);
+            navigate("/"); // Redirect to the main page after login
+        } else {
+            alert("Invalid username or password");
+        }
+    };
+
+    return (
+        <div className="log-in-page">
+            <h1>Log In</h1>
+            <form onSubmit={handleSubmit}>
+                <label htmlFor="username">Username:</label>
+                <input
+                    type="text"
+                    id="username"
+                    name="username"
+                    value={account}
+                    onChange={(e) => setAccount(e.target.value)}
+                    required />
+
+                <label htmlFor="password">Password:</label>
+                <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                />
+
+                <button type="submit">Sign In</button>
+            </form>
+        </div>
+    );
+}
+
+export default LoginPage;

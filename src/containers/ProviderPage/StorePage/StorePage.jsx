@@ -1,6 +1,6 @@
-import TimePicker from 'react-time-picker';
-import './StorePage.css'; // CSS 파일 이름도 변경
 import { useEffect, useState } from 'react';
+
+import './StorePage.css'; // CSS 파일 이름도 변경
 
 function StorePage() {
     const [activeTab, setActiveTab] = useState('storeAccount');
@@ -11,38 +11,38 @@ function StorePage() {
     const [reviews, setReviews] = useState([]);
 
     useEffect(() => {
-        // 스토어 데이터 호출
-        fetch('http://localhost:8080/store-info')
-            .then((response) => {
-                if (!response.ok) {
-                    throw new Error('Failed to fetch store data');
-                }
-                return response.json();
-            })
-            .then((data) => setStoreInfo(data))
-            .catch((error) => console.error('Error fetching store info data: ', error));
+        // // 스토어 데이터 호출
+        // fetch('http://localhost:8080/store-info')
+        //     .then((response) => {
+        //         if (!response.ok) {
+        //             throw new Error('Failed to fetch store data');
+        //         }
+        //         return response.json();
+        //     })
+        //     .then((data) => setStoreInfo(data))
+        //     .catch((error) => console.error('Error fetching store info data: ', error));
 
-        // 예약 데이터 호출
-        fetch('http://localhost:8080/reservations')
-            .then((response) => {
-                if (!response.ok) {
-                    throw new Error('Failed to fetch reservations data');
-                }
-                return response.json();
-            })
-            .then((data) => setReservations(data))
-            .catch((error) => console.error('Error fetching reservations data: ', error));
+        // // 예약 데이터 호출
+        // fetch('http://localhost:8080/reservations')
+        //     .then((response) => {
+        //         if (!response.ok) {
+        //             throw new Error('Failed to fetch reservations data');
+        //         }
+        //         return response.json();
+        //     })
+        //     .then((data) => setReservations(data))
+        //     .catch((error) => console.error('Error fetching reservations data: ', error));
 
-        // 리뷰 데이터 호출
-        fetch('http://localhost:8080/reviews')
-            .then((response) => {
-                if (!response.ok) {
-                    throw new Error('Failed to fetch reviews data');
-                }
-                return response.json();
-            })
-            .then((data) => setReviews(data))
-            .catch((error) => console.error('Error fetching reviews data: ', error));
+        // // 리뷰 데이터 호출
+        // fetch('http://localhost:8080/reviews')
+        //     .then((response) => {
+        //         if (!response.ok) {
+        //             throw new Error('Failed to fetch reviews data');
+        //         }
+        //         return response.json();
+        //     })
+        //     .then((data) => setReviews(data))
+        //     .catch((error) => console.error('Error fetching reviews data: ', error));
     }, []);
 
     const handleInputChange = (e) => {
