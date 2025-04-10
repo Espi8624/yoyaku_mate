@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+import "./LoginPage.css";
+
 function LoginPage({ setUserRole }) {
     const [account, setAccount] = useState("");
     const [password, setPassword] = useState("");
@@ -27,9 +29,9 @@ function LoginPage({ setUserRole }) {
 
     return (
         <div className="log-in-page">
-            <h1>Log In</h1>
+            <h1>ログイン</h1>
             <form onSubmit={handleSubmit}>
-                <label htmlFor="username">Username:</label>
+                <label htmlFor="username">メール</label>
                 <input
                     type="text"
                     id="username"
@@ -38,7 +40,7 @@ function LoginPage({ setUserRole }) {
                     onChange={(e) => setAccount(e.target.value)}
                     required />
 
-                <label htmlFor="password">Password:</label>
+                <label htmlFor="password">パスワード</label>
                 <input
                     type="password"
                     id="password"
@@ -48,7 +50,7 @@ function LoginPage({ setUserRole }) {
                     required
                 />
 
-                <button type="submit">Sign In</button>
+                <button type="submit">ログイン</button>
             </form>
         </div>
     );

@@ -1,0 +1,96 @@
+/* 브라우저 기본 스타일 초기화 */
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+  }
+  
+  /* 전체 페이지 스타일 */
+  .log-in-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background-color: #f4f6f8;
+    padding: 20px;
+    box-sizing: border-box;
+  }
+  
+  /* 제목 스타일 */
+  .log-in-page h1 {
+    font-size: 2.5rem;
+    color: #2E4CA6;
+    margin-top: 0;
+    margin-bottom: 20px;
+    font-family: 'Arial', sans-serif;
+  }
+  
+  /* 폼 스타일 */
+  .log-in-page form {
+    max-width: 450px;
+    width: 100%;
+    padding: 50px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #fff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* 라벨 스타일 */
+  .log-in-page label {
+    display: block;
+    width: 100px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 5px;
+  }
+  
+  /* 입력 필드 스타일 */
+  .log-in-page input {
+    width: 100%;
+    padding: 0.75rem;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+    color: #555;
+    box-sizing: border-box;
+    transition: border-color 0.3s ease;
+  }
+  
+  .log-in-page input:focus {
+    border-color: #8FA9E0;
+    outline: none;
+  }
+  
+  /* 버튼 스타일 */
+  .log-in-page button {
+    width: 100%;
+    padding: 0.75rem;
+    margin-top: 20px;
+    background-color: #2E4CA6;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: opacity 0.3s ease;
+  }
+  
+  .log-in-page button:hover {
+    opacity: 0.9;
+  }
+  
+  /* 반응형 디자인 */
+  @media (max-width: 480px) {
+    .log-in-page h1 {
+      font-size: 2rem;
+    }
+  
+    .log-in-page form {
+      padding: 20px; /* 모바일에서는 패딩을 줄여서 너무 크지 않게 */
+      max-width: 100%;
+    }
+  }

@@ -1,3 +1,4 @@
+/* 기존 스타일 유지하면서 필요한 부분만 수정 */
 .store-page {
   max-width: 800px;
   margin: 20px auto;
@@ -53,28 +54,6 @@
   margin-bottom: 15px;
 }
 
-.info-item input[type="time"] {
-  padding: 5px 10px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  font-size: 14px;
-  color: #555;
-  width: auto;
-  margin-right: 5px;
-}
-
-.label {
-  width: 100px;
-  font-weight: bold;
-  color: #333;
-}
-
-.value {
-  flex: 1;
-  padding: 8px 12px;
-  color: #555;
-}
-
 .tab-content input {
   flex: 1;
   padding: 8px 12px;
@@ -82,6 +61,54 @@
   border-radius: 4px;
   font-size: 16px;
   color: #555;
+  box-sizing: border-box;
+  min-height: 36px;
+  max-width: 300px; /* 고정 폭 */
+}
+
+/* 읽기 전용 스타일 */
+.tab-content input.read-only {
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  cursor: default;
+}
+
+/* 시간 입력 필드 */
+.info-item.time-section {
+  display: flex;
+  align-items: center;
+}
+
+.time-wrapper {
+  display: flex;
+  align-items: center;
+}
+
+.info-item input[type="time"] {
+  padding: 5px 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  color: #555;
+  width: 100px; /* 고정 폭 */
+  margin-right: 5px;
+}
+
+.time-separator {
+  margin: 0 5px;
+  color: #555;
+}
+
+.info-item input[type="time"].read-only {
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  cursor: default;
+}
+
+.label {
+  width: 100px;
+  font-weight: bold;
+  color: #333;
 }
 
 .button-group {
@@ -123,17 +150,6 @@
   background-color: #e0e0e0;
 }
 
-.tab-content ul {
-  list-style: none;
-  padding: 0;
-}
-
-.tab-content li {
-  padding: 10px 0;
-  border-bottom: 1px solid #eee;
-}
-
-/* 구분선 디자인 */
 .divider {
   margin: 20px 0;
   border: none;

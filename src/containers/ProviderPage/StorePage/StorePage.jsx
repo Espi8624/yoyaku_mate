@@ -1,48 +1,24 @@
 import { useEffect, useState } from 'react';
 
-import './StorePage.css'; // CSS 파일 이름도 변경
+import './StorePage.css';
 
 function StorePage() {
     const [activeTab, setActiveTab] = useState('storeAccount');
     const [isEditing, setIsEditing] = useState(false);
-    const [storeInfo, setStoreInfo] = useState({});
-    const [storeMenu, setStoreMenu] = useState([]);
-    const [reservations, setReservations] = useState([]);
-    const [reviews, setReviews] = useState([]);
+    const [storeInfo, setStoreInfo] = useState({
+        store_name: "Test Store",
+        address: "123 Tokyo St",
+        phone_number: "123-456-7890",
+        email: "test@example.com",
+        website: "https://test.com",
+        open_time: "09:00",
+        close_time: "18:00"
+    });
+    const [reservations, setReservations] = useState({});
+    const [reviews, setReviews] = useState({});
 
     useEffect(() => {
-        // // 스토어 데이터 호출
-        // fetch('http://localhost:8080/store-info')
-        //     .then((response) => {
-        //         if (!response.ok) {
-        //             throw new Error('Failed to fetch store data');
-        //         }
-        //         return response.json();
-        //     })
-        //     .then((data) => setStoreInfo(data))
-        //     .catch((error) => console.error('Error fetching store info data: ', error));
-
-        // // 예약 데이터 호출
-        // fetch('http://localhost:8080/reservations')
-        //     .then((response) => {
-        //         if (!response.ok) {
-        //             throw new Error('Failed to fetch reservations data');
-        //         }
-        //         return response.json();
-        //     })
-        //     .then((data) => setReservations(data))
-        //     .catch((error) => console.error('Error fetching reservations data: ', error));
-
-        // // 리뷰 데이터 호출
-        // fetch('http://localhost:8080/reviews')
-        //     .then((response) => {
-        //         if (!response.ok) {
-        //             throw new Error('Failed to fetch reviews data');
-        //         }
-        //         return response.json();
-        //     })
-        //     .then((data) => setReviews(data))
-        //     .catch((error) => console.error('Error fetching reviews data: ', error));
+        // 초기 데이터 설정 (테스트용)
     }, []);
 
     const handleInputChange = (e) => {
@@ -51,12 +27,11 @@ function StorePage() {
     };
 
     const handleTimeChange = (key, value) => {
-        // console.log(`${key} changed to:`, value); 
         setStoreInfo((prev) => ({
-          ...prev,
-          [key]: value || "", // null 방지
+            ...prev,
+            [key]: value || ""
         }));
-      };
+    };
 
     const handleSave = () => {
         setIsEditing(false);
@@ -72,96 +47,84 @@ function StorePage() {
                         <div className="info-list">
                             <div className="info-item">
                                 <span className="label">店舗名</span>
-                                {isEditing ? (
-                                    <input
-                                        type="text"
-                                        name="store_name"
-                                        value={storeInfo.store_name}
-                                        onChange={handleInputChange}
-                                    />
-                                ) : (
-                                    <span className="value">{storeInfo.store_name}</span>
-                                )}
+                                <input
+                                    type="text"
+                                    name="store_name"
+                                    value={storeInfo.store_name || ""}
+                                    onChange={handleInputChange}
+                                    disabled={!isEditing}
+                                    className={!isEditing ? "read-only" : ""}
+                                />
                             </div>
                             <div className="info-item">
                                 <span className="label">住所</span>
-                                {isEditing ? (
-                                    <input
-                                        type="text"
-                                        name="address"
-                                        value={storeInfo.address}
-                                        onChange={handleInputChange}
-                                    />
-                                ) : (
-                                    <span className="value">{storeInfo.address}</span>
-                                )}
+                                <input
+                                    type="text"
+                                    name="address"
+                                    value={storeInfo.address || ""}
+                                    onChange={handleInputChange}
+                                    disabled={!isEditing}
+                                    className={!isEditing ? "read-only" : ""}
+                                />
                             </div>
                             <div className="info-item">
                                 <span className="label">電話番号</span>
-                                {isEditing ? (
-                                    <input
-                                        type="text"
-                                        name="phone_number"
-                                        value={storeInfo.phone_number}
-                                        onChange={handleInputChange}
-                                    />
-                                ) : (
-                                    <span className="value">{storeInfo.phone_number}</span>
-                                )}
+                                <input
+                                    type="text"
+                                    name="phone_number"
+                                    value={storeInfo.phone_number || ""}
+                                    onChange={handleInputChange}
+                                    disabled={!isEditing}
+                                    className={!isEditing ? "read-only" : ""}
+                                />
                             </div>
                             <div className="info-item">
                                 <span className="label">メール</span>
-                                {isEditing ? (
-                                    <input
-                                        type="email"
-                                        name="email"
-                                        value={storeInfo.email}
-                                        onChange={handleInputChange}
-                                    />
-                                ) : (
-                                    <span className="value">{storeInfo.email}</span>
-                                )}
+                                <input
+                                    type="email"
+                                    name="email"
+                                    value={storeInfo.email || ""}
+                                    onChange={handleInputChange}
+                                    disabled={!isEditing}
+                                    className={!isEditing ? "read-only" : ""}
+                                />
                             </div>
                             <div className="info-item">
                                 <span className="label">公式サイト</span>
-                                {isEditing ? (
-                                    <input
-                                        type="text"
-                                        name="website"
-                                        value={storeInfo.website}
-                                        onChange={handleInputChange}
-                                    />
-                                ) : (
-                                    <span className="value">{storeInfo.website}</span>
-                                )}
+                                <input
+                                    type="text"
+                                    name="website"
+                                    value={storeInfo.website || ""}
+                                    onChange={handleInputChange}
+                                    disabled={!isEditing}
+                                    className={!isEditing ? "read-only" : ""}
+                                />
                             </div>
                         </div>
-                        <hr className='divider' />
-                        <div className='info-item'>
-                            <span className='label'>営業時間</span>
-                            {isEditing ? (
-                                 <>
-                                 <input
-                                     type="time"
-                                     name="open_time"
-                                     value={storeInfo.open_time || '00:00'}
-                                     onChange={(e) => handleTimeChange('open_time', e.target.value)}
-                                     step="300" // 5분 단위로 설정
-                                 />
-                                 <span> ~ </span>
-                                 <input
-                                     type="time"
-                                     name="close_time"
-                                     value={storeInfo.close_time || '00:00'}
-                                     onChange={(e) => handleTimeChange('close_time', e.target.value)}
-                                     step="300" // 5분 단위로 설정
-                                 />
-                             </>
-                            ) : (
-                                <span className="value">
-                                    {storeInfo.open_time || '未設定'} ~ {storeInfo.close_time || '未設定'}
-                                </span>
-                            )}
+                        <hr className="divider" />
+                        <div className="info-item time-section">
+                            <span className="label">営業時間</span>
+                            <div className="time-wrapper">
+                                <input
+                                    type="time"
+                                    name="open_time"
+                                    value={storeInfo.open_time || "00:00"}
+                                    onChange={(e) => handleTimeChange('open_time', e.target.value)}
+                                    disabled={!isEditing}
+                                    className={!isEditing ? "read-only" : ""}
+                                    step="300"
+                                />
+                                <span className="time-separator"> ~ </span>
+                                <input
+                                    type="time"
+                                    name="close_time"
+                                    value={storeInfo.close_time || "00:00"}
+                                    onChange={(e) => handleTimeChange('close_time', e.target.value)}
+                                    disabled={!isEditing}
+                                    className={!isEditing ? "read-only" : ""}
+                                    step="300"
+                                />
+                            </div>
                         </div>
                         <div className="button-group">
                             {isEditing ? (
@@ -187,86 +150,74 @@ function StorePage() {
                         </div>
                     </div>
                 );
-            case 'storeMenu':
-                return (
-                    <div className="tab-content">
-                        <h2>店舗メニュー</h2>
-                        <ul>
-                            {storeInfo.menu && storeInfo.menu.length > 0 ? (
-                                storeInfo.menu.map((item, index) => (
-                                    <li key={index}>
-                                        {item.name} - {item.price}
-                                    </li>
-                                ))
-                            ) : (
-                                <p>メニューがありません。</p>
-                            )}
-                        </ul>
-                    </div>
-                );
-            case 'reservations':
-                return (
-                    <div className="tab-content">
-                        <h2>予約状況</h2>
-                        <ul>
-                            {reservations.length > 0 ? (
+                case 'storeMenu':
+                    return (
+                        <div className="tab-content">
+                            <h2>店舗メニュー</h2>
+                            <ul>
+                                {storeInfo.menu && storeInfo.menu.length > 0 ? (
+                                    storeInfo.menu.map((item, index) => (
+                                        <li key={index}>
+                                            {item.name} - {item.price}
+                                        </li>
+                                    ))
+                                ) : (
+                                    <p>メニューがありません。</p>
+                                )}
+                            </ul>
+                        </div>
+                    );
+                case 'reservations':
+                    return (
+                        <div className="tab-content">
+                            <h2>予約状況</h2>
+                            <ul>
+                                {reservations.length > 0 ? (
+                                    <ul>
+                                        {reservations.map(res => (
+                                            <li key={res.id}>{res.time_stamp} : {res.details}</li>
+                                        ))}
+                                    </ul>
+                                ) : (
+                                    <p>予定がありません。</p>
+                                )}
+                            </ul>
+                        </div>
+                    );
+                case 'reviews':
+                    return (
+                        <div className="tab-content">
+                            <h2>レヴュー</h2>
+                            {reviews.length > 0 ? (
                                 <ul>
-                                    {reservations.map(res => (
-                                        <li key={res.id}>{res.time_stamp} : {res.details}</li>
+                                    {reviews.map(res => (
+                                        <li key={res.id}>{res.time_stamp} / {res.store_name} / {res.comments} / {res.rating}</li>
                                     ))}
                                 </ul>
                             ) : (
                                 <p>予定がありません。</p>
                             )}
-                        </ul>
-                    </div>
-                );
-            case 'reviews':
-                return (
-                    <div className="tab-content">
-                        <h2>レヴュー</h2>
-                        {reviews.length > 0 ? (
-                            <ul>
-                                {reviews.map(res => (
-                                    <li key={res.id}>{res.time_stamp} / {res.store_name} / {res.comments} / {res.rating}</li>
-                                ))}
-                            </ul>
-                        ) : (
-                            <p>予定がありません。</p>
-                        )}
-                    </div>
-                );
-            default:
-                return null;
-        }
+                        </div>
+                    );
+                default:
+                    return null;
+            }
     };
 
     return (
         <div className="store-page">
             <h1>店舗ページ</h1>
             <div className="tabs">
-                <button
-                    className={activeTab === 'storeAccount' ? 'active' : ''}
-                    onClick={() => setActiveTab('storeAccount')}
-                >
+                <button className={activeTab === 'storeAccount' ? 'active' : ''} onClick={() => setActiveTab('storeAccount')}>
                     店舗情報
                 </button>
-                <button
-                    className={activeTab === 'storeMenu' ? 'active' : ''}
-                    onClick={() => setActiveTab('storeMenu')}
-                >
+                <button className={activeTab === 'storeMenu' ? 'active' : ''} onClick={() => setActiveTab('storeMenu')}>
                     店舗メニュー
                 </button>
-                <button
-                    className={activeTab === 'reservations' ? 'active' : ''}
-                    onClick={() => setActiveTab('reservations')}
-                >
+                <button className={activeTab === 'reservations' ? 'active' : ''} onClick={() => setActiveTab('reservations')}>
                     予約状況
                 </button>
-                <button
-                    className={activeTab === 'reviews' ? 'active' : ''}
-                    onClick={() => setActiveTab('reviews')}
-                >
+                <button className={activeTab === 'reviews' ? 'active' : ''} onClick={() => setActiveTab('reviews')}>
                     レヴュー
                 </button>
             </div>

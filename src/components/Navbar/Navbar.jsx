@@ -1,11 +1,12 @@
 import { Link, useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import './Navbar.css';
 
 function Navbar() {
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const navigate = useNavigate();
+    const dropdownRef = useRef(null);
 
     const toggleDropdown = () => {
         setIsDropdownOpen(!isDropdownOpen);
@@ -19,6 +20,24 @@ function Navbar() {
         setIsDropdownOpen(false);
     }
 
+    const handleClickOutside = (event) => {
+        if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+            setIsDropdownOpen(false); // 드롭다운 외부 클릭 시 닫기
+        }
+    }
+
+    useEffect(() => {
+        if (isDropdownOpen) {
+            document.addEventListener('mousedown', handleClickOutside);
+        } else {
+            document.removeEventListener('mousedown', handleClickOutside);
+        }
+
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, [isDropdownOpen]);
+
     return (
         <nav className="navbar">
             <div className="navbar-logo">
@@ -29,7 +48,11 @@ function Navbar() {
             </div>
             <div className='navbar-icons'>
                 <Link to='/notification' className='navbar-icon'>🔔</Link>
-                <div className='navbar-icon dropdown' onClick={toggleDropdown}>
+                <div
+                    className='navbar-icon dropdown'
+                    onClick={toggleDropdown}
+                    ref={dropdownRef}
+                >
                     👤
                     {isDropdownOpen && (
                         <div className='dropdown-menu'>

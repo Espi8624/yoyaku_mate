@@ -62,42 +62,36 @@ function UserPage() {
                         <div className="info-list">
                             <div className="info-item">
                                 <span className="label">名前</span>
-                                {isEditing ? (
-                                    <input
-                                        type="text"
-                                        name="user_name"
-                                        value={userInfo.user_name}
-                                        onChange={handleInputChange}
-                                    />
-                                ) : (
-                                    <span className="value">{userInfo.user_name}</span>
-                                )}
+                                <input
+                                    type="text"
+                                    name="user_name"
+                                    value={userInfo.user_name || ""}
+                                    onChange={handleInputChange}
+                                    disabled={!isEditing}
+                                    className={!isEditing ? "read-only" : ""}
+                                />
                             </div>
                             <div className="info-item">
                                 <span className="label">メール</span>
-                                {isEditing ? (
-                                    <input
-                                        type="email"
-                                        name="email"
-                                        value={userInfo.email}
-                                        onChange={handleInputChange}
-                                    />
-                                ) : (
-                                    <span className="value">{userInfo.email}</span>
-                                )}
+                                <input
+                                    type="email"
+                                    name="email"
+                                    value={userInfo.email || ""}
+                                    onChange={handleInputChange}
+                                    disabled={!isEditing}
+                                    className={!isEditing ? "read-only" : ""}
+                                />
                             </div>
                             <div className="info-item">
                                 <span className="label">電話番号</span>
-                                {isEditing ? (
-                                    <input
-                                        type="text"
-                                        name="phone_number"
-                                        value={userInfo.phone_number}
-                                        onChange={handleInputChange}
-                                    />
-                                ) : (
-                                    <span className="value">{userInfo.phone_number}</span>
-                                )}
+                                <input
+                                    type="text"
+                                    name="phone_number"
+                                    value={userInfo.phone_number || ""}
+                                    onChange={handleInputChange}
+                                    disabled={!isEditing}
+                                    className={!isEditing ? "read-only" : ""}
+                                />
                             </div>
                         </div>
                         <div className="button-group">
@@ -130,11 +124,9 @@ function UserPage() {
                         <h2>予約状況</h2>
                         <ul>
                             {reservations.length > 0 ? (
-                                <ul>
-                                    {reservations.map(res => (
-                                        <li key={res.id}>{res.time_stamp} : {res.details}</li>
-                                    ))}
-                                </ul>
+                                reservations.map(res => (
+                                    <li key={res.id}>{res.time_stamp} : {res.details}</li>
+                                ))
                             ) : (
                                 <p>予定がありません。</p>
                             )}
@@ -146,14 +138,12 @@ function UserPage() {
                     <div className="tab-content">
                         <h2>作成レヴュー</h2>
                         {reviews.length > 0 ? (
-                                <ul>
-                                    {reviews.map(res => (
-                                        <li key={res.id}>{res.time_stamp} / {res.store_name} / {res.comments} / {res.rating}</li>
-                                    ))}
-                                </ul>
-                            ) : (
-                                <p>予定がありません。</p>
-                            )}
+                            reviews.map(res => (
+                                <li key={res.id}>{res.time_stamp} / {res.store_name} / {res.comments} / {res.rating}</li>
+                            ))
+                        ) : (
+                            <p>予定がありません。</p>
+                        )}
                     </div>
                 );
             default:

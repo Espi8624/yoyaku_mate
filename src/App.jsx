@@ -1,5 +1,5 @@
 
-import { useState } from 'react';
+import { Children, useState } from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 
 import Navbar from './components/Navbar/Navbar';
@@ -17,56 +17,61 @@ import LoginPage from './containers/CommonPage/LoginPage/LoginPage';
 
 import './App.css';
 
+// 인증된 사용자용 레이아웃웃
+const PrivateLayout = ({ userRole, children }) => (
+  <div>
+    <Navbar />
+    {children}
+  </div>
+);
+
+const PublicLayout = ({ children }) => (
+  <div>
+    {children}
+  </div>
+);
+
 function App() {
-  // 임시 권한 설정
-  const [userRole, setUserRole] = useState(null); // 'client' or 'provider'
+  const [userRole, setUserRole] = useState(null);
 
   return (
     <Router>
-      <div className="App">
-        <Navbar />
-        <Routes>
-          <Route path='/' element={
-            userRole === 'client' ? (
-              <ClientMainPage />
-            ) : userRole === 'provider' ? (
-              <ProviderMainPage />
-            ) : (
-              <Navigate to="/login" />
-            )
-          }
-          ></Route>
+      <Routes>
 
-          <Route path='/mypage' element={
-            userRole === 'client' ? (
-              <UserPage />
-            ) : userRole === 'provider' ? (
-              <StorePage />
-            ) : (
-              <Navigate to="/login" />
-            )
-          }
-          ></Route>
+        <Route path='/login' element={
+          <PublicLayout>
+            <LoginPage setUserRole={setUserRole} />
+          </PublicLayout>
+        } />
+        
+        <Route path='*' element={<Navigate to="/login" />} />
 
-          <Route path='/notification' element={
-            userRole === 'client' ? (
-              <ClientNotificationPage />
-            ) : userRole === 'provider' ? (
-              <ProviderNotificationPage />
-            ) : (
-              <Navigate to="/login" />
-            )
-          }
-          ></Route>
+        <Route path='/' element={
+          <PrivateLayout userRole={userRole}>
+            {userRole === 'client' ? <ClientMainPage /> :
+              userRole === 'provider' ? <ProviderMainPage /> :
+                <Navigate to="/login" />}
+          </PrivateLayout>
+        } />
 
-          <Route path='/login' element={<LoginPage setUserRole={setUserRole} />} />
+        <Route path='/mypage' element={
+          <PrivateLayout userRole={userRole}>
+            {userRole === 'client' ? <UserPage /> :
+              userRole === 'provider' ? <StorePage /> :
+                <Navigate to="/login" />}
+          </PrivateLayout>
+        } />
 
-          {/* <Route path='/'></Route> */}
-          <Route path='*' element={<Navigate to="/login" />}></Route>
-        </Routes>
-      </div>
+        <Route path='/notification' element={
+          <PrivateLayout userRole={userRole}>
+            {userRole === 'client' ? <ClientNotificationPage /> :
+              userRole === 'provider' ? <ProviderNotificationPage /> :
+                <Navigate to="/login" />}
+          </PrivateLayout>
+        } />
+
+      </Routes>
     </Router>
-
   );
 }
 
