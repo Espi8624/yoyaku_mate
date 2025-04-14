@@ -5,20 +5,22 @@ import './StorePage.css';
 function StorePage() {
     const [activeTab, setActiveTab] = useState('storeAccount');
     const [isEditing, setIsEditing] = useState(false);
-    const [storeInfo, setStoreInfo] = useState({
-        store_name: "Test Store",
-        address: "123 Tokyo St",
-        phone_number: "123-456-7890",
-        email: "test@example.com",
-        website: "https://test.com",
-        open_time: "09:00",
-        close_time: "18:00"
-    });
+    const [storeInfo, setStoreInfo] = useState({});
+    const [menu, setMenu] = useState([]);
     const [reservations, setReservations] = useState({});
     const [reviews, setReviews] = useState({});
 
     useEffect(() => {
-        // 초기 데이터 설정 (테스트용)
+        // 가게 데이터 호출
+        fetch('http://localhost:8080/provider/store-info')
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error('Failed to fetch user data');
+                }
+                return response.json();
+            })
+            .then((data) => setStoreInfo(data))
+            .catch((error) => console.error('Error fetching store info data: ', error));
     }, []);
 
     const handleInputChange = (e) => {
@@ -61,7 +63,7 @@ function StorePage() {
                                 <input
                                     type="text"
                                     name="address"
-                                    value={storeInfo.address || ""}
+                                    value={storeInfo.store_address || ""}
                                     onChange={handleInputChange}
                                     disabled={!isEditing}
                                     className={!isEditing ? "read-only" : ""}
@@ -72,7 +74,7 @@ function StorePage() {
                                 <input
                                     type="text"
                                     name="phone_number"
-                                    value={storeInfo.phone_number || ""}
+                                    value={storeInfo.store_tel_number || ""}
                                     onChange={handleInputChange}
                                     disabled={!isEditing}
                                     className={!isEditing ? "read-only" : ""}
@@ -83,7 +85,7 @@ function StorePage() {
                                 <input
                                     type="email"
                                     name="email"
-                                    value={storeInfo.email || ""}
+                                    value={storeInfo.store_email || ""}
                                     onChange={handleInputChange}
                                     disabled={!isEditing}
                                     className={!isEditing ? "read-only" : ""}
@@ -94,7 +96,7 @@ function StorePage() {
                                 <input
                                     type="text"
                                     name="website"
-                                    value={storeInfo.website || ""}
+                                    value={storeInfo.store_official_web_site || ""}
                                     onChange={handleInputChange}
                                     disabled={!isEditing}
                                     className={!isEditing ? "read-only" : ""}
@@ -108,7 +110,7 @@ function StorePage() {
                                 <input
                                     type="time"
                                     name="open_time"
-                                    value={storeInfo.open_time || "00:00"}
+                                    value={storeInfo.store_open_time || "00:00"}
                                     onChange={(e) => handleTimeChange('open_time', e.target.value)}
                                     disabled={!isEditing}
                                     className={!isEditing ? "read-only" : ""}
@@ -118,7 +120,7 @@ function StorePage() {
                                 <input
                                     type="time"
                                     name="close_time"
-                                    value={storeInfo.close_time || "00:00"}
+                                    value={storeInfo.store_close_time || "00:00"}
                                     onChange={(e) => handleTimeChange('close_time', e.target.value)}
                                     disabled={!isEditing}
                                     className={!isEditing ? "read-only" : ""}
