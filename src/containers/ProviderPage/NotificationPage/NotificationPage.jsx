@@ -7,8 +7,8 @@ function NotificationPage() {
     const [activeTab, setActiveTab] = useState('all');
     const [notifications, setNotifications] = useState([]);
 
-    // 알림 데이터 호출
-    // 탭 변경시마다 호출
+    // お知らせデータ呼出
+    // タブ変更時に呼び出し
     useEffect(() => {
         const fetchNotifications = async () => {
             const url = activeTab === 'all'
@@ -17,7 +17,7 @@ function NotificationPage() {
             try {
                 const response = await fetch(url);
                 const data = await response.json();
-                // 최신순 정렬렬
+                // 最新順にソート
                 setNotifications(data.sort((a, b) => b.id - a.id));
             } catch (error) {
                 console.error('Error fetching notifications: ', error);
@@ -31,7 +31,7 @@ function NotificationPage() {
         <div className="provider-notification-page">
             <h1>お知らせ</h1>
 
-            {/* 탭 네비게이션션 */}
+            {/* タブーナビゲーション */}
             <div className="provider-notification-tabs">
                 <button
                     className={activeTab === 'all' ? 'active' : ''}
@@ -53,7 +53,7 @@ function NotificationPage() {
                 </button>
             </div>
 
-            {/* 알림 목록록 */}
+            {/* お知らせ目録 */}
             <div className="provider-notification-tab-container">
                 <div className="provider-notification-tab-content">
                     <h2>

@@ -8,7 +8,7 @@ function LoginPage({ setUserRole }) {
     const [password, setPassword] = useState("");
     const navigate = useNavigate();
 
-    // Dummy user data for demonstration purposes
+    // ダミーユーザーデータ
     const dummyUsers = {
         "client1": { password: "1234", role: "client" },
         "provider1": { password: "1234", role: "provider" },
@@ -21,7 +21,8 @@ function LoginPage({ setUserRole }) {
         if (user && user.password === password) {
             setUserRole(user.role);
             console.log(`Logged in as ${user.role}`);
-            navigate("/"); // Redirect to the main page after login
+
+            navigate("/"); // ログイン後、メインページへリダイレクト
         } else {
             alert("Invalid username or password");
         }

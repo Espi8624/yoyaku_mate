@@ -9,7 +9,7 @@ function UserPage() {
     const [reviews, setReviews] = useState([]);
 
     useEffect(() => {
-        // 유저 데이터 호출
+        // ユーザーデータ呼出
         fetch('http://localhost:8080/user-info')
             .then((response) => {
                 if (!response.ok) {
@@ -20,7 +20,7 @@ function UserPage() {
             .then((data) => setUserInfo(data))
             .catch((error) => console.error('Error fetching user info data: ', error));
 
-        // 예약 데이터 호출
+        // 予約データ呼出
         fetch('http://localhost:8080/reservations')
             .then((response) => {
                 if (!response.ok) {
@@ -31,7 +31,7 @@ function UserPage() {
             .then((data) => setReservations(data))
             .catch((error) => console.error('Error fetching reservations data: ', error));
 
-        // 리뷰 데이터 호출
+        // レヴューデータ呼出
         fetch('http://localhost:8080/reviews')
             .then((response) => {
                 if (!response.ok) {
@@ -50,7 +50,7 @@ function UserPage() {
 
     const handleSave = () => {
         setIsEditing(false);
-        console.log('저장된 정보:', userInfo);
+        console.log('保存される情報:', userInfo);
     };
 
     const renderTabContent = () => {

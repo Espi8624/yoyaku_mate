@@ -1,11 +1,10 @@
-/* 브라우저 기본 스타일 초기화 */
+/* ブラウザ基本スタイル初期化 */
 html, body {
     margin: 0;
     padding: 0;
     height: 100%;
   }
   
-  /* 전체 페이지 스타일 */
   .log-in-page {
     display: flex;
     flex-direction: column;
@@ -17,7 +16,6 @@ html, body {
     box-sizing: border-box;
   }
   
-  /* 제목 스타일 */
   .log-in-page h1 {
     font-size: 2.5rem;
     color: #2E4CA6;
@@ -26,7 +24,6 @@ html, body {
     font-family: 'Arial', sans-serif;
   }
   
-  /* 폼 스타일 */
   .log-in-page form {
     max-width: 450px;
     width: 100%;
@@ -37,7 +34,6 @@ html, body {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   }
   
-  /* 라벨 스타일 */
   .log-in-page label {
     display: block;
     width: 100px;
@@ -46,7 +42,6 @@ html, body {
     margin-bottom: 5px;
   }
   
-  /* 입력 필드 스타일 */
   .log-in-page input {
     width: 100%;
     padding: 0.75rem;
@@ -64,7 +59,6 @@ html, body {
     outline: none;
   }
   
-  /* 버튼 스타일 */
   .log-in-page button {
     width: 100%;
     padding: 0.75rem;
@@ -83,14 +77,13 @@ html, body {
     opacity: 0.9;
   }
   
-  /* 반응형 디자인 */
   @media (max-width: 480px) {
     .log-in-page h1 {
       font-size: 2rem;
     }
   
     .log-in-page form {
-      padding: 20px; /* 모바일에서는 패딩을 줄여서 너무 크지 않게 */
+      padding: 20px;
       max-width: 100%;
     }
   }

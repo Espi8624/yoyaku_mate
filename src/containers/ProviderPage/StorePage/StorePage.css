@@ -1,4 +1,3 @@
-/* 기존 스타일 유지하면서 필요한 부분만 수정 */
 .store-page {
   max-width: 800px;
   margin: 20px auto;
@@ -63,17 +62,15 @@
   color: #555;
   box-sizing: border-box;
   min-height: 36px;
-  max-width: 300px; /* 고정 폭 */
+  max-width: 300px;
 }
 
-/* 읽기 전용 스타일 */
 .tab-content input.read-only {
   background-color: #f9f9f9;
   border: 1px solid #ddd;
   cursor: default;
 }
 
-/* 시간 입력 필드 */
 .info-item.time-section {
   display: flex;
   align-items: center;
@@ -90,7 +87,7 @@
   border-radius: 4px;
   font-size: 14px;
   color: #555;
-  width: 100px; /* 고정 폭 */
+  width: 100px;
   margin-right: 5px;
 }
 
@@ -154,4 +151,24 @@
   margin: 20px 0;
   border: none;
   border-top: 1px solid #ddd;
+}
+
+.menu-list {
+  list-style: none;
+  padding: 0;
+}
+
+.menu-item {
+  margin-bottom: 15px;
+}
+
+.menu-main {
+  font-weight: bold;
+  color: #333;
+}
+
+.menu-description {
+  margin-top: 5px;
+  color: #666;
+  font-size: 14px;
 }

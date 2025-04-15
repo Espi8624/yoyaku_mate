@@ -67,11 +67,11 @@
   font-size: 16px;
   color: #555;
   box-sizing: border-box;
-  min-height: 36px; /* 높이 고정 */
-  max-width: 300px; /* 폭 고정 */
+  min-height: 36px; /* 高さ固定 */
+  max-width: 300px; /* 幅固定 */
 }
 
-/* 읽기 전용 스타일 */
+/* read 専用スタイル */
 .tab-content input.read-only {
   background-color: #f9f9f9;
   border: 1px solid #ddd;

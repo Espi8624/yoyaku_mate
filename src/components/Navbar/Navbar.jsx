@@ -13,16 +13,19 @@ function Navbar() {
     };
 
     const handleLogout = () => {
-        // Perform logout logic here
+        // ログアウトロジックをここに追加
         console.log('User logged out');
         // Redirect to login page after logout
+        // ログアウト後にログインページにリダイレクト
+        // ここでトークン削除などの処理を行う
         navigate('/login');
         setIsDropdownOpen(false);
     }
 
     const handleClickOutside = (event) => {
         if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-            setIsDropdownOpen(false); // 드롭다운 외부 클릭 시 닫기
+            // ドロップダウン外部クリック時、閉じる
+            setIsDropdownOpen(false);
         }
     }
 

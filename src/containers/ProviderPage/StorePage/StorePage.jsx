@@ -6,12 +6,12 @@ function StorePage() {
     const [activeTab, setActiveTab] = useState('storeAccount');
     const [isEditing, setIsEditing] = useState(false);
     const [storeInfo, setStoreInfo] = useState({});
-    const [menu, setMenu] = useState([]);
+    const [menus, setMenus] = useState([]);
     const [reservations, setReservations] = useState({});
     const [reviews, setReviews] = useState({});
 
     useEffect(() => {
-        // 가게 데이터 호출
+        // 店データ呼出
         fetch('http://localhost:8080/provider/store-info')
             .then((response) => {
                 if (!response.ok) {
@@ -21,6 +21,39 @@ function StorePage() {
             })
             .then((data) => setStoreInfo(data))
             .catch((error) => console.error('Error fetching store info data: ', error));
+
+        // 店メニューデータ呼出
+        fetch('http://localhost:8080/provider/store-menus')
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error('Failed to fetch store menus data');
+                }
+                return response.json();
+            })
+            .then((data) => setMenus(data))
+            .catch((error) => console.error('Error fetching store menus data: ', error));
+
+        // 店予約データ呼出
+        fetch('http://localhost:8080/provider/store-reservations')
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error('Failed to fetch store reservations data');
+                }
+                return response.json();
+            })
+            .then((data) => setReservations(data))
+            .catch((error) => console.error('Error fetching store reservations data: ', error));
+
+        // 店レヴューデータ呼出
+        fetch('http://localhost:8080/provider/store-reviews')
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error('Failed to fetch store reviews data');
+                }
+                return response.json();
+            })
+            .then((data) => setReviews(data))
+            .catch((error) => console.error('Error fetching store reviews data: ', error));
     }, []);
 
     const handleInputChange = (e) => {
@@ -37,7 +70,7 @@ function StorePage() {
 
     const handleSave = () => {
         setIsEditing(false);
-        console.log('저장된 정보:', storeInfo);
+        console.log('保存される情報:', storeInfo);
     };
 
     const renderTabContent = () => {
@@ -152,58 +185,63 @@ function StorePage() {
                         </div>
                     </div>
                 );
-                case 'storeMenu':
-                    return (
-                        <div className="tab-content">
-                            <h2>店舗メニュー</h2>
-                            <ul>
-                                {storeInfo.menu && storeInfo.menu.length > 0 ? (
-                                    storeInfo.menu.map((item, index) => (
-                                        <li key={index}>
-                                            {item.name} - {item.price}
-                                        </li>
-                                    ))
-                                ) : (
-                                    <p>メニューがありません。</p>
-                                )}
-                            </ul>
-                        </div>
-                    );
-                case 'reservations':
-                    return (
-                        <div className="tab-content">
-                            <h2>予約状況</h2>
-                            <ul>
-                                {reservations.length > 0 ? (
-                                    <ul>
-                                        {reservations.map(res => (
-                                            <li key={res.id}>{res.time_stamp} : {res.details}</li>
-                                        ))}
-                                    </ul>
-                                ) : (
-                                    <p>予定がありません。</p>
-                                )}
-                            </ul>
-                        </div>
-                    );
-                case 'reviews':
-                    return (
-                        <div className="tab-content">
-                            <h2>レヴュー</h2>
-                            {reviews.length > 0 ? (
+            case 'storeMenus':
+                return (
+                    <div className="tab-content">
+                        <h2>店舗メニュー</h2>
+                        <ul className='menu-list'>
+                            {menus.length > 0 ? (
+                                menus.map((item, index) => (
+                                    <li key={index} className="menu-item">
+                                        <div className="menu-main">
+                                            {item.menu_number} : {item.menu_name} - {item.menu_price}
+                                        </div>
+                                        <div className="menu-description">
+                                            {item.menu_description}
+                                        </div>
+                                    </li>
+                                ))
+                            ) : (
+                                <p>メニューがありません。</p>
+                            )}
+                        </ul>
+                    </div>
+                );
+            case 'reservations':
+                return (
+                    <div className="tab-content">
+                        <h2>予約状況</h2>
+                        <ul>
+                            {reservations.length > 0 ? (
                                 <ul>
-                                    {reviews.map(res => (
-                                        <li key={res.id}>{res.time_stamp} / {res.store_name} / {res.comments} / {res.rating}</li>
+                                    {reservations.map(res => (
+                                        <li key={res.id}>顧客名： {res.client_name} / 予約時間： {res.reserved_date} {res.reserved_time} / 予約詳細： {res.details}</li>
                                     ))}
                                 </ul>
                             ) : (
                                 <p>予定がありません。</p>
                             )}
-                        </div>
-                    );
-                default:
-                    return null;
-            }
+                        </ul>
+                    </div>
+                );
+            case 'reviews':
+                return (
+                    <div className="tab-content">
+                        <h2>レヴュー</h2>
+                        {reviews.length > 0 ? (
+                            <ul>
+                                {reviews.map(res => (
+                                    <li key={res.id}>{res.time_stamp} / {res.store_name} / {res.comments} / {res.rating}</li>
+                                ))}
+                            </ul>
+                        ) : (
+                            <p>予定がありません。</p>
+                        )}
+                    </div>
+                );
+            default:
+                return null;
+        }
     };
 
     return (
@@ -213,7 +251,7 @@ function StorePage() {
                 <button className={activeTab === 'storeAccount' ? 'active' : ''} onClick={() => setActiveTab('storeAccount')}>
                     店舗情報
                 </button>
-                <button className={activeTab === 'storeMenu' ? 'active' : ''} onClick={() => setActiveTab('storeMenu')}>
+                <button className={activeTab === 'storeMenus' ? 'active' : ''} onClick={() => setActiveTab('storeMenus')}>
                     店舗メニュー
                 </button>
                 <button className={activeTab === 'reservations' ? 'active' : ''} onClick={() => setActiveTab('reservations')}>

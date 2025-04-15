@@ -16,7 +16,7 @@ function ReservationModal({ onClose }) {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        // 날짜와 시간을 합쳐서 백엔드로 전송
+        // 日付と時間を結合し、バックエンドへ送信
         const reservationTime = `${formData.reservationDate}T${formData.reservationTime}`;
         const dataToSend = { ...formData, reservationTime };
         fetch('http://localhost:8080/provider/reservations', {
@@ -31,7 +31,7 @@ function ReservationModal({ onClose }) {
             .catch((error) => console.error('Error submitting reservation:', error));
     };
 
-    // 5분 단위 시간 옵션 생성 (00:00 ~ 23:55)
+    // 5分単位時間オプション生成 (00:00 ~ 23:55)
     const timeOptions = Array.from({ length: 24 * 12 }, (_, i) => {
         const hours = String(Math.floor(i / 12)).padStart(2, '0');
         const minutes = String((i % 12) * 5).padStart(2, '0');

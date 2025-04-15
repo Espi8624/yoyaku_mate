@@ -7,7 +7,7 @@ const MainCalendar = () => {
     const [reservations, setReservations] = useState([]);
 
     useEffect(() => {
-            // Reservations 데이터 호출
+            // Reservations データ呼出
             fetch('http://localhost:8080/reservations')
                 .then((response) => {
                     if (!response.ok) {

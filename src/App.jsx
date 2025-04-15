@@ -1,5 +1,5 @@
 
-import { Children, useState } from 'react';
+import { useState } from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 
 import Navbar from './components/Navbar/Navbar';
@@ -17,7 +17,7 @@ import LoginPage from './containers/CommonPage/LoginPage/LoginPage';
 
 import './App.css';
 
-// 인증된 사용자용 레이아웃웃
+// 認証されたユーザー用レイアウト
 const PrivateLayout = ({ userRole, children }) => (
   <div>
     <Navbar />
@@ -25,6 +25,7 @@ const PrivateLayout = ({ userRole, children }) => (
   </div>
 );
 
+// 未認証ユーザー用レイアウト
 const PublicLayout = ({ children }) => (
   <div>
     {children}
@@ -32,20 +33,13 @@ const PublicLayout = ({ children }) => (
 );
 
 function App() {
-  const [userRole, setUserRole] = useState(null);
+  const [userRole, setUserRole] = useState(null);// ユーザー権限の状態を管理
 
   return (
     <Router>
       <Routes>
 
-        <Route path='/login' element={
-          <PublicLayout>
-            <LoginPage setUserRole={setUserRole} />
-          </PublicLayout>
-        } />
-        
-        <Route path='*' element={<Navigate to="/login" />} />
-
+        {/* メインページ */}
         <Route path='/' element={
           <PrivateLayout userRole={userRole}>
             {userRole === 'client' ? <ClientMainPage /> :
@@ -54,6 +48,7 @@ function App() {
           </PrivateLayout>
         } />
 
+        {/* マイページ（ユーザOR店） */}
         <Route path='/mypage' element={
           <PrivateLayout userRole={userRole}>
             {userRole === 'client' ? <UserPage /> :
@@ -62,6 +57,7 @@ function App() {
           </PrivateLayout>
         } />
 
+        {/* お知らせページ */}
         <Route path='/notification' element={
           <PrivateLayout userRole={userRole}>
             {userRole === 'client' ? <ClientNotificationPage /> :
@@ -69,6 +65,16 @@ function App() {
                 <Navigate to="/login" />}
           </PrivateLayout>
         } />
+
+        {/* ログインページ */}
+        <Route path='/login' element={
+          <PublicLayout>
+            <LoginPage setUserRole={setUserRole} />
+          </PublicLayout>
+        } />
+
+        {/* 間違えたURLで接近 */}
+        <Route path='*' element={<Navigate to="/login" />} />
 
       </Routes>
     </Router>

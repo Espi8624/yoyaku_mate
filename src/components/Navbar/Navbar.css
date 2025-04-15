@@ -38,7 +38,7 @@
   user-select: none;
 }
 
-/* 드롭다운 스타일 */
+/* ドロップダウン */
 .dropdown {
   position: relative;
 }
@@ -52,9 +52,9 @@
   border-radius: 4px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   z-index: 1000;
-  width: 120px; /* 박스 너비 고정 */
+  width: 120px;
   padding: 5px 0;
-  overflow: hidden; /* 내용이 밖으로 나가지 않게 */
+  overflow: hidden;
 }
 
 .dropdown-item {
@@ -68,7 +68,7 @@
   text-align: left;
   cursor: pointer;
   font-size: 0.7em;
-  box-sizing: border-box; /* 패딩이 너비에 포함되게 */
+  box-sizing: border-box; /* paddingが幅に含まれる　*/
 }
 
 .box-item {

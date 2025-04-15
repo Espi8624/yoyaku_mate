@@ -7,7 +7,7 @@ function MainPage() {
     const [timeLineData, setTimeLineData] = useState([]);
 
     useEffect(() => {
-        // Frequent Places 데이터 호출
+        // Frequent Places データ呼出
         fetch('http://localhost:8080/frequent-places')
             .then((response) => {
                 if (!response.ok) {
@@ -18,7 +18,7 @@ function MainPage() {
             .then((data) => setFrequentPlaces(data))
             .catch((error) => console.error('Error fetching frequent places: ', error));
 
-        // TimeLine 데이터 호출
+        // TimeLine データ呼出
         fetch('http://localhost:8080/timeline')
             .then((response) => {
                 if (!response.ok) {
@@ -55,7 +55,7 @@ function MainPage() {
                                                     minute: '2-digit',
                                                 })}
                                             </div>
-                                            {/* 추후 <icon>으로 변경 */}
+                                            {/* 今後、<icon> に変更する予定　*/}
                                             <span className="move-icon">&gt;</span>
                                         </div>
                                     </li>
