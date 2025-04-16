@@ -4,13 +4,13 @@ import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-d
 
 import Navbar from './components/Navbar/Navbar';
 
-import ClientMainPage from './containers/ClientPage/MainPage/MainPage';
+import CustomerMainPage from './containers/CustomerPage/MainPage/MainPage';
 import ProviderMainPage from './containers/ProviderPage/MainPage/MainPage';
 
-import UserPage from './containers/ClientPage/UserPage/UserPage';
+import UserPage from './containers/CustomerPage/UserPage/UserPage';
 import StorePage from './containers/ProviderPage/StorePage/StorePage';
 
-import ClientNotificationPage from './containers/ClientPage/NotificationPage/NotificationPage';
+import CustomerNotificationPage from './containers/CustomerPage/NotificationPage/NotificationPage';
 import ProviderNotificationPage from './containers/ProviderPage/NotificationPage/NotificationPage';
 
 import LoginPage from './containers/CommonPage/LoginPage/LoginPage';
@@ -42,7 +42,7 @@ function App() {
         {/* メインページ */}
         <Route path='/' element={
           <PrivateLayout userRole={userRole}>
-            {userRole === 'client' ? <ClientMainPage /> :
+            {userRole === 'customer' ? <CustomerMainPage /> :
               userRole === 'provider' ? <ProviderMainPage /> :
                 <Navigate to="/login" />}
           </PrivateLayout>
@@ -51,7 +51,7 @@ function App() {
         {/* マイページ（ユーザOR店） */}
         <Route path='/mypage' element={
           <PrivateLayout userRole={userRole}>
-            {userRole === 'client' ? <UserPage /> :
+            {userRole === 'customer' ? <UserPage /> :
               userRole === 'provider' ? <StorePage /> :
                 <Navigate to="/login" />}
           </PrivateLayout>
@@ -60,7 +60,7 @@ function App() {
         {/* お知らせページ */}
         <Route path='/notification' element={
           <PrivateLayout userRole={userRole}>
-            {userRole === 'client' ? <ClientNotificationPage /> :
+            {userRole === 'customer' ? <CustomerNotificationPage /> :
               userRole === 'provider' ? <ProviderNotificationPage /> :
                 <Navigate to="/login" />}
           </PrivateLayout>

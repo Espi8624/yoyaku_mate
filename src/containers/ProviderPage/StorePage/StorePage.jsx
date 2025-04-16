@@ -215,7 +215,7 @@ function StorePage() {
                             {reservations.length > 0 ? (
                                 <ul>
                                     {reservations.map(res => (
-                                        <li key={res.id}>顧客名： {res.client_name} / 予約時間： {res.reserved_date} {res.reserved_time} / 予約詳細： {res.details}</li>
+                                        <li key={res.id}>顧客名： {res.customer_name} / 予約時間： {res.reserved_date} {res.reserved_time} / 予約詳細： {res.details}</li>
                                     ))}
                                 </ul>
                             ) : (

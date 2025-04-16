@@ -10,7 +10,7 @@ function LoginPage({ setUserRole }) {
 
     // ダミーユーザーデータ
     const dummyUsers = {
-        "client1": { password: "1234", role: "client" },
+        "customer1": { password: "1234", role: "customer" },
         "provider1": { password: "1234", role: "provider" },
     }
 

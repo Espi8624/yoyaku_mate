@@ -35,7 +35,7 @@ function MainPage() {
             <div className="main-time-line">
                 <div className="title-container">
                     <h1 className="title">タイムライン</h1>
-                    <button className="view-all-btn">view all &gt;&gt;</button>
+                    <button className="view-all-btn">すべて &gt;&gt;</button>
                 </div>
                 <div className="main-time-line-wrap">
                     <ul>
@@ -69,15 +69,19 @@ function MainPage() {
 
             <div className="main-frequent-places">
                 <div className="title-container">
-                    <h1 className="title">前回訪問した場所</h1>
-                    <button className="view-all-btn">view all &gt;&gt;</button>
+                    <h1 className="title">よく訪問する場所</h1>
+                    <button className="view-all-btn">すべて &gt;&gt;</button>
                 </div>
                 <div className="main-frequent-places-wrap">
                     <ul>
                         {frequentPlaces.length > 0 ? (
                             frequentPlaces.map((res, index) => (
-                                <li key={index}>
-                                    {res.store_name}
+                                <li key={index} className="frequent-place-item">
+                                    <span className="rank">{index + 1}.</span>
+                                    <div className="place-info">
+                                        <span className="store-name">{res.store_name}</span>
+                                        <span className="last-visited">最終訪問日: {res.last_visited}</span>
+                                    </div>
                                     <span className="move-icon">&gt;</span>
                                 </li>
                             ))
@@ -87,6 +91,7 @@ function MainPage() {
                     </ul>
                 </div>
             </div>
+
 
             <div className="main-calendar">
                 <div className="main-calendar-wrap">

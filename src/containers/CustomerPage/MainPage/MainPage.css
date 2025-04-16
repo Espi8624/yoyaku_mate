@@ -79,14 +79,73 @@
   text-align: left;
 }
 
-.main-frequent-places li {
+/* .main-frequent-places li {
   position: relative;
-  margin: 10px 30px;
+  margin: 10px 10px;
   padding: 11px 22px;
   border: 1px solid #e2e2e2;
   border-radius: 5px;
   flex: 1 1 calc(33.333% - 60px);
   box-sizing: border-box;
+} */
+
+.frequent-place-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  margin: 10px 20px;
+  padding: 11px 22px;
+  /* border: 1px solid #e2e2e2; */
+  background-color: #f0f0f0;
+  border-radius: 8px;
+  flex: 1 1 calc(33.333% - 60px);
+  box-sizing: border-box;
+}
+
+.rank {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #2E4CA6;
+  margin-right: 16px;
+  min-width: 24px;
+}
+
+.place-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.place-header {
+  display: flex;
+  align-items: center;
+}
+
+.store-name {
+  font-size: 1.1em;
+  font-weight: bold;
+  color: #2E4CA6;
+}
+
+.last-visited {
+  font-size: 0.95em;
+  color: #555;
+  margin-top: 5px;
+}
+
+.frequent-place-item .move-icon {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-weight: bold;
+  color: #2E4CA6;
+  transition: color 0.3s, transform 0.3s;
+}
+
+.frequent-place-item .move-icon:hover {
+  color: #1e3575;
+  transform: translateY(-50%) translateX(5px);
 }
 
 .timeline-item {
@@ -174,5 +233,10 @@
   .main-time-line .title,
   .main-frequent-places .title {
     font-size: 1.2em;
+  }
+
+  .frequent-place-item {
+    flex: 1 1 100%;
+    margin: 10px 15px;
   }
 }
