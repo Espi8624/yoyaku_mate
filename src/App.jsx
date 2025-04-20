@@ -13,6 +13,8 @@ import StorePage from './containers/ProviderPage/StorePage/StorePage';
 import CustomerNotificationPage from './containers/CustomerPage/NotificationPage/NotificationPage';
 import ProviderNotificationPage from './containers/ProviderPage/NotificationPage/NotificationPage';
 
+import StoreInfoPage from './containers/CommonPage/StoreInfoPage/StoreInfoPage';
+
 import LoginPage from './containers/CommonPage/LoginPage/LoginPage';
 
 import './App.css';
@@ -63,6 +65,13 @@ function App() {
             {userRole === 'customer' ? <CustomerNotificationPage /> :
               userRole === 'provider' ? <ProviderNotificationPage /> :
                 <Navigate to="/login" />}
+          </PrivateLayout>
+        } />
+
+        {/* 店情報ページ */}
+        <Route path='/store/:storeId' element={
+          <PrivateLayout>
+            <StoreInfoPage />
           </PrivateLayout>
         } />
 

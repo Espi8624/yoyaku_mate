@@ -79,16 +79,6 @@
   text-align: left;
 }
 
-/* .main-frequent-places li {
-  position: relative;
-  margin: 10px 10px;
-  padding: 11px 22px;
-  border: 1px solid #e2e2e2;
-  border-radius: 5px;
-  flex: 1 1 calc(33.333% - 60px);
-  box-sizing: border-box;
-} */
-
 .frequent-place-item {
   position: relative;
   display: flex;

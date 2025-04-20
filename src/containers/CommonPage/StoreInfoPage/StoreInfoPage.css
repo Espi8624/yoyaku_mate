@@ -1,0 +1,224 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+}
+
+.store-page {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    position: relative;
+}
+
+.store-name-wrap {
+    display: flex;
+    align-items: center;
+    /* margin-bottom: 20px; */
+}
+
+.store-logo {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    margin-right: 15px;
+    object-fit: cover;
+}
+
+.store-name {
+    font-size: 1.8em;
+    color: #333;
+    margin: 0;
+}
+
+.section {
+    margin: 15px 0;
+}
+
+.section-category-rating {
+    margin: 0;
+}
+
+.info-label {
+    margin: 8px 0;
+    font-size: 1.1em;
+    color: #333;
+}
+
+.info-description {
+    margin: 0 0 8px 0;
+    padding-left: 20px;
+    /* インデント */
+    font-size: 1.1em;
+    color: #555;
+}
+
+.info-description-category {
+    padding: 0 0 0 75px;
+    margin: 0;
+    font-weight: bold;
+    color: #555;
+}
+
+.info-description-rating {
+    padding: 0 0 0 75px;
+    margin: 0;
+    font-weight: bold;
+    color: #555;
+}
+
+.info-description a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+.info-description a:hover {
+    text-decoration: underline;
+}
+
+.map-placeholder {
+    height: 200px;
+    background: #e0e0e0;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* margin: 0 0 8px 20px; */
+    /* インデント及び間隔 */
+    font-size: 1.1em;
+    color: #666;
+}
+
+.hours-list {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 8px 20px;
+}
+
+.hours-item {
+    margin: 4px 0;
+    font-size: 1em;
+    color: #555;
+}
+
+.menu-list {
+    list-style: none;
+    padding: 0;
+}
+
+.menu-item {
+    margin: 5px 0;
+    font-size: 1em;
+    color: #555;
+}
+
+.comments-section {
+    border-top: 1px solid #ddd;
+    padding-top: 15px;
+}
+
+.comments-section h2 {
+    font-size: 1.5em;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.comment {
+    margin: 2px 0;
+    padding: 8px;
+    background: #f9f9f9;
+    border-radius: 5px;
+    font-size: 1em;
+}
+
+.comment strong {
+    color: #333;
+}
+
+.comment span {
+    color: #888;
+    font-size: 0.9em;
+}
+
+.reserve-button-wrap {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+}
+
+.reserve-button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 30px;
+    width: 210px;
+    height: 60px;
+    font-size: 1.2em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.3s;
+}
+
+.reserve-button:hover {
+    background-color: #0056b3;
+}
+
+@media (max-width: 600px) {
+    .store-page {
+        margin: 10px;
+        padding: 15px;
+    }
+
+    .store-name {
+        font-size: 1.5em;
+    }
+
+    .store-logo {
+        width: 50px;
+        height: 50px;
+    }
+
+    .info-label,
+    .info-description {
+        font-size: 1em;
+    }
+
+    .info-description,
+    .hours-list {
+        padding-left: 15px;
+        margin-left: 15px;
+    }
+
+    .map-placeholder {
+        height: 200px;
+        font-size: 1em;
+    }
+
+    .hours-item {
+        font-size: 0.95em;
+    }
+
+    .comment {
+        margin: 3px 0;
+        padding: 6px;
+    }
+
+    .reserve-button-wrap {
+        bottom: 15px;
+    }
+
+    .reserve-button {
+        width: 190px;
+        height: 50px;
+        font-size: 0.9em;
+    }
+}
