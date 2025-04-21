@@ -39,7 +39,7 @@ function StoreInfoPage() {
     };
 
     return (
-        <div className="store-page">
+        <div className="store-info-page">
             {/* 店位置 (Google Maps プレイスホルダ) */}
             <div className="section">
                 {/* <div className="info-label">
@@ -51,13 +51,13 @@ function StoreInfoPage() {
             </div>
 
             {/* 店ロゴ、店名 */}
-            <div className="store-name-wrap">
+            <div className="store-info-name-wrap">
                 <img
                     src={storeInfoData.logo}
                     alt={`${storeInfoData.name}`}
-                    className="store-logo"
+                    className="store-info-logo"
                 />
-                <h1 className="store-name">{storeInfoData.name}</h1>
+                <h1 className="store-info-name">{storeInfoData.name}</h1>
             </div>
 
             {/* 店分類、店評価 */}

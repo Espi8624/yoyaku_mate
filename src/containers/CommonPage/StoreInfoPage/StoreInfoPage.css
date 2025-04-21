@@ -1,11 +1,4 @@
-body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #f4f4f4;
-}
-
-.store-page {
+.store-info-page {
     max-width: 800px;
     margin: 20px auto;
     padding: 20px;
@@ -15,13 +8,13 @@ body {
     position: relative;
 }
 
-.store-name-wrap {
+.store-info-name-wrap {
     display: flex;
     align-items: center;
     /* margin-bottom: 20px; */
 }
 
-.store-logo {
+.store-info-logo {
     width: 60px;
     height: 60px;
     border-radius: 50%;
@@ -29,7 +22,7 @@ body {
     object-fit: cover;
 }
 
-.store-name {
+.store-info-name {
     font-size: 1.8em;
     color: #333;
     margin: 0;
@@ -173,16 +166,16 @@ body {
 }
 
 @media (max-width: 600px) {
-    .store-page {
+    .store-info-page {
         margin: 10px;
         padding: 15px;
     }
 
-    .store-name {
+    .store-info-name {
         font-size: 1.5em;
     }
 
-    .store-logo {
+    .store-info-logo {
         width: 50px;
         height: 50px;
     }

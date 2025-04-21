@@ -1,5 +1,5 @@
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 
 import Navbar from './components/Navbar/Navbar';
@@ -14,6 +14,7 @@ import CustomerNotificationPage from './containers/CustomerPage/NotificationPage
 import ProviderNotificationPage from './containers/ProviderPage/NotificationPage/NotificationPage';
 
 import StoreInfoPage from './containers/CommonPage/StoreInfoPage/StoreInfoPage';
+import ReservationDetails from './containers/CommonPage/ReservationDetails/ReservationDetails';
 
 import LoginPage from './containers/CommonPage/LoginPage/LoginPage';
 
@@ -35,7 +36,20 @@ const PublicLayout = ({ children }) => (
 );
 
 function App() {
-  const [userRole, setUserRole] = useState(null);// ユーザー権限の状態を管理
+  // const [userRole, setUserRole] = useState(null);// ユーザー権限の状態を管理
+  const [userRole, setUserRole] = useState(() => {
+    return sessionStorage.getItem('userRole') || null;
+  });
+
+  // userRoleが変更される時にlocalStorageに保存
+  // 今後Cookie又はサーバーセッションに変更する予定
+  useEffect(() => {
+    if (userRole) {
+      sessionStorage.setItem('userRole', userRole);
+    } else {
+      sessionStorage.removeItem('userRole'); // ログアウト時、削除
+    }
+  }, [userRole]);
 
   return (
     <Router>
@@ -72,6 +86,13 @@ function App() {
         <Route path='/store/:storeId' element={
           <PrivateLayout>
             <StoreInfoPage />
+          </PrivateLayout>
+        } />
+
+        {/* 予約詳細ページ */}
+        <Route path='/reservation/:reservationId' element={
+          <PrivateLayout>
+            <ReservationDetails />
           </PrivateLayout>
         } />
 
