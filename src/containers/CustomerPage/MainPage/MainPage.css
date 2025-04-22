@@ -33,7 +33,7 @@
   text-align: left;
   font-size: 1.6em;
   margin: 0;
-  color: #2E4CA6;
+  color: #555;
 }
 
 .view-all-btn {
@@ -61,7 +61,7 @@
 .main-calendar-wrap {
   display: flex;
   flex-direction: column;
-  border: 1px solid #e2e2e2;
+  border: 1px solid #fff;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   padding: 10px;
@@ -90,6 +90,41 @@
   border-radius: 8px;
   flex: 1 1 calc(33.333% - 60px);
   box-sizing: border-box;
+  transition: background-color 0.3s;
+}
+
+.frequent-place-item:hover {
+  background-color: #e8e8e8;
+}
+
+.frequent-place-item:hover .place-link {
+  background-color: #e8e8e8;
+}
+
+.frequent-place-item:hover .move-icon {
+  color: #1e3575;
+  transform: translateY(-50%) translateX(5px);
+}
+
+.place-link {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  text-decoration: none;
+  color: inherit;
+  background-color: #f0f0f0;
+  border-radius: 8px;
+  transition: background-color 0.3s;
+}
+
+.move-icon {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-weight: bold;
+  color: #2E4CA6;
+  transition: color 0.3s, transform 0.3s;
 }
 
 .rank {
@@ -98,6 +133,7 @@
   color: #2E4CA6;
   margin-right: 16px;
   min-width: 24px;
+  white-space: nowrap;
 }
 
 .place-info {
@@ -114,13 +150,19 @@
 .store-name {
   font-size: 1.1em;
   font-weight: bold;
-  color: #2E4CA6;
+  color: #333;
+  margin-right: 10px; /* last-visited와 간격 */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .last-visited {
   font-size: 0.95em;
   color: #555;
-  margin-top: 5px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .frequent-place-item .move-icon {
@@ -140,7 +182,7 @@
 
 .timeline-item {
   position: relative;
-  margin: 0 40px;
+  margin: 0 20px 0 55px;
   padding: 11px 22px;
   border-radius: 5px;
   box-sizing: border-box;
@@ -186,21 +228,6 @@
 .timestamp {
   color: #555;
   font-size: 0.95em;
-}
-
-.move-icon {
-  position: absolute;
-  right: 10px;
-  top: 50%;
-  transform: translateY(-50%);
-  font-weight: bold;
-  color: #2E4CA6;
-  transition: color 0.3s, transform 0.3s;
-}
-
-.move-icon:hover {
-  color: #1e3575;
-  transform: translateY(-50%) translateX(5px);
 }
 
 @media (max-width: 768px) {

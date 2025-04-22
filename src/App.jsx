@@ -7,7 +7,7 @@ import Navbar from './components/Navbar/Navbar';
 import CustomerMainPage from './containers/CustomerPage/MainPage/MainPage';
 import ProviderMainPage from './containers/ProviderPage/MainPage/MainPage';
 
-import UserPage from './containers/CustomerPage/UserPage/UserPage';
+import CustomerPage from './containers/CustomerPage/CustomerPage/CustomerPage';
 import StorePage from './containers/ProviderPage/StorePage/StorePage';
 
 import CustomerNotificationPage from './containers/CustomerPage/NotificationPage/NotificationPage';
@@ -67,7 +67,7 @@ function App() {
         {/* マイページ（ユーザOR店） */}
         <Route path='/mypage' element={
           <PrivateLayout userRole={userRole}>
-            {userRole === 'customer' ? <UserPage /> :
+            {userRole === 'customer' ? <CustomerPage /> :
               userRole === 'provider' ? <StorePage /> :
                 <Navigate to="/login" />}
           </PrivateLayout>

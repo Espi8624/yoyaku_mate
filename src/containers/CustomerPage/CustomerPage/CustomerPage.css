@@ -43,11 +43,11 @@
   color: #2E4CA6;
 }
 
-.info-list {
+.customer-page-info-list {
   margin: 20px 0;
 }
 
-.info-item {
+.customer-page-info-item {
   display: flex;
   align-items: center;
   margin-bottom: 15px;
@@ -78,13 +78,13 @@
   cursor: default;
 }
 
-.button-group {
+.customer-page-button-group {
   margin-top: 20px;
 }
 
-.edit-btn,
-.save-btn,
-.cancel-btn {
+.customer-page-edit-btn,
+.customer-page-save-btn,
+.customer-page-cancel-btn {
   padding: 8px 16px;
   margin-right: 10px;
   border: none;
@@ -93,27 +93,27 @@
   font-size: 14px;
 }
 
-.edit-btn {
+.customer-page-edit-btn {
   background-color: #8FA9E0;
   color: white;
 }
 
-.save-btn {
+.customer-page-save-btn {
   background-color: #2E4CA6;
   color: white;
 }
 
-.cancel-btn {
+.customer-page-cancel-btn {
   background-color: #f0f0f0;
   color: #333;
 }
 
-.edit-btn:hover,
-.save-btn:hover {
+.customer-page-edit-btn:hover,
+.customer-page-save-btn:hover {
   opacity: 0.9;
 }
 
-.cancel-btn:hover {
+.customer-page-cancel-btn:hover {
   background-color: #e0e0e0;
 }
 

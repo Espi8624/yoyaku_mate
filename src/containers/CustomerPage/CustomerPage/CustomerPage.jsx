@@ -1,7 +1,7 @@
-import './UserPage.css';
+import './CustomerPage.css';
 import { useEffect, useState } from 'react';
 
-function UserPage() {
+function CustomerPage() {
     const [activeTab, setActiveTab] = useState('account');
     const [isEditing, setIsEditing] = useState(false);
     const [userInfo, setUserInfo] = useState({});
@@ -59,8 +59,8 @@ function UserPage() {
                 return (
                     <div className="tab-content">
                         <h2>アカウント情報</h2>
-                        <div className="info-list">
-                            <div className="info-item">
+                        <div className="customer-page-info-list">
+                            <div className="customer-page-info-item">
                                 <span className="label">名前</span>
                                 <input
                                     type="text"
@@ -71,7 +71,7 @@ function UserPage() {
                                     className={!isEditing ? "read-only" : ""}
                                 />
                             </div>
-                            <div className="info-item">
+                            <div className="customer-page-info-item">
                                 <span className="label">メール</span>
                                 <input
                                     type="email"
@@ -82,7 +82,7 @@ function UserPage() {
                                     className={!isEditing ? "read-only" : ""}
                                 />
                             </div>
-                            <div className="info-item">
+                            <div className="customer-page-info-item">
                                 <span className="label">電話番号</span>
                                 <input
                                     type="text"
@@ -94,14 +94,14 @@ function UserPage() {
                                 />
                             </div>
                         </div>
-                        <div className="button-group">
+                        <div className="customer-page-button-group">
                             {isEditing ? (
                                 <>
-                                    <button className="save-btn" onClick={handleSave}>
+                                    <button className="customer-page-save-btn" onClick={handleSave}>
                                         保存
                                     </button>
                                     <button
-                                        className="cancel-btn"
+                                        className="customer-page-cancel-btn"
                                         onClick={() => setIsEditing(false)}
                                     >
                                         取消
@@ -109,7 +109,7 @@ function UserPage() {
                                 </>
                             ) : (
                                 <button
-                                    className="edit-btn"
+                                    className="customer-page-edit-btn"
                                     onClick={() => setIsEditing(true)}
                                 >
                                     修正
@@ -179,4 +179,4 @@ function UserPage() {
     );
 }
 
-export default UserPage;
+export default CustomerPage;

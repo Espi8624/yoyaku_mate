@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import MainCalendar from './MainCalendar';
 import './MainPage.css';
+import { Link } from 'react-router-dom';
 
 function MainPage() {
     const [frequentPlaces, setFrequentPlaces] = useState([]);
@@ -77,12 +78,14 @@ function MainPage() {
                         {frequentPlaces.length > 0 ? (
                             frequentPlaces.map((res, index) => (
                                 <li key={index} className="frequent-place-item">
-                                    <span className="rank">{index + 1}.</span>
-                                    <div className="place-info">
-                                        <span className="store-name">{res.store_name}</span>
-                                        <span className="last-visited">最終訪問日: {res.last_visited}</span>
-                                    </div>
-                                    <span className="move-icon">&gt;</span>
+                                    <Link to={`/store/${res.store_id}`} className="place-link">
+                                        <span className="rank">{index + 1}.</span>
+                                        <div className="place-info">
+                                            <span className="store-name">{res.store_name}</span>
+                                            <span className="last-visited">最終訪問日: {res.last_visited}</span>
+                                        </div>
+                                        <span className="move-icon">&gt;</span>
+                                    </Link>
                                 </li>
                             ))
                         ) : (

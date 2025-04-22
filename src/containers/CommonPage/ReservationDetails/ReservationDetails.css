@@ -1,0 +1,128 @@
+.reservation-details-page {
+    max-width: 800px;
+    /* store-info-page와 동일한 최대 너비 */
+    margin: 20px auto;
+    /* 중앙 정렬 및 여백 */
+    padding: 20px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    /* store-info-page와 동일한 그림자 */
+    font-family: Arial, sans-serif;
+    position: relative;
+}
+
+.page-title {
+    text-align: center;
+    font-size: 1.5em;
+    color: #263D8A;
+    margin: 0 0 20px;
+    font-weight: bold;
+}
+
+.reservation-section {
+    margin: 15px 0;
+    /* section과 유사한 간격 */
+}
+
+.section-title {
+    font-size: 1.4em;
+    color: #555;
+    margin: 0 0 10px;
+    font-weight: bold;
+}
+
+.info-list {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 15px;
+    background: #f9f9f9;
+    /* 기존 배경 유지 */
+}
+
+.info-item {
+    display: flex;
+    justify-content: space-between;
+    margin: 3px 0;
+    font-size: 1.1em;
+}
+
+.info-item:last-child {
+    margin-bottom: 0;
+}
+
+.label {
+    font-weight: bold;
+    color: #555;
+    flex-basis: 130px;
+    flex-shrink: 0;
+    white-space: nowrap;
+}
+
+.value {
+    color: #333;
+}
+
+.button-group {
+    justify-content: center;
+    display: flex;
+    gap: 10px;
+    margin: 15px 0;
+}
+
+.edit-btn,
+.cancel-btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 30px;
+    font-size: 1em;
+    color: white;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.3s, transform 0.3s;
+}
+
+.edit-btn {
+    background-color: #2E4CA6;
+}
+
+.edit-btn:hover {
+    background-color: #263D8A;
+}
+
+.cancel-btn {
+    background-color: #f44336;
+}
+
+.cancel-btn:hover {
+    background-color: #d32f2f;
+}
+
+@media (max-width: 600px) {
+    .reservation-details-page {
+        margin: 10px;
+        padding: 15px;
+        /* store-info-page의 모바일 스타일 반영 */
+    }
+
+    .page-title {
+        font-size: 1.5em;
+        /* store-info-name과 동일 */
+    }
+
+    .section-title {
+        font-size: 1.3em;
+    }
+
+    .info-item {
+        font-size: 1em;
+        /* info-description과 동일 */
+    }
+
+    .edit-btn,
+    .cancel-btn {
+        padding: 8px 15px;
+        font-size: 0.9em;
+        /* reserve-button과 유사 */
+    }
+}
