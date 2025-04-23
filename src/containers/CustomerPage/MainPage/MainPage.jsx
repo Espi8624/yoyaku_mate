@@ -45,20 +45,31 @@ function MainPage() {
                                 .sort((a, b) => new Date(b.time_stamp) - new Date(a.time_stamp))
                                 .map((res, index) => (
                                     <li key={index} className="timeline-item">
-                                        <div className="timeline-content">
-                                            <div className="place-name">{res.store_name}</div>
-                                            <div className="time_stamp">
-                                                {new Date(res.time_stamp).toLocaleString('ja-JP', {
-                                                    year: 'numeric',
-                                                    month: '2-digit',
-                                                    day: '2-digit',
-                                                    hour: '2-digit',
-                                                    minute: '2-digit',
-                                                })}
+                                        <Link to={`/past-reservation/${res.reservation_id}`} className="place-link">
+                                            <div className="timeline-content">
+                                                <div className="place-name">{res.store_name}</div>
+                                                <div className="time-stamp">
+                                                    {new Date(res.time_stamp).toLocaleString('ja-JP', {
+                                                        year: 'numeric',
+                                                        month: '2-digit',
+                                                        day: '2-digit',
+                                                        hour: '2-digit',
+                                                        minute: '2-digit',
+                                                    })}
+                                                </div>
+                                                {/* 今後、<icon> に変更する予定　*/}
+                                                <span className="move-icon">&gt;</span>
                                             </div>
-                                            {/* 今後、<icon> に変更する予定　*/}
-                                            <span className="move-icon">&gt;</span>
+                                        </Link>
+
+                                        {/* <Link to={`/store/${res.store_id}`} className="place-link">
+                                        <span className="rank">{index + 1}.</span>
+                                        <div className="place-info">
+                                            <span className="store-name">{res.store_name}</span>
+                                            <span className="last-visited">最終訪問日: {res.last_visited}</span>
                                         </div>
+                                        <span className="move-icon">&gt;</span>
+                                    </Link> */}
                                     </li>
                                 ))
                         ) : (

@@ -19,6 +19,7 @@ import ReservationDetails from './containers/CommonPage/ReservationDetails/Reser
 import LoginPage from './containers/CommonPage/LoginPage/LoginPage';
 
 import './App.css';
+import PastReservationDetails from './containers/CommonPage/PastReservationDetails/PastReservationDetails';
 
 // 認証されたユーザー用レイアウト
 const PrivateLayout = ({ userRole, children }) => (
@@ -83,16 +84,23 @@ function App() {
         } />
 
         {/* 店情報ページ */}
-        <Route path='/store/:storeId' element={
+        <Route path='/store/:id' element={
           <PrivateLayout>
             <StoreInfoPage />
           </PrivateLayout>
         } />
 
         {/* 予約詳細ページ */}
-        <Route path='/reservation/:reservationId' element={
+        <Route path='/reservation/:id' element={
           <PrivateLayout>
             <ReservationDetails />
+          </PrivateLayout>
+        } />
+
+        {/* 過去予約詳細ページ */}
+        <Route path='/past-reservation/:id' element={
+          <PrivateLayout>
+            <PastReservationDetails />
           </PrivateLayout>
         } />
 
