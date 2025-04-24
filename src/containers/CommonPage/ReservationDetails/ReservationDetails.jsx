@@ -33,7 +33,7 @@ function ReservationDetails() {
 
   return (
     <div className="reservation-details-page">
-      <h2 className="page-title">予約内容は下記の通りです</h2>
+      <h2 className="reservation-page-title">予約内容は下記の通りです</h2>
 
       {/* 店情報 */}
       <section className="reservation-section">
@@ -49,100 +49,100 @@ function ReservationDetails() {
 
       {/* 基本予約情報 */}
       <section className="reservation-section">
-        <h3 className="section-title">基本予約情報</h3>
-        <div className="info-list">
-          <div className="info-item">
-            <span className="label">予約番号:</span>
-            <span className="value">{reservationData.reservationId}</span>
+        <h3 className="reservation-section-title">基本予約情報</h3>
+        <div className="reservation-info-list">
+          <div className="reservation-info-item">
+            <span className="reservation-label">予約番号:</span>
+            <span className="reservation-value">{reservationData.reservationId}</span>
           </div>
-          <div className="info-item">
-            <span className="label">予約状態:</span>
-            <span className="value">{reservationData.status}</span>
+          <div className="reservation-info-item">
+            <span className="reservation-label">予約状態:</span>
+            <span className="reservation-value">{reservationData.status}</span>
           </div>
-          <div className="info-item">
-            <span className="label">予約日:</span>
-            <span className="value">{reservationData.date}</span>
+          <div className="reservation-info-item">
+            <span className="reservation-label">予約日:</span>
+            <span className="reservation-value">{reservationData.date}</span>
           </div>
-          <div className="info-item">
-            <span className="label">予約時間:</span>
-            <span className="value">{reservationData.time}</span>
+          <div className="reservation-info-item">
+            <span className="reservation-label">予約時間:</span>
+            <span className="reservation-value">{reservationData.time}</span>
           </div>
         </div>
       </section>
 
       {/* ユーザー情報 */}
       <section className="reservation-section">
-        <h3 className="section-title">ユーザー情報</h3>
-        <div className="info-list">
-          <div className="info-item">
-            <span className="label">名前:</span>
-            <span className="value">{reservationData.customerName}</span>
+        <h3 className="reservation-section-title">ユーザー情報</h3>
+        <div className="reservation-info-list">
+          <div className="reservation-info-item">
+            <span className="reservation-label">名前:</span>
+            <span className="reservation-value">{reservationData.customerName}</span>
           </div>
-          <div className="info-item">
-            <span className="label">連絡先:</span>
-            <span className="value">{reservationData.contact}</span>
+          <div className="reservation-info-item">
+            <span className="reservation-label">連絡先:</span>
+            <span className="reservation-value">{reservationData.contact}</span>
           </div>
-          <div className="info-item">
-            <span className="label">人数:</span>
-            <span className="value">{reservationData.numberOfPeople}</span>
+          <div className="reservation-info-item">
+            <span className="reservation-label">人数:</span>
+            <span className="reservation-value">{reservationData.numberOfPeople}</span>
           </div>
         </div>
       </section>
 
       {/* 予約先情報 */}
       <section className="reservation-section">
-        <h3 className="section-title">予約先情報</h3>
-        <div className="info-list">
-          <div className="info-item">
-            <span className="label">分類:</span>
-            <span className="value">{reservationData.category}</span>
+        <h3 className="reservation-section-title">予約先情報</h3>
+        <div className="reservation-info-list">
+          <div className="reservation-info-item">
+            <span className="reservation-label">分類:</span>
+            <span className="reservation-value">{reservationData.category}</span>
           </div>
-          <div className="info-item">
-            <span className="label">住所:</span>
-            <span className="value">{reservationData.address}</span>
+          <div className="reservation-info-item">
+            <span className="reservation-label">住所:</span>
+            <span className="reservation-value">{reservationData.address}</span>
           </div>
-          <div className="info-item">
-            <span className="label">予約サービス:</span>
-            <span className="value">{reservationData.service}</span>
+          <div className="reservation-info-item">
+            <span className="reservation-label">予約サービス:</span>
+            <span className="reservation-value">{reservationData.service}</span>
           </div>
         </div>
       </section>
 
       {/* 決済情報 */}
       <section className="reservation-section">
-        <h3 className="section-title">決済情報</h3>
-        <div className="info-list">
-          <div className="info-item">
-            <span className="label">価格:</span>
-            <span className="value">￥{reservationData.price}</span>
+        <h3 className="reservation-section-title">決済情報</h3>
+        <div className="reservation-info-list">
+          <div className="reservation-info-item">
+            <span className="reservation-label">価格:</span>
+            <span className="reservation-value">￥{reservationData.price}</span>
           </div>
-          <div className="info-item">
-            <span className="label">決済状態:</span>
-            <span className="value">{reservationData.paymentStatus}</span>
+          <div className="reservation-info-item">
+            <span className="reservation-label">決済状態:</span>
+            <span className="reservation-value">{reservationData.paymentStatus}</span>
           </div>
-          <div className="info-item">
-            <span className="label">決済手段:</span>
-            <span className="value">{reservationData.paymentMethod}</span>
+          <div className="reservation-info-item">
+            <span className="reservation-label">決済手段:</span>
+            <span className="reservation-value">{reservationData.paymentMethod}</span>
           </div>
-          <div className="info-item">
-            <span className="label">取消政策:</span>
-            <span className="value">{reservationData.cancellationPolicy}</span>
+          <div className="reservation-info-item">
+            <span className="reservation-label">取消政策:</span>
+            <span className="reservation-value">{reservationData.cancellationPolicy}</span>
           </div>
         </div>
       </section>
 
       {/* 追加オプション */}
       <section className="reservation-section">
-        <h3 className="section-title">追加オプション</h3>
-        <div className="info-list">
-          <div className="info-item">
-            <span className="label">要請事項:</span>
-            <span className="value">{reservationData.specialRequests}</span>
+        <h3 className="reservation-section-title">追加オプション</h3>
+        <div className="reservation-info-list">
+          <div className="reservation-info-item">
+            <span className="reservation-label">要請事項:</span>
+            <span className="reservation-value">{reservationData.specialRequests}</span>
           </div>
         </div>
-        <div className="button-group">
-          <button className="edit-btn" onClick={handleUpdateButtonClick}>変更</button>
-          <button className="cancel-btn" onClick={handleCancelButtonClick}>取消</button>
+        <div className="reservation-button-group">
+          <button className="reservation-edit-btn" onClick={handleUpdateButtonClick}>変更</button>
+          <button className="reservation-cancel-btn" onClick={handleCancelButtonClick}>取消</button>
         </div>
       </section>
     </div>
