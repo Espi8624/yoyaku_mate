@@ -42,34 +42,23 @@ function MainPage() {
                     <ul>
                         {timeLineData.length > 0 ? (
                             [...timeLineData]
-                                .sort((a, b) => new Date(b.time_stamp) - new Date(a.time_stamp))
+                                .sort((a, b) => {
+                                    const dateTimeA = new Date(`${a.reserved_date}T${a.reserved_time}`);
+                                    const dateTimeB = new Date(`${b.reserved_date}T${b.reserved_time}`);
+                                    return dateTimeB - dateTimeA;
+                                })
                                 .map((res, index) => (
                                     <li key={index} className="timeline-item">
                                         <Link to={`/past-reservation/${res.reservation_id}`} className="place-link">
                                             <div className="timeline-content">
                                                 <div className="place-name">{res.store_name}</div>
                                                 <div className="time-stamp">
-                                                    {new Date(res.time_stamp).toLocaleString('ja-JP', {
-                                                        year: 'numeric',
-                                                        month: '2-digit',
-                                                        day: '2-digit',
-                                                        hour: '2-digit',
-                                                        minute: '2-digit',
-                                                    })}
+                                                    {res.reserved_date} {res.reserved_time}
                                                 </div>
                                                 {/* 今後、<icon> に変更する予定　*/}
                                                 <span className="move-icon">&gt;</span>
                                             </div>
                                         </Link>
-
-                                        {/* <Link to={`/store/${res.store_id}`} className="place-link">
-                                        <span className="rank">{index + 1}.</span>
-                                        <div className="place-info">
-                                            <span className="store-name">{res.store_name}</span>
-                                            <span className="last-visited">最終訪問日: {res.last_visited}</span>
-                                        </div>
-                                        <span className="move-icon">&gt;</span>
-                                    </Link> */}
                                     </li>
                                 ))
                         ) : (
