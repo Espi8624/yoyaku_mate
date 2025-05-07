@@ -125,7 +125,7 @@ function CustomerPage() {
                         <ul>
                             {reservations.length > 0 ? (
                                 reservations.map(res => (
-                                    <li key={res.id}>{res.time_stamp} : {res.details}</li>
+                                    <li key={res.reserved_id}>{res.reserved_date} {res.reserved_time} / {res.store_name} ・・・ {res.details}</li>
                                 ))
                             ) : (
                                 <p>予定がありません。</p>
