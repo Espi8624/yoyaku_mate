@@ -84,7 +84,7 @@ function App() {
         } />
 
         {/* 店情報ページ */}
-        <Route path='/store/:id' element={
+        <Route path='/store/:storeId' element={
           <PrivateLayout>
             <StoreInfoPage />
           </PrivateLayout>
