@@ -10,7 +10,7 @@ function CustomerPage() {
 
     useEffect(() => {
         // ユーザーデータ呼出
-        fetch('http://localhost:8080/user-info')
+        fetch('http://localhost:8080/user-info?user_id=1')
             .then((response) => {
                 if (!response.ok) {
                     throw new Error('Failed to fetch user data');
@@ -21,10 +21,10 @@ function CustomerPage() {
             .catch((error) => console.error('Error fetching user info data: ', error));
 
         // 予約データ呼出
-        fetch('http://localhost:8080/reservations')
+        fetch('http://localhost:8080/reservations-info?user_id=1')
             .then((response) => {
                 if (!response.ok) {
-                    throw new Error('Failed to fetch timeline data');
+                    throw new Error('Failed to fetch reservations data');
                 }
                 return response.json();
             })
@@ -32,14 +32,17 @@ function CustomerPage() {
             .catch((error) => console.error('Error fetching reservations data: ', error));
 
         // レヴューデータ呼出
-        fetch('http://localhost:8080/reviews')
+        fetch('http://localhost:8080/comments-info?user_id=1')
             .then((response) => {
                 if (!response.ok) {
-                    throw new Error('Failed to fetch timeline data');
+                    throw new Error('Failed to fetch reviews data');
                 }
                 return response.json();
             })
-            .then((data) => setReviews(data))
+            .then((data) => {
+                setReviews(data);
+                console.log('Fetched reviews data:', data);
+            })
             .catch((error) => console.error('Error fetching reservations data: ', error));
     }, []);
 
@@ -61,11 +64,33 @@ function CustomerPage() {
                         <h2>アカウント情報</h2>
                         <div className="customer-page-info-list">
                             <div className="customer-page-info-item">
-                                <span className="label">名前</span>
+                                <span className="label">別名</span>
                                 <input
                                     type="text"
                                     name="user_name"
-                                    value={userInfo.user_name || ""}
+                                    value={userInfo.display_name || ""}
+                                    onChange={handleInputChange}
+                                    disabled={!isEditing}
+                                    className={!isEditing ? "read-only" : ""}
+                                />
+                            </div>
+                            <div className="customer-page-info-item">
+                                <span className="label">名前(姓)</span>
+                                <input
+                                    type="text"
+                                    name="user_name"
+                                    value={userInfo.first_name || ""}
+                                    onChange={handleInputChange}
+                                    disabled={!isEditing}
+                                    className={!isEditing ? "read-only" : ""}
+                                />
+                            </div>
+                            <div className="customer-page-info-item">
+                                <span className="label">名前(名)</span>
+                                <input
+                                    type="text"
+                                    name="user_name"
+                                    value={userInfo.last_name || ""}
                                     onChange={handleInputChange}
                                     disabled={!isEditing}
                                     className={!isEditing ? "read-only" : ""}
@@ -125,7 +150,7 @@ function CustomerPage() {
                         <ul>
                             {reservations.length > 0 ? (
                                 reservations.map(res => (
-                                    <li key={res.reserved_id}>{res.reserved_date} {res.reserved_time} / {res.store_name} ・・・ {res.details}</li>
+                                    <li key={res.reservation_id}>{res.reservation_date} {res.reservation_time} / {res.store_name} ・・・ {res.reservation_details}</li>
                                 ))
                             ) : (
                                 <p>予定がありません。</p>
@@ -139,7 +164,7 @@ function CustomerPage() {
                         <h2>作成レヴュー</h2>
                         {reviews.length > 0 ? (
                             reviews.map(res => (
-                                <li key={res.id}>{res.time_stamp} / {res.store_name} / {res.comments} / {res.rating}</li>
+                                <li key={res.id}>{res.timestamp} / {res.store_info.store_name} / {res.comment_text} / {res.rating}</li>
                             ))
                         ) : (
                             <p>予定がありません。</p>
