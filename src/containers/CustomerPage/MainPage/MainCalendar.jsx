@@ -7,17 +7,17 @@ const MainCalendar = () => {
     const [reservations, setReservations] = useState([]);
 
     useEffect(() => {
-            // Reservations データ呼出
-            fetch('http://localhost:8080/reservations')
-                .then((response) => {
-                    if (!response.ok) {
-                        throw new Error('Failed to fetch Reservations data');
-                    }
-                    return response.json();
-                })
-                .then((data) => setReservations(data))
-                .catch((error) => console.error('Error fetching Reservations data: ', error));
-        }, []);
+        // Reservations データ呼出
+        fetch('http://localhost:8080/reservations-info?user_id=1')
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error('Failed to fetch Reservations data');
+                }
+                return response.json();
+            })
+            .then((data) => setReservations(data))
+            .catch((error) => console.error('Error fetching Reservations data: ', error));
+    }, []);
 
     const generateCalendar = () => {
         const year = currentDate.getFullYear();
@@ -31,7 +31,7 @@ const MainCalendar = () => {
         }
         for (let day = 1; day <= daysInMonth; day++) {
             const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-            const dayReservations = reservations.filter(res => res.reserved_date === dateStr);
+            const dayReservations = reservations.filter(res => res.reservation_date === dateStr);
             const isReserved = dayReservations.length > 0;
             const isSelected = selectedDate === dateStr;
             days.push(
@@ -52,7 +52,7 @@ const MainCalendar = () => {
         return days;
     };
 
-    const selectedReservations = selectedDate ? reservations.filter(res => res.reserved_date === selectedDate) : [];
+    const selectedReservations = selectedDate ? reservations.filter(res => res.reservation_date === selectedDate) : [];
 
     return (
         <>
@@ -84,7 +84,7 @@ const MainCalendar = () => {
                     {selectedReservations.length > 0 ? (
                         <ul>
                             {selectedReservations.map(res => (
-                                <li key={res.id}>{res.store_name}・・・{res.details}</li>
+                                <li key={res.id}>{res.store_name}・・・{res.reservation_details}</li>
                             ))}
                         </ul>
                     ) : (

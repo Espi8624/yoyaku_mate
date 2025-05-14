@@ -9,7 +9,7 @@ function MainPage() {
 
     useEffect(() => {
         // Frequent Places データ呼出
-        fetch('http://localhost:8080/frequent-places')
+        fetch('http://localhost:8080/frequent-store?user_id=1')
             .then((response) => {
                 if (!response.ok) {
                     throw new Error('Failed to fetch frequent places data');
@@ -20,7 +20,7 @@ function MainPage() {
             .catch((error) => console.error('Error fetching frequent places: ', error));
 
         // TimeLine データ呼出
-        fetch('http://localhost:8080/timeline')
+        fetch('http://localhost:8080/timeline?user_id=1')
             .then((response) => {
                 if (!response.ok) {
                     throw new Error('Failed to fetch timeline data');
@@ -47,6 +47,7 @@ function MainPage() {
                                     const dateTimeB = new Date(`${b.reserved_date}T${b.reserved_time}`);
                                     return dateTimeB - dateTimeA;
                                 })
+                                .slice(0, 5)
                                 .map((res, index) => (
                                     <li key={index} className="timeline-item">
                                         <Link to={`/past-reservation/${res.reservation_id}`} className="place-link">
@@ -82,7 +83,7 @@ function MainPage() {
                                         <span className="rank">{index + 1}.</span>
                                         <div className="place-info">
                                             <span className="store-name">{res.store_name}</span>
-                                            <span className="last-visited">最終訪問日: {res.last_visited}</span>
+                                            <span className="last-visited">最終訪問日: {res.last_visited} / 訪問回数: {res.visit_count}</span>
                                         </div>
                                         <span className="move-icon">&gt;</span>
                                     </Link>
