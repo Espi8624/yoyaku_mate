@@ -98,7 +98,7 @@ function App() {
         } />
 
         {/* 過去予約詳細ページ */}
-        <Route path='/past-reservation/:id' element={
+        <Route path='/past-reservation/:reservationId' element={
           <PrivateLayout>
             <PastReservationDetails />
           </PrivateLayout>
