@@ -16,19 +16,19 @@ function StoreInfoPage() {
                 setLoading(true);
 
                 // 가게 정보 가져오기
-                const storeInfoResponse = await fetch(`http://localhost:8080/provider/store-info?store_id=${storeId}`);
+                const storeInfoResponse = await fetch(`http://localhost:8080/store-info?store_id=${storeId}`);
                 if (!storeInfoResponse.ok) throw new Error('Failed to fetch store info');
                 const storeInfoData = await storeInfoResponse.json();
                 setStoreInfo(storeInfoData);
 
                 // 메뉴 정보 가져오기
-                const storeMenusResponse = await fetch(`http://localhost:8080/provider/store-menus?store_id=${storeId}`);
+                const storeMenusResponse = await fetch(`http://localhost:8080/store-menus?store_id=${storeId}`);
                 if (!storeMenusResponse.ok) throw new Error('Failed to fetch store menus');
                 const storeMenusData = await storeMenusResponse.json();
                 setStoreMenus(storeMenusData);
 
                 // 댓글 정보 가져오기
-                const storeCommentsResponse = await fetch(`http://localhost:8080/provider/store-comments?store_id=${storeId}`);
+                const storeCommentsResponse = await fetch(`http://localhost:8080/store-comments?store_id=${storeId}`);
                 if (!storeCommentsResponse.ok) throw new Error('Failed to fetch store comments');
                 const storeCommentsData = await storeCommentsResponse.json();
                 setStoreComments(storeCommentsData);
