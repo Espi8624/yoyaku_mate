@@ -36,11 +36,15 @@ function MainPage() {
             <div className="main-time-line">
                 <div className="title-container">
                     <h1 className="title">タイムライン</h1>
-                    <button className="view-all-btn">すべて &gt;&gt;</button>
+                    <Link to={`/all-reservation/${timeLineData.user_id}`} >
+                        <button className="view-all-btn">
+                            すべて &gt;&gt;
+                        </button>
+                    </Link>
                 </div>
                 <div className="main-time-line-wrap">
                     <ul>
-                        {timeLineData.length > 0 ? (
+                        {timeLineData && timeLineData.length > 0 ? (
                             [...timeLineData]
                                 .sort((a, b) => {
                                     const dateTimeA = new Date(`${a.reserved_date}T${a.reserved_time}`);
@@ -72,13 +76,18 @@ function MainPage() {
             <div className="main-frequent-places">
                 <div className="title-container">
                     <h1 className="title">よく訪問する場所</h1>
-                    <button className="view-all-btn">すべて &gt;&gt;</button>
+                    {/* ↓コード修正要 ${timeLineData.user_id}←変*/}
+                    <Link to={`/all-visited-places/${timeLineData.user_id}`} >
+                        <button className="view-all-btn">
+                            すべて &gt;&gt;
+                        </button>
+                    </Link>
                 </div>
                 <div className="main-frequent-places-wrap">
                     <ul>
-                        {frequentPlaces.length > 0 ? (
+                        {frequentPlaces && frequentPlaces.length > 0 ? (
                             frequentPlaces.map((res, index) => (
-                                <li key={index} className="frequent-place-item">
+                                <li key={index} className="frequent-place-item/">
                                     <Link to={`/store/${res.store_id}`} className="place-link">
                                         <span className="rank">{index + 1}.</span>
                                         <div className="place-info">

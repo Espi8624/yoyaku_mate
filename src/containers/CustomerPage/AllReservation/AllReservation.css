@@ -1,0 +1,258 @@
+.main-page {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 50px;
+  box-sizing: border-box;
+}
+
+.main-time-line,
+.main-frequent-places,
+.main-calendar {
+  margin: 20px 0;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.title-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 15px;
+  box-sizing: border-box;
+}
+
+.main-time-line .title,
+.main-frequent-places .title {
+  text-align: left;
+  font-size: 1.6em;
+  margin: 0;
+  color: #555;
+}
+
+.view-all-btn {
+  padding: 8px 16px;
+  background-color: #2E4CA6;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1em;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+.view-all-btn:hover {
+  background-color: #1e3575;
+  transform: translateY(-2px);
+}
+
+.view-all-btn:active {
+  transform: translateY(1px);
+}
+
+.main-time-line-wrap,
+.main-frequent-places-wrap,
+.main-calendar-wrap {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 10px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.main-time-line ul,
+.main-frequent-places ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  box-sizing: border-box;
+  text-align: left;
+}
+
+.frequent-place-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  margin: 10px 20px;
+  padding: 11px 22px;
+  /* border: 1px solid #e2e2e2; */
+  background-color: #f0f0f0;
+  border-radius: 8px;
+  flex: 1 1 calc(33.333% - 60px);
+  box-sizing: border-box;
+  transition: background-color 0.3s;
+}
+
+.frequent-place-item:hover {
+  background-color: #e8e8e8;
+}
+
+.frequent-place-item:hover .place-link {
+  background-color: #e8e8e8;
+}
+
+.frequent-place-item:hover .move-icon {
+  color: #1e3575;
+  transform: translateY(-50%) translateX(5px);
+}
+
+.place-link {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  text-decoration: none;
+  color: inherit;
+  background-color: #f0f0f0;
+  border-radius: 8px;
+  transition: background-color 0.3s;
+}
+
+.move-icon {
+  position: absolute;
+  right: 25px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-weight: bold;
+  color: #2E4CA6;
+  transition: color 0.3s, transform 0.3s;
+}
+
+.rank {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #2E4CA6;
+  margin-right: 16px;
+  min-width: 24px;
+  white-space: nowrap;
+}
+
+.place-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.place-header {
+  display: flex;
+  align-items: center;
+}
+
+.store-name {
+  font-size: 1.1em;
+  font-weight: bold;
+  color: #333;
+  margin-right: 10px; /* last-visited와 간격 */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.last-visited {
+  font-size: 0.95em;
+  color: #555;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.timeline-item {
+  position: relative;
+  margin: 0 20px 0 55px;
+  padding: 11px 22px;
+  border-radius: 5px;
+  box-sizing: border-box;
+  transition: background-color 0.3s;
+}
+
+.timeline-item:hover {
+  background-color: #e8e8e8;
+}
+
+.timeline-item:hover .place-link {
+  background-color: #e8e8e8;
+}
+
+.timeline-item::before {
+  content: '';
+  position: absolute;
+  left: -16px;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background-color: #2E4CA6;
+}
+
+.timeline-item:first-child::before {
+  top: 50%;
+}
+
+.timeline-item:last-child::before {
+  bottom: 50%;
+}
+
+.timeline-item::after {
+  content: '';
+  position: absolute;
+  left: -20px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 10px;
+  height: 10px;
+  background-color: #2E4CA6;
+  border-radius: 50%;
+  z-index: 1;
+}
+
+.timeline-item:hover .move-icon {
+  color: #1e3575;
+  transform: translateY(-50%) translateX(5px);
+}
+
+.place-name {
+  font-weight: bold;
+  margin-bottom: 5px;
+  font-size: 1.1em;
+}
+
+.time-stamp {
+  color: #555;
+  font-size: 0.95em;
+}
+
+@media (max-width: 768px) {
+  .main-page {
+    padding: 20px;
+  }
+
+  .main-time-line li,
+  .main-frequent-places li {
+    flex: 1 1 100%;
+    margin: 10px 15px;
+  }
+
+  .main-time-line-wrap,
+  .main-frequent-places-wrap,
+  .main-calendar-wrap {
+    padding: 5px;
+  }
+
+  .main-time-line .title,
+  .main-frequent-places .title {
+    font-size: 1.2em;
+  }
+
+  .frequent-place-item {
+    flex: 1 1 100%;
+    margin: 10px 15px;
+  }
+}
