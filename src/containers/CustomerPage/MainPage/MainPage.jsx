@@ -16,7 +16,7 @@ function MainPage() {
                 }
                 return response.json();
             })
-            .then((data) => setFrequentPlaces(data))
+            .then((data) => setFrequentPlaces(data.data))
             .catch((error) => console.error('Error fetching frequent places: ', error));
 
         // TimeLine データ呼出
@@ -27,7 +27,7 @@ function MainPage() {
                 }
                 return response.json();
             })
-            .then((data) => setTimeLineData(data))
+            .then((data) => setTimeLineData(data.data))
             .catch((error) => console.error('Error fetching timeline: ', error));
     }, []);
 
