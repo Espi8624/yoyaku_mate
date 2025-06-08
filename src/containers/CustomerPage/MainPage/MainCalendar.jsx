@@ -7,7 +7,6 @@ const MainCalendar = () => {
     const [reservations, setReservations] = useState([]);
 
     useEffect(() => {
-        // Reservations データ呼出
         fetch('http://localhost:8080/reservations-info?user_id=1')
             .then((response) => {
                 if (!response.ok) {
@@ -15,7 +14,9 @@ const MainCalendar = () => {
                 }
                 return response.json();
             })
-            .then((data) => setReservations(data))
+            .then((data) => {
+                setReservations(data.data);
+            })
             .catch((error) => console.error('Error fetching Reservations data: ', error));
     }, []);
 

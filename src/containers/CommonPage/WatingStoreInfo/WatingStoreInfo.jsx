@@ -9,50 +9,13 @@ function WatingStoreInfo({ setUserRole }) {
     const [password, setPassword] = useState("");
     const navigate = useNavigate();
 
-    // ダミーユーザーデータ
-    const dummyUsers = {
-        "customer1": { password: "1234", role: "customer" },
-        "provider1": { password: "1234", role: "provider" },
-    }
-
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        const user = dummyUsers[account];
-
-        if (user && user.password === password) {
-            setUserRole(user.role);
-            console.log(`Logged in as ${user.role}`);
-
-            navigate("/"); // ログイン後、メインページへリダイレクト
-        } else {
-            alert("Invalid username or password");
-        }
-    };
-
     return (
         <div className="log-in-page">
             <div className="form-wrap"> {/* h1과 form을 감싸는 컨테이너 추가 */}
                 <h1>Yoyaku Mate</h1>
-                <form onSubmit={handleSubmit}>
+                <form>
                     <label htmlFor="username">店名</label>
-                    {/* <input
-                        type="text"
-                        id="username"
-                        name="username"
-                        value={account}
-                        onChange={(e) => setAccount(e.target.value)}
-                        required
-                    /> */}
-
                     <label htmlFor="password">挨拶テキスト</label>
-                    {/* <input
-                        type="password"
-                        id="password"
-                        name="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        required
-                    /> */}
                 </form>
             </div>
         </div>

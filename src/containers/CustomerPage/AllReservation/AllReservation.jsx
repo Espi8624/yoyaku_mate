@@ -15,7 +15,7 @@ function AllReservation() {
                 }
                 return response.json();
             })
-            .then((data) => setTimeLineData(data))
+            .then((data) => setTimeLineData(data.data))
             .catch((error) => console.error('Error fetching timeline: ', error));
     }, []);
 

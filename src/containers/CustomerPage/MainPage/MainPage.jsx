@@ -16,7 +16,7 @@ function MainPage() {
                 }
                 return response.json();
             })
-            .then((data) => setFrequentPlaces(data))
+            .then((data) => setFrequentPlaces(data.data))
             .catch((error) => console.error('Error fetching frequent places: ', error));
 
         // TimeLine データ呼出
@@ -27,7 +27,7 @@ function MainPage() {
                 }
                 return response.json();
             })
-            .then((data) => setTimeLineData(data))
+            .then((data) => setTimeLineData(data.data))
             .catch((error) => console.error('Error fetching timeline: ', error));
     }, []);
 
@@ -87,7 +87,7 @@ function MainPage() {
                     <ul>
                         {frequentPlaces && frequentPlaces.length > 0 ? (
                             frequentPlaces.map((res, index) => (
-                                <li key={index} className="frequent-place-item/">
+                                <li key={index} className="frequent-place-item">
                                     <Link to={`/store/${res.store_id}`} className="place-link">
                                         <span className="rank">{index + 1}.</span>
                                         <div className="place-info">

@@ -1,31 +1,77 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { Link } from 'react-router-dom';
+import { useLocation } from "react-router-dom"
+import { useNavigate } from "react-router-dom";
 
 import "./WatingUserInfo.css";
 
+
+
 function WatingUserInfo({ setUserRole }) {
-    const [account, setAccount] = useState("");
-    const [password, setPassword] = useState("");
+    const location = useLocation();
     const navigate = useNavigate();
+    const { customer_name, party_size, contact, notes } = location.state || {};
+    // const [ID, setID] = useState("");
+    // const [StoreID, setStoreID] = useState("");
+    // const [QueueNumber, setQueueNumber] = useState("");
+    // const [Nationality, setNationality] = useState("");
+    // const [RegistrationTime, setRegistrationTime] = useState("");
+    // const [Status, setStatus] = useState("");
+    // const [CalledTime, setCalledTime] = useState("");
+    // const [EntryTime, setEntryTime] = useState("");
 
-    // ダミーユーザーデータ
-    const dummyUsers = {
-        "customer1": { password: "1234", role: "customer" },
-        "provider1": { password: "1234", role: "provider" },
-    }
+    const handleSubmit = () => {
+        createWaitingListItem({
+            customerName: customer_name,
+            partySize: Number(party_size),
+            contact: contact,
+            nationality: "Japan",
+            notes: notes
+        });
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        const user = dummyUsers[account];
+        navigate("/wating-store-info");
+    };
 
-        if (user && user.password === password) {
-            setUserRole(user.role);
-            console.log(`Logged in as ${user.role}`);
+    // 登録関数例
+    const createWaitingListItem = async ({
+        customerName,
+        partySize,
+        contact,
+        nationality,
+        notes,
+        storeId = 'store-001',
+        baseUrl = 'http://localhost:8080'
+    }) => {
+        try {
+            const requestBody = {
+                store_id: storeId,
+                customer_name: customerName,
+                party_size: partySize,
+                nationality: nationality,
+                contact: contact,
+                notes: notes,
+                status: 'waiting'
+            };
 
-            navigate("/"); // ログイン後、メインページへリダイレクト
-        } else {
-            alert("Invalid username or password");
+            const response = await fetch(`${baseUrl}/api/waiting-list`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(requestBody)
+            });
+
+            if (response.status === 201) {
+                const responseData = await response.json();
+                return responseData;
+            }
+            navigate("/wating-store-info");
+
+            const errorData = await response.json();
+            throw new Error(`Failed to create waiting list item: ${response.status}\nResponse: ${JSON.stringify(errorData)}`);
+        } catch (error) {
+            console.error('Error creating waiting list item:', error);
+            throw error;
         }
     };
 
@@ -33,40 +79,24 @@ function WatingUserInfo({ setUserRole }) {
         <div className="log-in-page">
             <div className="form-wrap"> {/* h1과 form을 감싸는 컨테이너 추가 */}
                 <h1>Yoyaku Mate</h1>
-                <form onSubmit={handleSubmit}>
-                    <label htmlFor="username">名前</label>
-                    {/* <input
-                        type="text"
-                        id="username"
-                        name="username"
-                        value={account}
-                        onChange={(e) => setAccount(e.target.value)}
-                        required
-                    /> */}
+                <form>
+                    <label htmlFor="customer_name">名前：{customer_name}</label>
 
-                    <label htmlFor="password">連絡先</label>
-                    {/* <input
-                        type="password"
-                        id="password"
-                        name="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        required
-                    /> */}
+                    <label htmlFor="party_size">人数：{party_size}</label>
+
+                    <label htmlFor="contact">電話番号：{contact}</label>
+
+                    <label htmlFor="notes">備考：{notes}</label>
 
                 </form>
-
                 <Link to={`/wating-screen`} >
                     <button className="confirmation-btn">
                         戻る
                     </button>
                 </Link>
-
-                <Link to={`/wating-store-info`} >
-                    <button className="confirmation-btn">
-                        確認した
-                    </button>
-                </Link>
+                <button className="confirmation-btn" onClick={handleSubmit}>
+                    確定
+                </button>
             </div>
         </div>
     );
