@@ -21,6 +21,12 @@ import LoginPage from './containers/CommonPage/LoginPage/LoginPage';
 import './App.css';
 import PastReservationDetails from './containers/CommonPage/PastReservationDetails/PastReservationDetails';
 
+import AllReservation from './containers/CustomerPage/AllReservation/AllReservation';
+import AllVisitedPlaces from './containers/CustomerPage/AllVisitedPlaces/AllVisitedPlaces';
+import WatingScreen from './containers/CommonPage/WatingScreen/WatingScreen';
+import WatingStoreInfo from './containers/CommonPage/WatingStoreInfo/WatingStoreInfo';
+import WatingUserInfo from './containers/CommonPage/WatingUserInfo/WatingUserInfo';
+
 // 認証されたユーザー用レイアウト
 const PrivateLayout = ({ userRole, children }) => (
   <div>
@@ -108,6 +114,41 @@ function App() {
         <Route path='/login' element={
           <PublicLayout>
             <LoginPage setUserRole={setUserRole} />
+          </PublicLayout>
+        } />
+
+        {/* すべての予約ページ */}
+        <Route path='/all-reservation/:userId' element={
+          <PrivateLayout>
+            <AllReservation />
+          </PrivateLayout>
+        } />
+
+        {/* すべての訪問した場所ページ */}
+        <Route path='/all-visited-places/:userId' element={
+          <PrivateLayout>
+            <AllVisitedPlaces />
+          </PrivateLayout>
+        } />
+
+        {/* 待ち画面 */}
+        <Route path='/wating-screen' element={
+          <PublicLayout>
+            <WatingScreen />
+          </PublicLayout>
+        } />
+
+        {/* 待ち予約者情報 */}
+        <Route path='/wating-user-info' element={
+          <PublicLayout>
+            <WatingUserInfo />
+          </PublicLayout>
+        } />
+
+        {/* 待ち店情報 */}
+        <Route path='/wating-store-info' element={
+          <PublicLayout>
+            <WatingStoreInfo />
           </PublicLayout>
         } />
 
