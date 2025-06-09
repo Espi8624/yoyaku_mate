@@ -1,0 +1,35 @@
+{
+    "waiting_screen_nationality": {
+        "welcome": "Welcome!",
+        "origin": "Which country are you visiting from?",
+        "confirm": "→"
+    },
+    "waiting_screen_input": {
+        "input_label": "Please fill out the information below to help us with your waiting list!",
+        "name_label": "This is how we'll call you.",
+        "party_size_label": "How many people are in your party?",
+        "contact_label": "If anything comes up, we will contact you at this number.",
+        "note_label": "Is there anything you'd like us to inform the restaurant about?",
+        "confirm": "Next"
+    },
+    "waiting_screen_preview": {
+        "preview_label": "We will proceed with the waiting list based on the information you provided!",
+        "name_label": "Name",
+        "party_size_label": "Party Size",
+        "contact_label": "Contact",
+        "note_label": "Notes",
+        "confirm": "Register as is",
+        "back": "Back"
+    },
+    "waiting_screen": {
+        "label_1": "Thank you, {{name}}! Your information has been successfully registered!",
+        "label_2": "Please wait a moment; the restaurant will call you shortly.",
+        "waiting_number_label": "Waiting Number",
+        "name_label": "Name",
+        "party_size_label": "Party Size",
+        "note_label": "Notes",
+        "estimated_wait_time_label": "Estimated Wait Time",
+        "menu_label": "How about checking the menu while you wait?",
+        "menu_overview_label": "View Menu"
+    }
+}

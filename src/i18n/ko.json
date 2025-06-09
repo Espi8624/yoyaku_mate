@@ -1,0 +1,35 @@
+{
+    "waiting_screen_nationality": {
+        "welcome": "いらっしゃいませ！",
+        "origin": "Which country are you visiting from?",
+        "confirm": "→"
+    },
+    "waiting_screen_input": {
+        "input_label": "아래의 정보를 작성해주시면 웨이팅 도와드릴게요!",
+        "name_label": "이렇게 불러드릴게요.",
+        "party_size_label": "몇 명이서 오셨나요?",
+        "contact_label": "혹시 문제가 생기면 이 연락처로 연락할게요.",
+        "note_label": "가게에 미리 알려주실 사항이 있으신가요?",
+        "confirm": "다음으로"
+    },
+    "waiting_screen_preview": {
+        "preview_label": "작성해주신 정보를 바탕으로 웨이팅 진행할게요!",
+        "name_label": "성함함",
+        "party_size_label": "인원수",
+        "contact_label": "연락처",
+        "note_label": "비고",
+        "confirm": "이대로 등록",
+        "back": "뒤로가기"
+    },
+    "waiting_screen": {
+        "label_1": "{{name}}님! 작성해주신 정보로 등록 완료했습니다!",
+        "label_2" : "조금만 기다려주시면 가게에서 부를게요.",
+        "waiting_number_label" :"대기번호",
+        "name_label": "성함",
+        "party_size_label": "인원수",
+        "note_label": "비고",
+        "estimated_wait_time_label":"예상 대기 시간",
+        "menu_label":"기다리시는 동안 메뉴를 확인해보시는 건 어떠신가요?",
+        "menu_overview_label": "메뉴보기"
+    }
+}

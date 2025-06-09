@@ -1,0 +1,804 @@
+{
+  "nationalities": [
+    {
+      "name": "Afghanistan",
+      "languageCode": "en"
+    },
+    {
+      "name": "Albania",
+      "languageCode": "en"
+    },
+    {
+      "name": "Algeria",
+      "languageCode": "en"
+    },
+    {
+      "name": "Andorra",
+      "languageCode": "en"
+    },
+    {
+      "name": "Angola",
+      "languageCode": "en"
+    },
+    {
+      "name": "Antigua and Barbuda",
+      "languageCode": "en"
+    },
+    {
+      "name": "Argentina",
+      "languageCode": "en"
+    },
+    {
+      "name": "Armenia",
+      "languageCode": "en"
+    },
+    {
+      "name": "Australia",
+      "languageCode": "en"
+    },
+    {
+      "name": "Austria",
+      "languageCode": "en"
+    },
+    {
+      "name": "Azerbaijan",
+      "languageCode": "en"
+    },
+    {
+      "name": "Bahamas",
+      "languageCode": "en"
+    },
+    {
+      "name": "Bahrain",
+      "languageCode": "en"
+    },
+    {
+      "name": "Bangladesh",
+      "languageCode": "en"
+    },
+    {
+      "name": "Barbados",
+      "languageCode": "en"
+    },
+    {
+      "name": "Belarus",
+      "languageCode": "en"
+    },
+    {
+      "name": "Belgium",
+      "languageCode": "en"
+    },
+    {
+      "name": "Belize",
+      "languageCode": "en"
+    },
+    {
+      "name": "Benin",
+      "languageCode": "en"
+    },
+    {
+      "name": "Bhutan",
+      "languageCode": "en"
+    },
+    {
+      "name": "Bolivia",
+      "languageCode": "en"
+    },
+    {
+      "name": "Bosnia and Herzegovina",
+      "languageCode": "en"
+    },
+    {
+      "name": "Botswana",
+      "languageCode": "en"
+    },
+    {
+      "name": "Brazil",
+      "languageCode": "en"
+    },
+    {
+      "name": "Brunei",
+      "languageCode": "en"
+    },
+    {
+      "name": "Bulgaria",
+      "languageCode": "en"
+    },
+    {
+      "name": "Burkina Faso",
+      "languageCode": "en"
+    },
+    {
+      "name": "Burundi",
+      "languageCode": "en"
+    },
+    {
+      "name": "Cape Verde",
+      "languageCode": "en"
+    },
+    {
+      "name": "Cambodia",
+      "languageCode": "en"
+    },
+    {
+      "name": "Cameroon",
+      "languageCode": "en"
+    },
+    {
+      "name": "Canada",
+      "languageCode": "en"
+    },
+    {
+      "name": "Central African Republic",
+      "languageCode": "en"
+    },
+    {
+      "name": "Chad",
+      "languageCode": "en"
+    },
+    {
+      "name": "Chile",
+      "languageCode": "en"
+    },
+    {
+      "name": "China",
+      "languageCode": "en"
+    },
+    {
+      "name": "Colombia",
+      "languageCode": "en"
+    },
+    {
+      "name": "Comoros",
+      "languageCode": "en"
+    },
+    {
+      "name": "Congo",
+      "languageCode": "en"
+    },
+    {
+      "name": "Costa Rica",
+      "languageCode": "en"
+    },
+    {
+      "name": "Croatia",
+      "languageCode": "en"
+    },
+    {
+      "name": "Cuba",
+      "languageCode": "en"
+    },
+    {
+      "name": "Cyprus",
+      "languageCode": "en"
+    },
+    {
+      "name": "Czech Republic",
+      "languageCode": "en"
+    },
+    {
+      "name": "Democratic Republic of the Congo",
+      "languageCode": "en"
+    },
+    {
+      "name": "Denmark",
+      "languageCode": "en"
+    },
+    {
+      "name": "Djibouti",
+      "languageCode": "en"
+    },
+    {
+      "name": "Dominica",
+      "languageCode": "en"
+    },
+    {
+      "name": "Dominican Republic",
+      "languageCode": "en"
+    },
+    {
+      "name": "Ecuador",
+      "languageCode": "en"
+    },
+    {
+      "name": "Egypt",
+      "languageCode": "en"
+    },
+    {
+      "name": "El Salvador",
+      "languageCode": "en"
+    },
+    {
+      "name": "Equatorial Guinea",
+      "languageCode": "en"
+    },
+    {
+      "name": "Eritrea",
+      "languageCode": "en"
+    },
+    {
+      "name": "Estonia",
+      "languageCode": "en"
+    },
+    {
+      "name": "Eswatini",
+      "languageCode": "en"
+    },
+    {
+      "name": "Ethiopia",
+      "languageCode": "en"
+    },
+    {
+      "name": "Fiji",
+      "languageCode": "en"
+    },
+    {
+      "name": "Finland",
+      "languageCode": "en"
+    },
+    {
+      "name": "France",
+      "languageCode": "en"
+    },
+    {
+      "name": "Gabon",
+      "languageCode": "en"
+    },
+    {
+      "name": "Gambia",
+      "languageCode": "en"
+    },
+    {
+      "name": "Georgia",
+      "languageCode": "en"
+    },
+    {
+      "name": "Germany",
+      "languageCode": "en"
+    },
+    {
+      "name": "Ghana",
+      "languageCode": "en"
+    },
+    {
+      "name": "Greece",
+      "languageCode": "en"
+    },
+    {
+      "name": "Grenada",
+      "languageCode": "en"
+    },
+    {
+      "name": "Guatemala",
+      "languageCode": "en"
+    },
+    {
+      "name": "Guinea",
+      "languageCode": "en"
+    },
+    {
+      "name": "Guinea-Bissau",
+      "languageCode": "en"
+    },
+    {
+      "name": "Guyana",
+      "languageCode": "en"
+    },
+    {
+      "name": "Haiti",
+      "languageCode": "en"
+    },
+    {
+      "name": "Honduras",
+      "languageCode": "en"
+    },
+    {
+      "name": "Hungary",
+      "languageCode": "en"
+    },
+    {
+      "name": "Iceland",
+      "languageCode": "en"
+    },
+    {
+      "name": "India",
+      "languageCode": "en"
+    },
+    {
+      "name": "Indonesia",
+      "languageCode": "en"
+    },
+    {
+      "name": "Iran",
+      "languageCode": "en"
+    },
+    {
+      "name": "Iraq",
+      "languageCode": "en"
+    },
+    {
+      "name": "Ireland",
+      "languageCode": "en"
+    },
+    {
+      "name": "Israel",
+      "languageCode": "en"
+    },
+    {
+      "name": "Italy",
+      "languageCode": "en"
+    },
+    {
+      "name": "Ivory Coast",
+      "languageCode": "en"
+    },
+    {
+      "name": "Jamaica",
+      "languageCode": "en"
+    },
+    {
+      "name": "Japan",
+      "languageCode": "ja"
+    },
+    {
+      "name": "Jordan",
+      "languageCode": "en"
+    },
+    {
+      "name": "Kazakhstan",
+      "languageCode": "en"
+    },
+    {
+      "name": "Kenya",
+      "languageCode": "en"
+    },
+    {
+      "name": "Kiribati",
+      "languageCode": "en"
+    },
+    {
+      "name": "Kuwait",
+      "languageCode": "en"
+    },
+    {
+      "name": "Kyrgyzstan",
+      "languageCode": "en"
+    },
+    {
+      "name": "Laos",
+      "languageCode": "en"
+    },
+    {
+      "name": "Latvia",
+      "languageCode": "en"
+    },
+    {
+      "name": "Lebanon",
+      "languageCode": "en"
+    },
+    {
+      "name": "Lesotho",
+      "languageCode": "en"
+    },
+    {
+      "name": "Liberia",
+      "languageCode": "en"
+    },
+    {
+      "name": "Libya",
+      "languageCode": "en"
+    },
+    {
+      "name": "Liechtenstein",
+      "languageCode": "en"
+    },
+    {
+      "name": "Lithuania",
+      "languageCode": "en"
+    },
+    {
+      "name": "Luxembourg",
+      "languageCode": "en"
+    },
+    {
+      "name": "Madagascar",
+      "languageCode": "en"
+    },
+    {
+      "name": "Malawi",
+      "languageCode": "en"
+    },
+    {
+      "name": "Malaysia",
+      "languageCode": "en"
+    },
+    {
+      "name": "Maldives",
+      "languageCode": "en"
+    },
+    {
+      "name": "Mali",
+      "languageCode": "en"
+    },
+    {
+      "name": "Malta",
+      "languageCode": "en"
+    },
+    {
+      "name": "Marshall Islands",
+      "languageCode": "en"
+    },
+    {
+      "name": "Mauritania",
+      "languageCode": "en"
+    },
+    {
+      "name": "Mauritius",
+      "languageCode": "en"
+    },
+    {
+      "name": "Mexico",
+      "languageCode": "en"
+    },
+    {
+      "name": "Micronesia",
+      "languageCode": "en"
+    },
+    {
+      "name": "Moldova",
+      "languageCode": "en"
+    },
+    {
+      "name": "Monaco",
+      "languageCode": "en"
+    },
+    {
+      "name": "Mongolia",
+      "languageCode": "en"
+    },
+    {
+      "name": "Montenegro",
+      "languageCode": "en"
+    },
+    {
+      "name": "Morocco",
+      "languageCode": "en"
+    },
+    {
+      "name": "Mozambique",
+      "languageCode": "en"
+    },
+    {
+      "name": "Myanmar",
+      "languageCode": "en"
+    },
+    {
+      "name": "Namibia",
+      "languageCode": "en"
+    },
+    {
+      "name": "Nauru",
+      "languageCode": "en"
+    },
+    {
+      "name": "Nepal",
+      "languageCode": "en"
+    },
+    {
+      "name": "Netherlands",
+      "languageCode": "en"
+    },
+    {
+      "name": "New Zealand",
+      "languageCode": "en"
+    },
+    {
+      "name": "Nicaragua",
+      "languageCode": "en"
+    },
+    {
+      "name": "Niger",
+      "languageCode": "en"
+    },
+    {
+      "name": "Nigeria",
+      "languageCode": "en"
+    },
+    {
+      "name": "North Korea",
+      "languageCode": "ko"
+    },
+    {
+      "name": "North Macedonia",
+      "languageCode": "en"
+    },
+    {
+      "name": "Norway",
+      "languageCode": "en"
+    },
+    {
+      "name": "Oman",
+      "languageCode": "en"
+    },
+    {
+      "name": "Pakistan",
+      "languageCode": "en"
+    },
+    {
+      "name": "Palau",
+      "languageCode": "en"
+    },
+    {
+      "name": "Palestine",
+      "languageCode": "en"
+    },
+    {
+      "name": "Panama",
+      "languageCode": "en"
+    },
+    {
+      "name": "Papua New Guinea",
+      "languageCode": "en"
+    },
+    {
+      "name": "Paraguay",
+      "languageCode": "en"
+    },
+    {
+      "name": "Peru",
+      "languageCode": "en"
+    },
+    {
+      "name": "Philippines",
+      "languageCode": "en"
+    },
+    {
+      "name": "Poland",
+      "languageCode": "en"
+    },
+    {
+      "name": "Portugal",
+      "languageCode": "en"
+    },
+    {
+      "name": "Qatar",
+      "languageCode": "en"
+    },
+    {
+      "name": "Romania",
+      "languageCode": "en"
+    },
+    {
+      "name": "Russia",
+      "languageCode": "en"
+    },
+    {
+      "name": "Rwanda",
+      "languageCode": "en"
+    },
+    {
+      "name": "Saint Kitts and Nevis",
+      "languageCode": "en"
+    },
+    {
+      "name": "Saint Lucia",
+      "languageCode": "en"
+    },
+    {
+      "name": "Saint Vincent and the Grenadines",
+      "languageCode": "en"
+    },
+    {
+      "name": "Samoa",
+      "languageCode": "en"
+    },
+    {
+      "name": "San Marino",
+      "languageCode": "en"
+    },
+    {
+      "name": "Sao Tome and Principe",
+      "languageCode": "en"
+    },
+    {
+      "name": "Saudi Arabia",
+      "languageCode": "en"
+    },
+    {
+      "name": "Senegal",
+      "languageCode": "en"
+    },
+    {
+      "name": "Serbia",
+      "languageCode": "en"
+    },
+    {
+      "name": "Seychelles",
+      "languageCode": "en"
+    },
+    {
+      "name": "Sierra Leone",
+      "languageCode": "en"
+    },
+    {
+      "name": "Singapore",
+      "languageCode": "en"
+    },
+    {
+      "name": "Slovakia",
+      "languageCode": "en"
+    },
+    {
+      "name": "Slovenia",
+      "languageCode": "en"
+    },
+    {
+      "name": "Solomon Islands",
+      "languageCode": "en"
+    },
+    {
+      "name": "Somalia",
+      "languageCode": "en"
+    },
+    {
+      "name": "South Africa",
+      "languageCode": "en"
+    },
+    {
+      "name": "South Korea",
+      "languageCode": "ko"
+    },
+    {
+      "name": "South Sudan",
+      "languageCode": "en"
+    },
+    {
+      "name": "Spain",
+      "languageCode": "en"
+    },
+    {
+      "name": "Sri Lanka",
+      "languageCode": "en"
+    },
+    {
+      "name": "Sudan",
+      "languageCode": "en"
+    },
+    {
+      "name": "Suriname",
+      "languageCode": "en"
+    },
+    {
+      "name": "Sweden",
+      "languageCode": "en"
+    },
+    {
+      "name": "Switzerland",
+      "languageCode": "en"
+    },
+    {
+      "name": "Syria",
+      "languageCode": "en"
+    },
+    {
+      "name": "Tajikistan",
+      "languageCode": "en"
+    },
+    {
+      "name": "Tanzania",
+      "languageCode": "en"
+    },
+    {
+      "name": "Thailand",
+      "languageCode": "en"
+    },
+    {
+      "name": "Timor-Leste",
+      "languageCode": "en"
+    },
+    {
+      "name": "Togo",
+      "languageCode": "en"
+    },
+    {
+      "name": "Tonga",
+      "languageCode": "en"
+    },
+    {
+      "name": "Trinidad and Tobago",
+      "languageCode": "en"
+    },
+    {
+      "name": "Tunisia",
+      "languageCode": "en"
+    },
+    {
+      "name": "Turkey",
+      "languageCode": "en"
+    },
+    {
+      "name": "Turkmenistan",
+      "languageCode": "en"
+    },
+    {
+      "name": "Tuvalu",
+      "languageCode": "en"
+    },
+    {
+      "name": "Uganda",
+      "languageCode": "en"
+    },
+    {
+      "name": "Ukraine",
+      "languageCode": "en"
+    },
+    {
+      "name": "United Arab Emirates",
+      "languageCode": "en"
+    },
+    {
+      "name": "United Kingdom",
+      "languageCode": "en"
+    },
+    {
+      "name": "United States",
+      "languageCode": "en"
+    },
+    {
+      "name": "Uruguay",
+      "languageCode": "en"
+    },
+    {
+      "name": "Uzbekistan",
+      "languageCode": "en"
+    },
+    {
+      "name": "Vanuatu",
+      "languageCode": "en"
+    },
+    {
+      "name": "Vatican City",
+      "languageCode": "en"
+    },
+    {
+      "name": "Venezuela",
+      "languageCode": "en"
+    },
+    {
+      "name": "Vietnam",
+      "languageCode": "en"
+    },
+    {
+      "name": "Yemen",
+      "languageCode": "en"
+    },
+    {
+      "name": "Zambia",
+      "languageCode": "en"
+    },
+    {
+      "name": "Zimbabwe",
+      "languageCode": "en"
+    },
+    {
+      "name": "Taiwan",
+      "languageCode": "en"
+    },
+    {
+      "name": "Kosovo",
+      "languageCode": "en"
+    },
+    {
+      "name": "Hong Kong",
+      "languageCode": "en"
+    },
+    {
+      "name": "Macau",
+      "languageCode": "en"
+    },
+    {
+      "name": "Western Sahara",
+      "languageCode": "en"
+    }
+  ]
+}
