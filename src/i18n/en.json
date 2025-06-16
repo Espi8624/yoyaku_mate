@@ -1,6 +1,6 @@
 {
     "waiting_screen_nationality": {
-        "welcome": "Welcome!",
+        "welcome": "いらっしゃいませ！",
         "origin": "Which country are you visiting from?",
         "confirm": "→"
     },
@@ -23,7 +23,7 @@
     },
     "waiting_screen": {
         "label_1": "Thank you, {{name}}! Your information has been successfully registered!",
-        "label_2": "Please wait a moment; the restaurant will call you shortly.",
+        "label_2": "Please wait a moment the restaurant will call you shortly.",
         "waiting_number_label": "Waiting Number",
         "name_label": "Name",
         "party_size_label": "Party Size",

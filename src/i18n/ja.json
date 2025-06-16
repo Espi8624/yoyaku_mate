@@ -9,7 +9,7 @@
         "name_label": "このお名前でお呼びします。",
         "party_size_label": "何名様でご来店されましたか？",
         "contact_label": "何かございましたら、こちらのご連絡先にご連絡いたします。",
-        "note_label": "お店側にお伝えしたいことがございましたらご記入ください。",
+        "note_label": "お店側にお伝えしたいことがございますでしょうか？",
         "confirm": "次へ"
     },
     "waiting_screen_preview": {
