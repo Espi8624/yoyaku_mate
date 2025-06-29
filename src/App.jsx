@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 
@@ -23,9 +22,12 @@ import PastReservationDetails from './containers/CommonPage/PastReservationDetai
 
 import AllReservation from './containers/CustomerPage/AllReservation/AllReservation';
 import AllVisitedPlaces from './containers/CustomerPage/AllVisitedPlaces/AllVisitedPlaces';
+
+import WatingScreenNationality from './containers/CommonPage/WatingScreenNationality/WatingScreenNationality';
+import WatingScreenInput from './containers/CommonPage/WatingScreenInput/WatingScreenInput';
+import WatingScreenPreview from './containers/CommonPage/WatingScreenPreview/WatingScreenPreview';
 import WatingScreen from './containers/CommonPage/WatingScreen/WatingScreen';
-import WatingStoreInfo from './containers/CommonPage/WatingStoreInfo/WatingStoreInfo';
-import WatingUserInfo from './containers/CommonPage/WatingUserInfo/WatingUserInfo';
+import WatingScreenFlow from './containers/CommonPage/WatingScreenFlow';
 
 // 認証されたユーザー用レイアウト
 const PrivateLayout = ({ userRole, children }) => (
@@ -131,24 +133,10 @@ function App() {
           </PrivateLayout>
         } />
 
-        {/* 待ち画面 */}
-        <Route path='/wating-screen' element={
+        {/* 待ち画面:SPAフロー */}
+        <Route path='/wating-screen-flow' element={
           <PublicLayout>
-            <WatingScreen />
-          </PublicLayout>
-        } />
-
-        {/* 待ち予約者情報 */}
-        <Route path='/wating-user-info' element={
-          <PublicLayout>
-            <WatingUserInfo />
-          </PublicLayout>
-        } />
-
-        {/* 待ち店情報 */}
-        <Route path='/wating-store-info' element={
-          <PublicLayout>
-            <WatingStoreInfo />
+            <WatingScreenFlow />
           </PublicLayout>
         } />
 

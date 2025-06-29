@@ -1,0 +1,35 @@
+{
+    "waiting_screen_nationality": {
+        "welcome": "いらっしゃいませ！",
+        "origin": "Which country are you visiting from?",
+        "confirm": "→"
+    },
+    "waiting_screen_input": {
+        "input_label": "以下の情報をご記入いただければ、順番をお取りいたします！",
+        "name_label": "このお名前でお呼びします。",
+        "party_size_label": "何名様でご来店されましたか？",
+        "contact_label": "何かございましたら、こちらのご連絡先にご連絡いたします。",
+        "note_label": "お店側にお伝えしたいことがございましたらご記入ください。",
+        "confirm": "次へ"
+    },
+    "waiting_screen_preview": {
+        "preview_label": "ご記入いただいた情報をもとに、順番をお取りいたします！",
+        "name_label": "お名前",
+        "party_size_label": "人数",
+        "contact_label": "連絡先",
+        "note_label": "備考",
+        "confirm": "この内容で登録",
+        "back": "戻る"
+    },
+    "waiting_screen": {
+        "label_1": "{{name}} 様、ご記入いただいた情報で登録が完了しました！",
+        "label_2": "少々お待ちいただければ、お店からお呼びいたします。",
+        "waiting_number_label": "受付番号",
+        "name_label": "お名前",
+        "party_size_label": "人数",
+        "note_label": "備考",
+        "estimated_wait_time_label": "予想待機時間",
+        "menu_label": "お待ちの間にメニューをご覧になりませんか？",
+        "menu_overview_label": "メニューを見る"
+    }
+}
