@@ -21,6 +21,7 @@ const MainCalendar = () => {
     }, []);
 
     const generateCalendar = () => {
+        console.log("reservations", reservations);
         const year = currentDate.getFullYear();
         const month = currentDate.getMonth();
         const firstDay = new Date(year, month, 1).getDay();
@@ -32,7 +33,12 @@ const MainCalendar = () => {
         }
         for (let day = 1; day <= daysInMonth; day++) {
             const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
-            const dayReservations = reservations.filter(res => res.reservation_date === dateStr);
+            // console.log("reservations", reservations);
+            console.log("dateStr", dateStr);
+            const dayReservations = reservations.filter((res) => {
+                // console.log("res", res);
+                return res.reservation_date === dateStr;
+            });
             const isReserved = dayReservations.length > 0;
             const isSelected = selectedDate === dateStr;
             days.push(
