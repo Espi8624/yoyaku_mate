@@ -1,0 +1,65 @@
+/* 不要なlog-in-page系など全削除。現行SPAで使うクラスのみ残す */
+.preview-section {
+  max-width: 420px;
+  margin: 32px auto;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(46, 76, 166, 0.1);
+  padding: 36px 28px 28px 28px;
+  border: 1px solid #e0e6f6;
+  box-sizing: border-box;
+}
+
+.preview-label {
+  margin-bottom: 18px;
+  font-size: 1.18em;
+  font-weight: bold;
+  color: #2e4ca6;
+  text-align: left;
+}
+
+.preview-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.preview-item-label {
+  width: 100%;
+  display: block;
+  font-size: 1.08em;
+  font-weight: 500;
+  color: #222;
+  margin-bottom: 2px;
+  letter-spacing: 0.01em;
+  box-sizing: border-box;
+}
+
+.preview-item-value {
+  width: 100%;
+  padding: 10px 8px;
+  border: none;
+  border-radius: 6px;
+  font-size: 1em;
+  background: #f0f4fa; /* 以前のやや濃い青系に戻す */
+  margin-bottom: 6px;
+  color: #333;
+  box-sizing: border-box;
+}
+
+.confirmation-btn {
+  padding: 8px 16px;
+  background-color: #2e4ca6;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1em;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+.confirmation-btn:hover {
+  opacity: 0.9;
+}

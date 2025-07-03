@@ -9,7 +9,6 @@
         "name_label": "このお名前でお呼びします。",
         "party_size_label": "何名様でご来店されましたか？",
         "contact_label": "何かございましたら、こちらのご連絡先にご連絡いたします。",
-        "note_label": "お店側にお伝えしたいことがございますでしょうか？",
         "confirm": "次へ"
     },
     "waiting_screen_preview": {
@@ -22,7 +21,6 @@
         "back": "戻る"
     },
     "waiting_screen": {
-        "label_1": "{{name}}様、ご記入いただいた情報で登録が完了しました！",
         "label_2": "少々お待ちいただければ、お店からお呼びいたします。",
         "waiting_number_label": "受付番号",
         "name_label": "お名前",
