@@ -5,15 +5,15 @@
         "confirm": "→"
     },
     "waiting_screen_input": {
-        "input_label": "Veuillez remplir les informations ci-dessous afin que nous puissions vous mettre sur la liste d’attente!",
+        "input_label": "Merci de remplir les informations ci-dessous pour que nous puissions vous ajouter à la liste d’attente!",
         "name_label": "Nous vous appellerons par ce nom.",
         "party_size_label": "Combien de personnes y a-t-il dans votre groupe?",
         "contact_label": "Nous vous contacterons à ce numéro en cas de problème.",
-        "note_label": "Souhaitez-vous que nous transmettions quelque chose au restaurant?",
+        "note_label": "Souhaitez-vous laisser un message pour le restaurant ?",
         "confirm": "Suivant"
     },
     "waiting_screen_preview": {
-        "preview_label": "Vous serez placés sur la liste d’attente en fonction des informations que vous avez fournies!",
+        "preview_label": "Nous vous inscrivons sur la liste d’attente avec les informations fournies!",
         "name_label": "Nom",
         "party_size_label": "Nombre de personnes",
         "contact_label": "Numéro de téléphone",
@@ -23,13 +23,13 @@
     },
     "waiting_screen": {
         "label_1": "Merci, {{name}}! Vos informations ont bien été enregistrées!",
-        "label_2": "Veuillez patienter un instant, nous vous informerons quand ce sera votre tour.",
+        "label_2": "Merci de patienter, nous vous appellerons dès que votre tour arrivera.",
         "waiting_number_label": "numéro d’appel",
         "name_label": "Nom",
         "party_size_label": "Nombre de personnes",
         "note_label": "Notes",
         "estimated_wait_time_label": "Temps d'attente estimé",
-        "menu_label": "Souhaitez-vous consulter le menu pendant l’attente ?",
+        "menu_label": "Souhaitez-vous jeter un œil au menu pendant l’attente ?",
         "menu_overview_label": "Afficher le menu"
     }
 }
