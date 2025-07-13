@@ -23,13 +23,15 @@
     },
     "waiting_screen": {
         "label_1": "{{name}}님! 작성해주신 정보로 등록 완료했습니다!",
-        "label_2" : "조금만 기다려주시면 가게에서 부를게요.",
-        "waiting_number_label" :"대기번호",
+        "label_2": "조금만 기다려주시면 가게에서 부를게요.",
+        "waiting_number_label": "대기번호",
         "name_label": "성함",
         "party_size_label": "인원수",
         "note_label": "비고",
-        "estimated_wait_time_label":"예상 대기 시간",
-        "menu_label":"기다리시는 동안 메뉴를 확인해보시는 건 어떠신가요?",
+        "estimated_wait_time_label": "예상 대기 시간",
+        "current_waiting_label": "현재 대기 중인 고객",
+        "group_label": "팀",
+        "menu_label": "기다리시는 동안 메뉴를 확인해보시는 건 어떠신가요?",
         "menu_overview_label": "메뉴보기"
     }
 }
