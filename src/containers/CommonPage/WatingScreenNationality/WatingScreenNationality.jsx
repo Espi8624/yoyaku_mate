@@ -9,42 +9,58 @@ function WatingScreenNationality({
     setSelectedLanguageCode,
     onNext
 }) {
-    const [searchText, setSearchText] = React.useState("");
+    const [inputValue, setInputValue] = React.useState("");
+    const [showDropdown, setShowDropdown] = React.useState(false);
 
-    // 検索フィルタ適用
+    // 入力値でフィルタ
     const filteredNationalities = nationalitiesData.nationalities.filter(n =>
-        n.name.toLowerCase().includes(searchText.toLowerCase())
+        n.name.toLowerCase().includes(inputValue.toLowerCase())
     );
+
+    // 選択時の処理
+    const handleSelect = (name) => {
+        setInputValue(name);
+        setSelectedNationality(name);
+        const selected = nationalitiesData.nationalities.find(n => n.name === name);
+        setSelectedLanguageCode(selected ? selected.languageCode : "");
+        setShowDropdown(false);
+    };
 
     return (
         <div className="waiting-section">
             <div className="preview-label">いらっしゃいませ！</div>
-            <form className="preview-form">
+            <form className="preview-form" autoComplete="off">
                 <div className="nationality-title">
                     国籍を選択<br />
                     <span className="nationality-title-en">select your nationality</span>
                 </div>
-                <input
-                    type="text"
-                    className="nationality-search"
-                    placeholder="国籍を検索..."
-                    value={searchText}
-                    onChange={e => setSearchText(e.target.value)}
-                />
-                <select
-                    value={selectedNationality}
-                    onChange={e => {
-                        setSelectedNationality(e.target.value);
-                        const selected = nationalitiesData.nationalities.find(n => n.name === e.target.value);
-                        setSelectedLanguageCode(selected ? selected.languageCode : "");
-                    }}
-                    size={8}
-                    className="nationality-select"
-                >
-                    {filteredNationalities.map((n, idx) => (
-                        <option key={idx} value={n.name}>{n.name}</option>
-                    ))}
-                </select>
+                <div style={{ position: 'relative' }}>
+                    <input
+                        type="text"
+                        className="nationality-search"
+                        placeholder="国籍を検索..."
+                        value={inputValue}
+                        onChange={e => {
+                            setInputValue(e.target.value);
+                            setShowDropdown(true);
+                        }}
+                        onFocus={() => setShowDropdown(true)}
+                        onBlur={() => setTimeout(() => setShowDropdown(false), 150)}
+                    />
+                    {showDropdown && filteredNationalities.length > 0 && (
+                        <ul className="nationality-dropdown">
+                            {filteredNationalities.map((n, idx) => (
+                                <li
+                                    key={idx}
+                                    className="nationality-dropdown-item"
+                                    onMouseDown={() => handleSelect(n.name)}
+                                >
+                                    {n.name}
+                                </li>
+                            ))}
+                        </ul>
+                    )}
+                </div>
             </form>
             <button
                 className="confirmation-btn"

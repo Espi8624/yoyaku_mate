@@ -14,7 +14,6 @@ function WatingScreen({
     waitingId,
     onBack
 }) {
-    const estimated_Waiting_Time = "30分";
     const [menuList, setMenuList] = useState([]);
     const [showCategories, setShowCategories] = useState(false);
     const [selectedCategory, setSelectedCategory] = useState(null);
@@ -24,6 +23,8 @@ function WatingScreen({
     const [partySize, setPartySize] = useState(initialPartySize);
     const [notes, setNotes] = useState(initialNotes);
     const [languageCode, setLanguageCode] = useState(initialLanguageCode);
+    const [waitingCount, setWaitingCount] = useState(0);
+    const [estimated_Waiting_Time, setEstimatedWaitingTime] = useState("-");
 
     let waitingScreen;
     if (languageCode === 'ja') {
@@ -81,6 +82,27 @@ function WatingScreen({
             });
     }, [waitingId]);
 
+    useEffect(() => {
+        // store_idとstatus==waitingの件数を取得
+        fetch('http://localhost:8080/api/waiting-list?store_id=store-001')
+            .then(res => res.json())
+            .then(result => {
+                const arr = Array.isArray(result.data) ? result.data : [];
+                const count = arr.filter(item => item.status === 'waiting').length;
+                setWaitingCount(count);
+                console.log('waiting-list 全データ:', result);
+            });
+    }, []);
+
+    useEffect(() => {
+        // 平均待機時間を取得
+        fetch('http://localhost:8080/api/waiting-list?action=average_waiting_time&store_id=store-001')
+            .then(res => res.json())
+            .then(result => {
+                setEstimatedWaitingTime(result.average_text || "-");
+            });
+    }, []);
+
     React.useEffect(() => {
         console.log('Current menuList state:', menuList);
     }, [menuList]);
@@ -100,6 +122,8 @@ function WatingScreen({
                 <div className="preview-item-value">{partySize}</div>
                 <label className="preview-item-label">{waitingScreen.note_label}</label>
                 <div className="preview-item-value">{notes}</div>
+                <label className="preview-item-label">{waitingScreen.current_waiting_label}</label>
+                <div className="preview-item-value">{waitingCount}{waitingScreen.group_label}</div>
                 <label className="preview-item-label">{waitingScreen.estimated_wait_time_label}</label>
                 <div className="preview-item-value">{estimated_Waiting_Time}</div>
             </form>

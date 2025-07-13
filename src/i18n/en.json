@@ -28,6 +28,8 @@
         "name_label": "Name",
         "party_size_label": "Party Size",
         "note_label": "Notes",
+        "current_waiting_label": "Current Waiting Customers",
+        "group_label": "group(s)",
         "estimated_wait_time_label": "Estimated Wait Time",
         "menu_label": "How about checking the menu while you wait?",
         "menu_overview_label": "View Menu"
