@@ -30,13 +30,14 @@ function WatingScreenInput({
 
     const handleSubmit = e => {
         e.preventDefault();
-        // 備考が空なら「なし」をセットして次画面へ
+        // 備考・電話番号が空なら「なし」をセットして次画面へ
         if (!notes || notes.trim() === "") {
             setNotes("なし");
-            onNext();
-        } else {
-            onNext();
         }
+        if (!contact || contact.trim() === "") {
+            setContact("なし");
+        }
+        onNext();
     };
 
     return (
@@ -73,7 +74,6 @@ function WatingScreenInput({
                     name="contact"
                     value={contact}
                     onChange={e => setContact(e.target.value)}
-                    required
                     className="preview-item-value"
                 />
                 <label htmlFor="notes" className="preview-item-label">{waitingScreenInput.note_label}</label>
