@@ -23,7 +23,7 @@
   margin-bottom: 18px;
   font-size: 1.15em;
   font-weight: bold;
-  color: #2E4CA6;
+  color: #FF6F61;
   text-align: center;
 }
 
@@ -41,7 +41,7 @@
 .input-title {
   font-size: 1.3em;
   font-weight: 600;
-  color: #2E4CA6;
+  color: #FF6F61;
   text-align: left;
   margin-bottom: 22px;
   letter-spacing: 0.02em;
@@ -78,8 +78,25 @@
   transition: border-color 0.2s;
 }
 
+input,
+textarea,
+input.preview-item-value,
+textarea.preview-item-value {
+  border: 2px solid #FF6F61 !important;
+  background: #fff !important;
+  color: inherit;
+  border-radius: 8px;
+  transition: border-color 0.2s;
+}
+
+input.preview-item-value:focus,
+textarea.preview-item-value:focus {
+  border-color: #FF6F61 !important;
+  outline: none;
+}
+
 .input-field:focus {
-  border-color: #1a237e;
+  border-color: #FF6F61;
   background: #fff;
   outline: none;
 }
@@ -89,7 +106,7 @@
   margin: 0 auto 18px;
   display: block;
   padding: 8px 16px;
-  background-color: #2E4CA6;
+  background-color: #FF6F61;
   color: white;
   border: none;
   border-radius: 5px;

@@ -2,14 +2,14 @@
   margin-bottom: 18px;
   font-size: 1.15em;
   font-weight: bold;
-  color: #2E4CA6;
+  color: #FF6F61;
   text-align: left;
 }
 
 .nationality-title {
   font-size: 1.1em;
   font-weight: bold;
-  color: #2E4CA6;
+  color: #FF6F61;
   margin-bottom: 8px;
 }
 
@@ -21,15 +21,16 @@
 .nationality-search {
   width: 100%;
   padding: 12px 10px;
-  border: 1.5px solid #bfc8e6;
+  border: 2px solid #FF6F61;
   border-radius: 8px;
   font-size: 1.05em;
-  background: #f7f9fc;
+  background: #fff;
   margin-bottom: 2px;
   transition: border-color 0.2s;
 }
+
 .nationality-search:focus {
-  border-color: #1a237e;
+  border-color: #FF6F61;
   background: #fff;
   outline: none;
 }
@@ -59,9 +60,11 @@
   border-bottom: 1px solid #e0e6f6;
   transition: background 0.2s;
 }
+
 .nationality-dropdown-item:last-child {
   border-bottom: none;
 }
+
 .nationality-dropdown-item:hover {
   background: #e3eafc;
 }
@@ -71,7 +74,7 @@
   margin: 0 auto 18px;
   display: block;
   padding: 8px 16px;
-  background-color: #2E4CA6;
+  background-color: #FF6F61;
   color: white;
   border: none;
   border-radius: 5px;
@@ -82,4 +85,13 @@
 
 .confirmation-btn:hover {
   opacity: 0.9;
+}
+
+input,
+textarea,
+.dropdown-search {
+  border: 2px solid #FF6F61 !important;
+  background: #fff !important;
+  color: inherit;
+  border-radius: 8px;
 }
