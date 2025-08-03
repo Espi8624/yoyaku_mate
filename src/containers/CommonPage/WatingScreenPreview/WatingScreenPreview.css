@@ -1,3 +1,41 @@
+.congestion-popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0,0,0,0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.congestion-popup-modal {
+  background: #fff;
+  padding: 32px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  min-width: 320px;
+  text-align: center;
+}
+
+.congestion-popup-message {
+  margin-bottom: 24px;
+  font-size: 1.1em;
+  white-space: pre-line;
+}
+
+.congestion-popup-actions {
+  display: flex;
+  gap: 24px;
+  justify-content: center;
+}
+
+.congestion-cancel-btn {
+  background: #ccc;
+  color: #333;
+}
 /* 不要なlog-in-page系など全削除。現行SPAで使うクラスのみ残す */
 .preview-section {
   max-width: 420px;
@@ -14,7 +52,7 @@
   margin-bottom: 18px;
   font-size: 1.18em;
   font-weight: bold;
-  color: #2e4ca6;
+  color: #FF6F61;
   text-align: left;
 }
 
@@ -43,15 +81,23 @@
   border: none;
   border-radius: 6px;
   font-size: 1em;
-  background: #f0f4fa; /* 以前のやや濃い青系に戻す */
+  background: #FF6F61;
   margin-bottom: 6px;
   color: #333;
   box-sizing: border-box;
 }
 
+input,
+textarea {
+  border: 2px solid #FF6F61 !important;
+  background: #fff !important;
+  color: inherit;
+  border-radius: 8px;
+}
+
 .confirmation-btn {
   padding: 8px 16px;
-  background-color: #2e4ca6;
+  background-color: #FF6F61;
   color: white;
   border: none;
   border-radius: 5px;

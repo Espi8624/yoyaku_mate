@@ -1,19 +1,33 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import WatingScreenNationality from "./WatingScreenNationality/WatingScreenNationality";
 import WatingScreenInput from "./WatingScreenInput/WatingScreenInput";
 import WatingScreenPreview from "./WatingScreenPreview/WatingScreenPreview";
 import WatingScreen from "./WatingScreen/WatingScreen";
 
 function WatingScreenFlow() {
-    const [step, setStep] = useState(1);
-    // すべてのパラメータを親で管理
-    const [selectedNationality, setSelectedNationality] = useState("");
-    const [selectedLanguageCode, setSelectedLanguageCode] = useState("");
+    const location = useLocation();
+    const searchParams = new URLSearchParams(location.search);
+    // URLパラメータから初期値を取得
+    const initialStep = Number(searchParams.get("step")) || 1;
+    const initialNationality = searchParams.get("nationality") || "";
+    const initialLang = searchParams.get("lang") || "";
+
+    const [step, setStep] = useState(initialStep);
+    const [selectedNationality, setSelectedNationality] = useState(initialNationality);
+    const [selectedLanguageCode, setSelectedLanguageCode] = useState(initialLang);
     const [customer_name, setCustomerName] = useState("");
     const [party_size, setPartySize] = useState("");
     const [contact, setContact] = useState("");
     const [notes, setNotes] = useState("");
-    const [waitingId, setWaitingId] = useState(""); // 追加
+    const [waitingId, setWaitingId] = useState("");
+
+    useEffect(() => {
+        // URLパラメータ変更時に初期値を再セット
+        setStep(initialStep);
+        setSelectedNationality(initialNationality);
+        setSelectedLanguageCode(initialLang);
+    }, [location.search]);
 
     // stepごとに表示するコンポーネントを切り替え
     if (step === 1) {

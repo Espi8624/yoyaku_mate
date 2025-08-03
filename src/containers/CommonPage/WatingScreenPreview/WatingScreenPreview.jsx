@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import "./WatingScreenPreview.css";
 
 const ja = require('../../../i18n/ja.json');
@@ -40,11 +40,40 @@ function WatingScreenPreview({
         );
     };
 
+    const [showCongestionPopup, setShowCongestionPopup] = useState(false);
+    const [pendingPayload, setPendingPayload] = useState(null);
+
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const waiting_id = generateWaitingId();
-        setWaitingId && setWaitingId(waiting_id); // 追加
         const store_id = "store-001"; // 必要に応じて動的に
+        // 1. 現在の待機人数取得
+        let waitingCount = 0;
+        let estimatedWaitingCount = null;
+        try {
+            // 待機人数
+            const res1 = await fetch(`http://localhost:8080/api/waiting-list?store_id=${store_id}`);
+            const data1 = await res1.json();
+            const arr = Array.isArray(data1.data) ? data1.data : [];
+            // 待機中グループのparty_size合計
+            const waitingPartySum = arr
+                .filter(item => item.status === 'waiting')
+                .reduce((sum, item) => sum + (Number(item.party_size) || 0), 0);
+            // 登録中ユーザーのparty_sizeを加算
+            waitingCount = waitingPartySum + Number(party_size);
+            // 店舗設定（estimated_waiting_count取得）
+            const res2 = await fetch(`http://localhost:8080/api/store_settings?store_id=688b8ed6ab7bace4919c793f`);
+            const data2 = await res2.json();
+            estimatedWaitingCount =
+                data2?.settings?.waiting_policy?.estimated_waiting_count ??
+                data2?.data?.settings?.waiting_policy?.estimated_waiting_count ??
+                null;
+            // ログ表示
+            console.log(`待機人数: ${waitingCount}, 想定待機人数: ${estimatedWaitingCount}`);
+        } catch (err) {
+            // 取得失敗時は何もしない
+        }
+        // 2. 判定
+        const waiting_id = generateWaitingId();
         const payload = {
             store_id,
             waiting_id,
@@ -55,6 +84,19 @@ function WatingScreenPreview({
             notes,
             status: "waiting"
         };
+        setWaitingId && setWaitingId(waiting_id); // 追加
+        if (
+            estimatedWaitingCount !== null &&
+            waitingCount >= Number(estimatedWaitingCount)
+        ) {
+            setPendingPayload(payload);
+            setShowCongestionPopup(true);
+            return;
+        }
+        await submitWaiting(payload);
+    };
+
+    const submitWaiting = async (payload) => {
         console.log("[waiting-list 登録内容]", payload);
         try {
             const res = await fetch("http://localhost:8080/api/waiting-list", {
@@ -91,6 +133,34 @@ function WatingScreenPreview({
                     <button type="submit" className="confirmation-btn">{watingScreenPreview.confirm}</button>
                 </div>
             </form>
+            {showCongestionPopup && (
+                <div className="congestion-popup-overlay">
+                    <div className="congestion-popup-modal">
+                        <div className="congestion-popup-message">
+                            {"現在大変混雑しており、ご案内までにお時間をいただく可能性がございます。\n予めご了承お願いします。"}
+                        </div>
+                        <div className="congestion-popup-actions">
+                            <button
+                                className="confirmation-btn"
+                                onClick={async () => {
+                                    setShowCongestionPopup(false);
+                                    if (pendingPayload) {
+                                        await submitWaiting(pendingPayload);
+                                        setPendingPayload(null);
+                                    }
+                                }}
+                            >確認</button>
+                            <button
+                                className="confirmation-btn congestion-cancel-btn"
+                                onClick={() => {
+                                    setShowCongestionPopup(false);
+                                    setPendingPayload(null);
+                                }}
+                            >キャンセル</button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }
