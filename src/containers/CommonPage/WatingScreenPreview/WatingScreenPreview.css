@@ -1,3 +1,22 @@
+.congestion-popup-close-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: transparent;
+  border: none;
+  font-size: 1.8em;
+  cursor: pointer;
+  z-index: 10;
+  line-height: 1;
+  padding: 0 4px;
+  transition: color 0.2s, transform 0.2s;
+}
+
+.preview-form-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 16px;
+}
 .congestion-popup-overlay {
   position: fixed;
   top: 0;
@@ -12,6 +31,7 @@
 }
 
 .congestion-popup-modal {
+  position: relative;
   background: #fff;
   padding: 32px;
   border-radius: 12px;

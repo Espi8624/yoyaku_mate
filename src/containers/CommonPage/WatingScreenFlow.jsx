@@ -69,7 +69,20 @@ function WatingScreenFlow() {
                 contact={contact}
                 notes={notes}
                 onBack={() => setStep(2)}
-                onNext={() => setStep(4)}
+                onNext={(inputInfo) => {
+                    if (inputInfo) {
+                        // 入力情報を復元してstep=2へ
+                        setCustomerName(inputInfo.customer_name ?? "");
+                        setPartySize(inputInfo.party_size ?? "");
+                        setContact(inputInfo.contact ?? "");
+                        setNotes(inputInfo.notes ?? "");
+                        setSelectedNationality(inputInfo.selectedNationality ?? "");
+                        setSelectedLanguageCode(inputInfo.selectedLanguageCode ?? "");
+                        setStep(2);
+                    } else {
+                        setStep(4);
+                    }
+                }}
                 setWaitingId={setWaitingId} // 追加
             />
         );
@@ -83,7 +96,13 @@ function WatingScreenFlow() {
                 party_size={party_size}
                 notes={notes}
                 waitingId={waitingId} // 追加
-                onBack={() => setStep(3)}
+                onBack={(info) => {
+                    if (info && info.step === 1) {
+                        setStep(1);
+                    } else {
+                        setStep(3);
+                    }
+                }}
             />
         );
     }
