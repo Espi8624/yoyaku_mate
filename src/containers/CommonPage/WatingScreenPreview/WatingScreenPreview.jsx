@@ -42,6 +42,8 @@ function WatingScreenPreview({
 
     const [showCongestionPopup, setShowCongestionPopup] = useState(false);
     const [pendingPayload, setPendingPayload] = useState(null);
+    const [popupMessage, setPopupMessage] = useState("");
+    const [popupMode, setPopupMode] = useState("congestion"); // "congestion" or "max"
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -49,6 +51,7 @@ function WatingScreenPreview({
         // 1. 現在の待機人数取得
         let waitingCount = 0;
         let estimatedWaitingCount = null;
+        let maxWaitingCount = null;
         try {
             // 待機人数
             const res1 = await fetch(`http://localhost:8080/api/waiting-list?store_id=${store_id}`);
@@ -60,15 +63,19 @@ function WatingScreenPreview({
                 .reduce((sum, item) => sum + (Number(item.party_size) || 0), 0);
             // 登録中ユーザーのparty_sizeを加算
             waitingCount = waitingPartySum + Number(party_size);
-            // 店舗設定（estimated_waiting_count取得）
+            // 店舗設定（estimated_waiting_count, max_waiting_count取得）
             const res2 = await fetch(`http://localhost:8080/api/store_settings?store_id=688b8ed6ab7bace4919c793f`);
             const data2 = await res2.json();
             estimatedWaitingCount =
                 data2?.settings?.waiting_policy?.estimated_waiting_count ??
                 data2?.data?.settings?.waiting_policy?.estimated_waiting_count ??
                 null;
+            maxWaitingCount =
+                data2?.settings?.waiting_policy?.max_waiting_count ??
+                data2?.data?.settings?.waiting_policy?.max_waiting_count ??
+                null;
             // ログ表示
-            console.log(`待機人数: ${waitingCount}, 想定待機人数: ${estimatedWaitingCount}`);
+            console.log(`待機人数: ${waitingCount}, 想定待機人数: ${estimatedWaitingCount}, 最大待機人数: ${maxWaitingCount}`);
         } catch (err) {
             // 取得失敗時は何もしない
         }
@@ -85,11 +92,21 @@ function WatingScreenPreview({
             status: "waiting"
         };
         setWaitingId && setWaitingId(waiting_id); // 追加
+        // party_sizeが最大待機人数を超えている場合
+        if (maxWaitingCount !== null && Number(party_size) > Number(maxWaitingCount)) {
+            setPopupMessage("大変申し訳ございません。\n当店の最大収容人数を超えているため、予約できません。");
+            setPopupMode("max");
+            setShowCongestionPopup(true);
+            return;
+        }
+        // 通常の混雑判定
         if (
             estimatedWaitingCount !== null &&
             waitingCount >= Number(estimatedWaitingCount)
         ) {
             setPendingPayload(payload);
+            setPopupMessage("現在大変混雑しており、ご案内までにお時間をいただく可能性がございます。\n予めご了承お願いします。");
+            setPopupMode("congestion");
             setShowCongestionPopup(true);
             return;
         }
@@ -128,7 +145,7 @@ function WatingScreenPreview({
                 <div className="preview-item-value">{contact}</div>
                 <label className="preview-item-label">{watingScreenPreview.note_label}</label>
                 <div className="preview-item-value">{notes}</div>
-                <div style={{ display: 'flex', gap: '12px', marginTop: '16px' }}>
+                <div className="preview-form-actions">
                     <button type="button" className="confirmation-btn" onClick={onBack}>{watingScreenPreview.back}</button>
                     <button type="submit" className="confirmation-btn">{watingScreenPreview.confirm}</button>
                 </div>
@@ -136,27 +153,41 @@ function WatingScreenPreview({
             {showCongestionPopup && (
                 <div className="congestion-popup-overlay">
                     <div className="congestion-popup-modal">
+                        <button
+                            className="congestion-popup-close-btn"
+                            onClick={() => {
+                                setShowCongestionPopup(false);
+                                setPendingPayload(null);
+                            }}
+                            aria-label="閉じる"
+                        >×</button>
                         <div className="congestion-popup-message">
-                            {"現在大変混雑しており、ご案内までにお時間をいただく可能性がございます。\n予めご了承お願いします。"}
+                            {popupMessage}
                         </div>
                         <div className="congestion-popup-actions">
                             <button
                                 className="confirmation-btn"
                                 onClick={async () => {
                                     setShowCongestionPopup(false);
-                                    if (pendingPayload) {
-                                        await submitWaiting(pendingPayload);
+                                    if (popupMode === "max") {
+                                        // Step2へ遷移（入力情報を保持して渡す）
+                                        onNext && onNext({
+                                            customer_name,
+                                            party_size,
+                                            contact,
+                                            notes,
+                                            selectedNationality,
+                                            selectedLanguageCode
+                                        });
                                         setPendingPayload(null);
+                                    } else if (popupMode === "congestion") {
+                                        if (pendingPayload) {
+                                            await submitWaiting(pendingPayload);
+                                            setPendingPayload(null);
+                                        }
                                     }
                                 }}
                             >確認</button>
-                            <button
-                                className="confirmation-btn congestion-cancel-btn"
-                                onClick={() => {
-                                    setShowCongestionPopup(false);
-                                    setPendingPayload(null);
-                                }}
-                            >キャンセル</button>
                         </div>
                     </div>
                 </div>
