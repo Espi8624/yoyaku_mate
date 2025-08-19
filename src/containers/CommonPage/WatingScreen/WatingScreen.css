@@ -1,3 +1,28 @@
+.cancel-btn {
+  margin-top: 24px;
+  background: #FF6F61;
+  color: #fff;
+}
+.cancel-modal {
+  position: relative;
+}
+.congestion-close-btn {
+  position: absolute;
+  top: 8px;
+  right: 12px;
+  background: transparent;
+  border: none;
+  font-size: 1.5em;
+  cursor: pointer;
+}
+.cancel-actions {
+  justify-content: center;
+}
+.cancel-yes-btn {
+  background: #FF6F61;
+  color: #fff;
+  min-width: 120px;
+}
 .waiting-section {
   max-width: 420px;
   margin: 32px auto;

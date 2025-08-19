@@ -25,6 +25,8 @@ function WatingScreen({
     const [languageCode, setLanguageCode] = useState(initialLanguageCode);
     const [waitingCount, setWaitingCount] = useState(0);
     const [estimated_Waiting_Time, setEstimatedWaitingTime] = useState("-");
+    // キャンセルポップアップ
+    const [showCancelPopup, setShowCancelPopup] = useState(false);
 
     let waitingScreen;
     if (languageCode === 'ja') {
@@ -160,7 +162,42 @@ function WatingScreen({
                     <button className="confirmation-btn" onClick={() => setSelectedCategory(null)} style={{ marginBottom: '16px' }}>戻る</button>
                 </>
             )}
-            <button className="confirmation-btn" style={{ marginTop: '24px', background: '#aaa' }} onClick={onBack}>戻る</button>
+            <button className="confirmation-btn cancel-btn" onClick={() => setShowCancelPopup(true)}>
+                予約をキャンセル
+            </button>
+            {showCancelPopup && (
+                <div className="congestion-popup-overlay">
+                    <div className="congestion-popup-modal cancel-modal">
+                        <button
+                            className="congestion-close-btn"
+                            onClick={() => setShowCancelPopup(false)}
+                        >×</button>
+                        <div className="congestion-popup-message">
+                            予約をキャンセルいたします
+                        </div>
+                        <div className="congestion-popup-actions cancel-actions">
+                            <button
+                                className="confirmation-btn cancel-yes-btn"
+                                onClick={async () => {
+                                    try {
+                                        await fetch(`http://localhost:8080/api/waiting-list?action=status`, {
+                                            method: 'PATCH',
+                                            headers: { 'Content-Type': 'application/json' },
+                                            body: JSON.stringify({
+                                                store_id: 'store-001',
+                                                waiting_id: waitingId,
+                                                status: 'cancelled'
+                                            })
+                                        });
+                                    } catch (err) { }
+                                    setShowCancelPopup(false);
+                                    onBack && onBack({ step: 1 });
+                                }}
+                            >はい</button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }
