@@ -12,7 +12,8 @@ function WatingScreen({
     party_size: initialPartySize,
     notes: initialNotes,
     waitingId,
-    onBack
+    onBack,
+    storeId,
 }) {
     const [menuList, setMenuList] = useState([]);
     const [showCategories, setShowCategories] = useState(false);
@@ -46,7 +47,7 @@ function WatingScreen({
     };
 
     useEffect(() => {
-        fetch('http://localhost:8080/api/menu-list?store_id=store-001')
+        fetch(`http://localhost:8080/api/menu-list?store_id=${storeId || ''}`)
             .then((res) => {
                 if (!res.ok) throw new Error('Failed to fetch menu_list');
                 return res.json();
@@ -68,7 +69,7 @@ function WatingScreen({
 
     useEffect(() => {
         if (!waitingId) return;
-        fetch(`http://localhost:8080/api/waiting-list?store_id=store-001&waiting_id=${waitingId}`)
+        fetch(`http://localhost:8080/api/waiting-list?store_id=${storeId || ''}&waiting_id=${waitingId}`)
             .then(res => res.json())
             .then(item => {
                 console.log('waiting-list fetch result:', item);
@@ -86,7 +87,7 @@ function WatingScreen({
 
     useEffect(() => {
         // store_idとstatus==waitingの件数を取得
-        fetch('http://localhost:8080/api/waiting-list?store_id=store-001')
+        fetch(`http://localhost:8080/api/waiting-list?store_id=${storeId || ''}`)
             .then(res => res.json())
             .then(result => {
                 const arr = Array.isArray(result.data) ? result.data : [];
@@ -98,7 +99,7 @@ function WatingScreen({
 
     useEffect(() => {
         // 平均待機時間を取得
-        fetch('http://localhost:8080/api/waiting-list?action=average_waiting_time&store_id=store-001')
+        fetch(`http://localhost:8080/api/waiting-list?action=average_waiting_time&store_id=${storeId || ''}`)
             .then(res => res.json())
             .then(result => {
                 setEstimatedWaitingTime(result.average_text || "-");
@@ -172,6 +173,7 @@ function WatingScreen({
                             className="congestion-close-btn"
                             onClick={() => setShowCancelPopup(false)}
                         >×</button>
+                        {/* シンピュルに確認 */}
                         <div className="congestion-popup-message">
                             予約をキャンセルいたします
                         </div>
@@ -184,7 +186,7 @@ function WatingScreen({
                                             method: 'PATCH',
                                             headers: { 'Content-Type': 'application/json' },
                                             body: JSON.stringify({
-                                                store_id: 'store-001',
+                                                store_id: storeId || '',
                                                 waiting_id: waitingId,
                                                 status: 'cancelled'
                                             })
