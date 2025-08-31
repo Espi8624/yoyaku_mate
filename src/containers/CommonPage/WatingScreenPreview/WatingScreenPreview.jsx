@@ -12,6 +12,7 @@ function WatingScreenPreview({
     party_size,
     contact,
     notes,
+    storeId,
     onBack,
     onNext,
     setWaitingId // 追加
@@ -47,7 +48,8 @@ function WatingScreenPreview({
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const store_id = "store-001"; // 必要に応じて動的に
+        const store_id = storeId || "";
+        console.log('[store_idデバッグ]', store_id);
         // 1. 現在の待機人数取得
         let waitingCount = 0;
         let estimatedWaitingCount = null;
@@ -64,7 +66,7 @@ function WatingScreenPreview({
             // 登録中ユーザーのparty_sizeを加算
             waitingCount = waitingPartySum + Number(party_size);
             // 店舗設定（estimated_waiting_count, max_waiting_count取得）
-            const res2 = await fetch(`http://localhost:8080/api/store_settings?store_id=688b8ed6ab7bace4919c793f`);
+            const res2 = await fetch(`http://localhost:8080/api/store_settings?store_id=${store_id}`);
             const data2 = await res2.json();
             estimatedWaitingCount =
                 data2?.settings?.waiting_policy?.estimated_waiting_count ??
