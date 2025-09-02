@@ -9,39 +9,47 @@ function WatingScreenFlow() {
     const location = useLocation();
     const searchParams = new URLSearchParams(location.search);
     // URLパラメータから初期値を取得
-    const initialStep = Number(searchParams.get("step")) || 1;
+    const initialStep = 1;
     const initialNationality = searchParams.get("nationality") || "";
     const initialLang = searchParams.get("lang") || "";
+    const initialStoreId = searchParams.get("storeid") || "";
 
     const [step, setStep] = useState(initialStep);
-    const [selectedNationality, setSelectedNationality] = useState(initialNationality);
-    const [selectedLanguageCode, setSelectedLanguageCode] = useState(initialLang);
+    const [selectedNationality, setSelectedNationality] = useState("");
+    const [selectedLanguageCode, setSelectedLanguageCode] = useState("");
     const [customer_name, setCustomerName] = useState("");
     const [party_size, setPartySize] = useState("");
     const [contact, setContact] = useState("");
     const [notes, setNotes] = useState("");
     const [waitingId, setWaitingId] = useState("");
+    const [storeId, setStoreId] = useState(initialStoreId);
+
+    const nationalitiesData = require("../../data/nationalities.json");
+    function getNationalityFromLanguage(language, nationalities) {
+        const lang = language.split('-')[0];
+        const match = nationalities.find(n => n.languageCode === lang);
+        if (match) return match.name;
+        return "";
+    }
 
     useEffect(() => {
-        // URLパラメータ変更時に初期値を再セット
+        // デバイス言語から国籍・言語コードを自動判定
+        const deviceLang = navigator.language || navigator.userLanguage;
+        const autoNationality = getNationalityFromLanguage(deviceLang, nationalitiesData.nationalities);
+        if (autoNationality) {
+            setSelectedNationality(autoNationality);
+            const selected = nationalitiesData.nationalities.find(n => n.name === autoNationality);
+            setSelectedLanguageCode(selected ? selected.languageCode : "");
+        } else {
+            setSelectedNationality(initialNationality);
+            setSelectedLanguageCode(initialLang);
+        }
         setStep(initialStep);
-        setSelectedNationality(initialNationality);
-        setSelectedLanguageCode(initialLang);
+        setStoreId(initialStoreId);
     }, [location.search]);
 
     // stepごとに表示するコンポーネントを切り替え
     if (step === 1) {
-        return (
-            <WatingScreenNationality
-                selectedNationality={selectedNationality}
-                setSelectedNationality={setSelectedNationality}
-                selectedLanguageCode={selectedLanguageCode}
-                setSelectedLanguageCode={setSelectedLanguageCode}
-                onNext={() => setStep(2)}
-            />
-        );
-    }
-    if (step === 2) {
         return (
             <WatingScreenInput
                 selectedNationality={selectedNationality}
@@ -54,12 +62,12 @@ function WatingScreenFlow() {
                 setContact={setContact}
                 notes={notes}
                 setNotes={setNotes}
-                onBack={() => setStep(1)}
-                onNext={() => setStep(3)}
+                storeId={storeId}
+                onNext={() => setStep(2)}
             />
         );
     }
-    if (step === 3) {
+    if (step === 2) {
         return (
             <WatingScreenPreview
                 selectedNationality={selectedNationality}
@@ -68,26 +76,27 @@ function WatingScreenFlow() {
                 party_size={party_size}
                 contact={contact}
                 notes={notes}
-                onBack={() => setStep(2)}
+                storeId={storeId}
+                onBack={() => setStep(1)}
                 onNext={(inputInfo) => {
                     if (inputInfo) {
-                        // 入力情報を復元してstep=2へ
+                        // 入力情報を復元してstep=1へ
                         setCustomerName(inputInfo.customer_name ?? "");
                         setPartySize(inputInfo.party_size ?? "");
                         setContact(inputInfo.contact ?? "");
                         setNotes(inputInfo.notes ?? "");
                         setSelectedNationality(inputInfo.selectedNationality ?? "");
                         setSelectedLanguageCode(inputInfo.selectedLanguageCode ?? "");
-                        setStep(2);
+                        setStep(1);
                     } else {
-                        setStep(4);
+                        setStep(3);
                     }
                 }}
                 setWaitingId={setWaitingId} // 追加
             />
         );
     }
-    if (step === 4) {
+    if (step === 3) {
         return (
             <WatingScreen
                 selectedNationality={selectedNationality}
@@ -96,11 +105,12 @@ function WatingScreenFlow() {
                 party_size={party_size}
                 notes={notes}
                 waitingId={waitingId} // 追加
+                storeId={storeId}
                 onBack={(info) => {
                     if (info && info.step === 1) {
                         setStep(1);
                     } else {
-                        setStep(3);
+                        setStep(2);
                     }
                 }}
             />
