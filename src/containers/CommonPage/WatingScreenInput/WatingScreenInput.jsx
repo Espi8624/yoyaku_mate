@@ -15,6 +15,7 @@ function WatingScreenInput({
     setContact,
     notes,
     setNotes,
+    storeId,
     onBack,
     onNext
 }) {
@@ -87,7 +88,6 @@ function WatingScreenInput({
                     className="preview-item-value"
                 />
                 <div style={{ display: 'flex', gap: '12px', marginTop: '16px' }}>
-                    <button type="button" className="confirmation-btn" onClick={onBack}>戻る</button>
                     <button type="submit" className="confirmation-btn">{waitingScreenInput.confirm}</button>
                 </div>
             </form>
