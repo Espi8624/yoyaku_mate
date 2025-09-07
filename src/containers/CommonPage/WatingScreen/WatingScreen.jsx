@@ -8,7 +8,6 @@ const ko = require('../../../i18n/ko.json');
 function WatingScreen({
     selectedNationality,
     selectedLanguageCode: initialLanguageCode,
-    customer_name: initialCustomerName,
     party_size: initialPartySize,
     notes: initialNotes,
     waitingId,
@@ -20,7 +19,6 @@ function WatingScreen({
     const [selectedCategory, setSelectedCategory] = useState(null);
     // DBから取得した値
     const [queueNumber, setQueueNumber] = useState("");
-    const [customerName, setCustomerName] = useState(initialCustomerName);
     const [partySize, setPartySize] = useState(initialPartySize);
     const [notes, setNotes] = useState(initialNotes);
     const [languageCode, setLanguageCode] = useState(initialLanguageCode);
@@ -78,7 +76,6 @@ function WatingScreen({
                 if (data) {
                     setLanguageCode(data.selectedLanguageCode || data.language_code || initialLanguageCode);
                     setQueueNumber(data.queue_number || "");
-                    setCustomerName(data.customer_name || "");
                     setPartySize(data.party_size || "");
                     setNotes(data.notes || "");
                 }
@@ -109,18 +106,16 @@ function WatingScreen({
     React.useEffect(() => {
         console.log('Current menuList state:', menuList);
     }, [menuList]);
-
+ 
     return (
         <div className="waiting-section">
-            <div className="preview-label">{waitingScreen.label_1 && waitingScreen.label_1.replace("{{name}}", customerName)}</div>
+            <div className="preview-label">{waitingScreen.label_1}</div>
             {waitingScreen.label_2 && (
                 <div className="waiting-label-2">{waitingScreen.label_2}</div>
             )}
             <form className="preview-form">
                 <label className="preview-item-label">{waitingScreen.waiting_number_label}</label>
                 <div className="preview-item-value">{queueNumber}</div>
-                <label className="preview-item-label">{waitingScreen.name_label}</label>
-                <div className="preview-item-value">{customerName}</div>
                 <label className="preview-item-label">{waitingScreen.party_size_label}</label>
                 <div className="preview-item-value">{partySize}</div>
                 <label className="preview-item-label">{waitingScreen.note_label}</label>
