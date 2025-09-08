@@ -8,7 +8,6 @@ const ko = require('../../../i18n/ko.json');
 function WatingScreenPreview({
     selectedNationality,
     selectedLanguageCode,
-    customer_name,
     party_size,
     contact,
     notes,
@@ -86,14 +85,17 @@ function WatingScreenPreview({
         const payload = {
             store_id,
             waiting_id,
-            customer_name,
             party_size: Number(party_size),
             nationality: selectedNationality,
             contact,
             notes,
             status: "waiting"
         };
-        setWaitingId && setWaitingId(waiting_id); // 追加
+        setWaitingId && setWaitingId(waiting_id);
+
+        // ここでwaiting_idをローカルストレージに保存←サーバ登録時に保存しないと意味がない
+        localStorage.setItem("waiting_id", waiting_id);
+
         // party_sizeが最大待機人数を超えている場合
         if (maxWaitingCount !== null && Number(party_size) > Number(maxWaitingCount)) {
             setPopupMessage("大変申し訳ございません。\n当店の最大収容人数を超えているため、予約できません。");
@@ -139,8 +141,6 @@ function WatingScreenPreview({
         <div className="waiting-section">
             <div className="preview-label">{watingScreenPreview.preview_label}</div>
             <form className="preview-form" onSubmit={handleSubmit}>
-                <label className="preview-item-label">{watingScreenPreview.name_label}</label>
-                <div className="preview-item-value">{customer_name}</div>
                 <label className="preview-item-label">{watingScreenPreview.party_size_label}</label>
                 <div className="preview-item-value">{party_size}</div>
                 <label className="preview-item-label">{watingScreenPreview.contact_label}</label>
@@ -174,7 +174,6 @@ function WatingScreenPreview({
                                     if (popupMode === "max") {
                                         // Step2へ遷移（入力情報を保持して渡す）
                                         onNext && onNext({
-                                            customer_name,
                                             party_size,
                                             contact,
                                             notes,

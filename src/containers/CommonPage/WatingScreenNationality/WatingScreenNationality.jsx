@@ -1,3 +1,4 @@
+// 未使用
 import React, { useEffect } from "react";
 import "./WatingScreenNationality.css";
 const nationalitiesData = require('../../../data/nationalities.json');
