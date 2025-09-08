@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import WatingScreenNationality from "./WatingScreenNationality/WatingScreenNationality";
 import WatingScreenInput from "./WatingScreenInput/WatingScreenInput";
 import WatingScreenPreview from "./WatingScreenPreview/WatingScreenPreview";
 import WatingScreen from "./WatingScreen/WatingScreen";
@@ -17,7 +16,6 @@ function WatingScreenFlow() {
     const [step, setStep] = useState(initialStep);
     const [selectedNationality, setSelectedNationality] = useState("");
     const [selectedLanguageCode, setSelectedLanguageCode] = useState("");
-    const [customer_name, setCustomerName] = useState("");
     const [party_size, setPartySize] = useState("");
     const [contact, setContact] = useState("");
     const [notes, setNotes] = useState("");
@@ -54,8 +52,6 @@ function WatingScreenFlow() {
             <WatingScreenInput
                 selectedNationality={selectedNationality}
                 selectedLanguageCode={selectedLanguageCode}
-                customer_name={customer_name}
-                setCustomerName={setCustomerName}
                 party_size={party_size}
                 setPartySize={setPartySize}
                 contact={contact}
@@ -72,7 +68,6 @@ function WatingScreenFlow() {
             <WatingScreenPreview
                 selectedNationality={selectedNationality}
                 selectedLanguageCode={selectedLanguageCode}
-                customer_name={customer_name}
                 party_size={party_size}
                 contact={contact}
                 notes={notes}
@@ -81,7 +76,6 @@ function WatingScreenFlow() {
                 onNext={(inputInfo) => {
                     if (inputInfo) {
                         // 入力情報を復元してstep=1へ
-                        setCustomerName(inputInfo.customer_name ?? "");
                         setPartySize(inputInfo.party_size ?? "");
                         setContact(inputInfo.contact ?? "");
                         setNotes(inputInfo.notes ?? "");
@@ -101,7 +95,6 @@ function WatingScreenFlow() {
             <WatingScreen
                 selectedNationality={selectedNationality}
                 selectedLanguageCode={selectedLanguageCode}
-                customer_name={customer_name}
                 party_size={party_size}
                 notes={notes}
                 waitingId={waitingId} // 追加
