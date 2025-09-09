@@ -15,9 +15,8 @@ function App() {
         } />
 
         {/* 待ち画面:SPAフロー */}
-        <Route path='/waiting-screen-flow' element={
-            <WaitingScreenFlow />
-        } />
+        <Route path='/waiting-screen-flow'
+          element={<WaitingScreenFlow />} />
 
         {/* 間違えたURLで接近 */}
         <Route path='*' element={<Navigate to="/" />} />

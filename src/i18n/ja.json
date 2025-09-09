@@ -17,12 +17,16 @@
         "name_label": "お名前",
         "party_size_label": "人数",
         "contact_label": "連絡先",
-        "note_label": "備考",
-        "confirm": "この内容で登録",
-        "back": "戻る"
+        "back": "修正する",
+        "confirm": "この内容で受付する",
+        "popup": {
+            "close": "閉じる",
+            "back": "戻る",
+            "confirm": "確認"
+        }
     },
     "waiting_screen": {
-        "label_1": "{{name}}様、ご記入いただいた情報で登録が完了しました！",
+        "label_1": "ご記入いただいた情報で登録が完了しました！",
         "label_2": "少々お待ちいただければ、お店からお呼びいたします。",
         "waiting_number_label": "受付番号",
         "name_label": "お名前",
@@ -32,6 +36,8 @@
         "group_label": "組",
         "estimated_wait_time_label": "予想待機時間",
         "menu_label": "お待ちの間にメニューをご覧になりませんか？",
-        "menu_overview_label": "メニューを見る"
+        "menu_overview_label": "メニューを見る",
+        "menu_close_label": "メニューを閉じる",
+        "category_overview_labe":"カテゴリーを見る"
     }
 }
