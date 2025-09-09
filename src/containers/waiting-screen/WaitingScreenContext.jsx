@@ -2,7 +2,7 @@ import React, { createContext, useState, useContext, useMemo, useEffect } from '
 import { useLocation } from 'react-router-dom';
 import nationalitiesData from '../../data/nationalities.json';
 import useTranslation from '../../hook/useTranslation';
-import { getWaitingStatus, submitWaiting as apiSubmitWaiting } from '../../api/waitingService';
+import { getWaitingStatus, submitWaiting as apiSubmitWaiting, cancelWaiting } from '../../api/waitingService';
 
 // Context Object生成
 const WaitingScreenContext = createContext(null);
@@ -29,13 +29,13 @@ export function WaitingScreenProvider({ children }) {
   const generateWaitingId = () => {
     const now = new Date();
     return (
-        now.getFullYear().toString() +
-        ("0" + (now.getMonth() + 1)).slice(-2) +
-        ("0" + now.getDate()).slice(-2) + "-" +
-        ("0" + now.getHours()).slice(-2) +
-        ("0" + now.getMinutes()).slice(-2) +
-        ("0" + now.getSeconds()).slice(-2) +
-        '-' + Math.random().toString(36).substring(2, 8)
+      now.getFullYear().toString() +
+      ("0" + (now.getMonth() + 1)).slice(-2) +
+      ("0" + now.getDate()).slice(-2) + "-" +
+      ("0" + now.getHours()).slice(-2) +
+      ("0" + now.getMinutes()).slice(-2) +
+      ("0" + now.getSeconds()).slice(-2) +
+      '-' + Math.random().toString(36).substring(2, 8)
     );
   };
 
@@ -46,7 +46,7 @@ export function WaitingScreenProvider({ children }) {
     const initialNationality = getNationalityFromLanguage(lang);
 
     return {
-      storeId: searchParams.get("storeid") || "",
+      storeId: searchParams.get("store_id") || "",
       nationality: initialNationality.name,
       languageCode: initialNationality.languageCode,
     };
@@ -61,12 +61,13 @@ export function WaitingScreenProvider({ children }) {
   const [contact, setContact] = useState("");
   const [notes, setNotes] = useState("");
   const [waitingId, setWaitingId] = useState("");
+  const [isCancelled, setIsCancelled] = useState(false);
 
   // ポップアップステータス管理
   const [isPopupVisible, setPopupVisible] = useState(false);
   const [popupInfo, setPopupInfo] = useState({ message: "", mode: "congestion" });
   const [pendingPayload, setPendingPayload] = useState(null);
-  
+
   // 多国語Hook
   const t = useTranslation(selectedLanguageCode);
 
@@ -117,7 +118,7 @@ export function WaitingScreenProvider({ children }) {
   const handleSubmitWaiting = async () => {
     const { waitingPartySum, estimatedWaitingCount, maxWaitingCount } = await getWaitingStatus(storeId);
     const currentWaitingCount = waitingPartySum + Number(partySize);
-    
+
     const newWaitingId = generateWaitingId();
     setWaitingId(newWaitingId);
     localStorage.setItem("waiting_id", newWaitingId);
@@ -137,7 +138,7 @@ export function WaitingScreenProvider({ children }) {
       setPopupVisible(true);
       return;
     }
-    
+
     if (estimatedWaitingCount !== null && currentWaitingCount >= estimatedWaitingCount) {
       setPendingPayload(payload);
       setPopupInfo({ message: "現在大変混雑しており、ご案内までにお時間をいただく可能性がございます。\n予めご了承お願いします。", mode: "congestion" });
@@ -148,26 +149,42 @@ export function WaitingScreenProvider({ children }) {
     await _performSubmit(payload);
   };
 
+  const handleCancel = async () => {
+    try {
+      const res = await cancelWaiting(storeId, waitingId);
+      if (!res.ok) {
+        const errorText = await res.text();
+        throw new Error(errorText || 'サーバーエラーが発生しました。');
+      }
+      // 成功時、isCancelled状態をtrueに変更
+      setIsCancelled(true);
+    } catch (err) {
+      alert(`キャンセル処理に失敗しました: ${err.message}`);
+    }
+  };
+
   const closePopupAndProceed = async () => {
     setPopupVisible(false);
     if (popupInfo.mode === "congestion" && pendingPayload) {
       await _performSubmit(pendingPayload);
     } else if (popupInfo.mode === "max") {
-      setStep(1); 
+      setStep(1);
     }
     setPendingPayload(null);
   };
-  
+
   const closePopupOnly = () => {
-      setPopupVisible(false);
-      setPendingPayload(null);
+    setPopupVisible(false);
+    setPendingPayload(null);
   };
 
-  
+
   // Providerかchildに伝達する値
   const value = {
     // ステータス値
     step,
+    isCancelled,
+    handleCancel,
     storeId,
     selectedNationality,
     selectedLanguageCode,
@@ -178,7 +195,7 @@ export function WaitingScreenProvider({ children }) {
     isPopupVisible,
     popupInfo,
     t, // 多国語データ
-    
+
     // ステータス変更関数
     setSelectedNationality,
     setSelectedLanguageCode,
@@ -192,6 +209,7 @@ export function WaitingScreenProvider({ children }) {
     handleSubmitWaiting,
     closePopupAndProceed,
     closePopupOnly,
+    goBackToInputStep,
   };
 
   return (

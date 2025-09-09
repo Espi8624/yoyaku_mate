@@ -19,10 +19,15 @@
         "contact_label": "Contact",
         "note_label": "Notes",
         "confirm": "Register as is",
-        "back": "Back"
+        "back": "Edit",
+        "popup": {
+            "close": "Close",
+            "back": "Back",
+            "confirm": "Confirm"
+        }
     },
     "waiting_screen": {
-        "label_1": "Thank you, {{name}}! Your information has been successfully registered!",
+        "label_1": "Thank you! Your information has been successfully registered!",
         "label_2": "Please wait a moment the restaurant will call you shortly.",
         "waiting_number_label": "Waiting Number",
         "name_label": "Name",
@@ -32,6 +37,8 @@
         "group_label": "group(s)",
         "estimated_wait_time_label": "Estimated Wait Time",
         "menu_label": "How about checking the menu while you wait?",
-        "menu_overview_label": "View Menu"
+        "menu_overview_label": "View Menu",
+        "menu_close_label": "Close Menu",
+        "category_overview_labe": "View Category"
     }
 }
