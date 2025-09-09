@@ -19,10 +19,15 @@
         "contact_label": "Numéro de téléphone",
         "note_label": "Notes",
         "confirm": "S’inscrire avec ces informations",
-        "back": "Retour"
+        "back": "Retour",
+        "popup": {
+          "close": "Fermer",
+          "back": "Retour",
+          "confirm": "Confirmer"
+        }
     },
     "waiting_screen": {
-        "label_1": "Merci, {{name}}! Vos informations ont bien été enregistrées!",
+        "label_1": "Merci! Vos informations ont bien été enregistrées!",
         "label_2": "Merci de patienter, nous vous appellerons dès que votre tour arrivera.",
         "waiting_number_label": "numéro d’appel",
         "name_label": "Nom",
@@ -30,6 +35,8 @@
         "note_label": "Notes",
         "estimated_wait_time_label": "Temps d'attente estimé",
         "menu_label": "Souhaitez-vous jeter un œil au menu pendant l’attente ?",
-        "menu_overview_label": "Afficher le menu"
+        "menu_overview_label": "Afficher le menu",
+        "menu_close_label": "Fermer le menu",
+        "category_overview_labe": "Afficher les catégories"
     }
 }

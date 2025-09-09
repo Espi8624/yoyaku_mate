@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useWaitingScreen } from "../WaitingScreenContext";
 import useTranslation from "../../../hook/useTranslation";
-import { getMenuList, getWaitingDetails, cancelWaiting } from "../../../api/waitingService";
-import MenuDisplay from "./MenuDisplay"; 
+import { getMenuList, getWaitingDetails } from "../../../api/waitingService";
+import MenuDisplay from "./MenuDisplay";
 import "./WaitingScreen.css";
 
 function WaitingScreen() {
@@ -10,9 +10,9 @@ function WaitingScreen() {
     storeId,
     waitingId,
     selectedLanguageCode,
-    goBackToInputStep
+    handleCancel
   } = useWaitingScreen();
-  
+
   const t = useTranslation(selectedLanguageCode);
   const waitingScreenTexts = t.waiting_screen;
 
@@ -52,17 +52,6 @@ function WaitingScreen() {
     loadAllData();
   }, [storeId, waitingId]); // storeIdやwaitingIdが変わる時のみ、ロードし直す
 
-
-  const handleCancel = async () => {
-    try {
-      await cancelWaiting(storeId, waitingId);
-      setShowCancelPopup(false);
-      goBackToInputStep(); // 成功時最初のページへ移動
-    } catch (err) {
-      alert("キャンセル処理に失敗しました。");
-    }
-  };
-
   if (isLoading) {
     return <div className="waiting-section">Loading...</div>;
   }
@@ -89,7 +78,7 @@ function WaitingScreen() {
         <label className="preview-item-label">{waitingScreenTexts.estimated_wait_time_label}</label>
         <div className="preview-item-value">{waitingDetails.estimated_waiting_time || "-"}</div>
       </form>
-      
+
       <MenuDisplay menuList={menuList} texts={waitingScreenTexts} />
 
       <button className="confirmation-btn cancel-btn" onClick={() => setShowCancelPopup(true)}>
