@@ -63,7 +63,7 @@ function MenuDisplay({ menuList, texts }) {
             ))}
           </div>
           <button className="confirmation-btn" onClick={() => setSelectedCategory(null)}>
-            {texts.back_label}
+            {texts.category_overview_labe}
           </button>
         </div>
       )}
