@@ -23,7 +23,7 @@
   margin-bottom: 18px;
   font-size: 1.15em;
   font-weight: bold;
-  color: #FF6F61;
+  color: #2C2C2C;
   text-align: center;
 }
 
@@ -41,7 +41,7 @@
 .input-title {
   font-size: 1.3em;
   font-weight: 600;
-  color: #FF6F61;
+  color: #2C2C2C;
   text-align: left;
   margin-bottom: 22px;
   letter-spacing: 0.02em;
@@ -82,7 +82,7 @@ input,
 textarea,
 input.preview-item-value,
 textarea.preview-item-value {
-  border: 2px solid #FF6F61 !important;
+  border: 2px solid #2C2C2C !important;
   background: #fff !important;
   color: inherit;
   border-radius: 8px;
@@ -91,12 +91,12 @@ textarea.preview-item-value {
 
 input.preview-item-value:focus,
 textarea.preview-item-value:focus {
-  border-color: #FF6F61 !important;
+  border-color: #2C2C2C !important;
   outline: none;
 }
 
 .input-field:focus {
-  border-color: #FF6F61;
+  border-color: #2C2C2C;
   background: #fff;
   outline: none;
 }
@@ -106,7 +106,7 @@ textarea.preview-item-value:focus {
   margin: 0 auto 18px;
   display: block;
   padding: 8px 16px;
-  background-color: #FF6F61;
+  background-color: #2C2C2C;
   color: white;
   border: none;
   border-radius: 5px;

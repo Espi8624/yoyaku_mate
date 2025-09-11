@@ -72,7 +72,7 @@
   margin-bottom: 18px;
   font-size: 1.18em;
   font-weight: bold;
-  color: #FF6F61;
+  color: #2C2C2C;
   text-align: left;
 }
 
@@ -101,7 +101,7 @@
   border: none;
   border-radius: 6px;
   font-size: 1em;
-  background: #FF6F61;
+  background: #2C2C2C;
   margin-bottom: 6px;
   color: #333;
   box-sizing: border-box;
@@ -109,7 +109,7 @@
 
 input,
 textarea {
-  border: 2px solid #FF6F61 !important;
+  border: 2px solid #2C2C2C !important;
   background: #fff !important;
   color: inherit;
   border-radius: 8px;
@@ -117,7 +117,7 @@ textarea {
 
 .confirmation-btn {
   padding: 8px 16px;
-  background-color: #FF6F61;
+  background-color: #2C2C2C;
   color: white;
   border: none;
   border-radius: 5px;

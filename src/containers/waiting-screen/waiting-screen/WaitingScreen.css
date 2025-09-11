@@ -1,6 +1,6 @@
 .cancel-btn {
   margin-top: 24px;
-  background: #FF6F61;
+  background: #2C2C2C;
   color: #fff;
 }
 .cancel-modal {
@@ -19,7 +19,7 @@
   justify-content: center;
 }
 .cancel-yes-btn {
-  background: #FF6F61;
+  background: #2C2C2C;
   color: #fff;
   min-width: 120px;
 }
@@ -41,7 +41,7 @@
 
 .menu-label {
   margin-bottom: 8px;
-  color: #FF6F61;
+  color: #2C2C2C;
   font-weight: bold;
   font-size: 1.1em;
   text-align: left;
@@ -65,11 +65,11 @@
   cursor: pointer;
   margin-bottom: 10px;
   background: #f4f6f8;
-  border: 1px solid #FF6F61;
+  border: 1px solid #2C2C2C;
   border-radius: 6px;
   padding: 12px 18px;
   font-weight: bold;
-  color: #FF6F61;
+  color: #2C2C2C;
   text-align: center;
   transition: background 0.2s;
 }
@@ -80,7 +80,7 @@
 
 .menu-item {
   background: #f8f9fa;
-  border: 1px solid #FF6F61;
+  border: 1px solid #2C2C2C;
   border-radius: 6px;
   padding: 12px 18px;
   display: flex;
@@ -90,7 +90,7 @@
 }
 
 .menu-item span:last-child {
-  color: #FF6F61;
+  color: #2C2C2C;
   font-weight: bold;
 }
 
@@ -99,7 +99,7 @@
   margin: 0 auto 18px;
   display: block;
   padding: 8px 16px;
-  background-color: #FF6F61;
+  background-color: #2C2C2C;
   color: white;
   border: none;
   border-radius: 5px;
@@ -114,7 +114,7 @@
 
 input,
 textarea {
-  border: 2px solid #FF6F61 !important;
+  border: 2px solid #2C2C2C !important;
   background: #fff !important;
   color: inherit;
   border-radius: 8px;
@@ -123,7 +123,7 @@ textarea {
 .preview-item-value {
   background: #fff;
   color: inherit;
-  border: 2px solid #FF6F61;
+  border: 2px solid #2C2C2C;
   border-radius: 8px;
   padding: 8px 12px;
   margin-bottom: 8px;
