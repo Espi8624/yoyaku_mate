@@ -18,11 +18,6 @@
 .cancel-actions {
   justify-content: center;
 }
-.cancel-yes-btn {
-  background: #2C2C2C;
-  color: #fff;
-  min-width: 120px;
-}
 .waiting-section {
   max-width: 420px;
   margin: 32px auto;
@@ -95,9 +90,9 @@
 }
 
 .confirmation-btn {
-  max-width: 420px;
-  margin: 0 auto 18px;
-  display: block;
+  max-width: 180px;
+  margin: 0 8px;
+  display: inline-block;
   padding: 8px 16px;
   background-color: #2C2C2C;
   color: white;
@@ -128,4 +123,89 @@ textarea {
   padding: 8px 12px;
   margin-bottom: 8px;
   box-sizing: border-box;
+}
+
+/* ポップアップのオーバーレイ */
+.congestion-popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0,0,0,0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+/* ポップアップ本体 */
+.congestion-popup-modal {
+  position: relative;
+  background: #fff;
+  border-radius: 12px;
+  padding: 32px 24px 24px 24px;
+  min-width: 320px;
+  max-width: 90vw;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.18);
+  text-align: center;
+}
+
+/* 閉じるボタン（右上×） */
+.congestion-popup-close-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: transparent;
+  border: none;
+  font-size: 2rem;
+  color: #888;
+  cursor: pointer;
+  transition: color 0.2s, transform 0.2s;
+  z-index: 10;
+}
+.congestion-popup-close-btn:hover {
+  color: #333;
+  transform: scale(1.15);
+}
+
+/* メッセージ部分 */
+.congestion-popup-message {
+  margin: 24px 0 16px 0;
+  font-size: 1.1rem;
+  white-space: pre-line;
+}
+
+/* ボタン配置 */
+.congestion-popup-actions {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  margin-top: 8px;
+}
+
+.waiting-number-label {
+  text-align: center;
+  font-size: 1.5em;
+  margin-top: 36px;
+  margin-bottom: 12px;
+  font-weight: bold;
+  letter-spacing: 0.12em;
+  color: #222;
+  border: none;
+  background: none;
+}
+
+.waiting-number-value {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 4.5em;
+  font-weight: bold;
+  color: #2C2C2C;
+  margin-bottom: 40px;
+  border: none;
+  background: none;
+  letter-spacing: 0.22em;
+  width: 100%;
 }

@@ -52,15 +52,23 @@ export function WaitingScreenProvider({ children }) {
     };
   }, [location.search]);
 
+  // ★★ ここでローカルストレージからstep初期値を判定 ★★
+  const initialStep = (() => {
+    const storedStoreId = localStorage.getItem("store_id");
+    const storedWaitingId = localStorage.getItem("waiting_id");
+    if (storedStoreId && storedWaitingId) return 3;
+    return 1;
+  })();
+
   // ステータス管理
-  const [step, setStep] = useState(1);
+  const [step, setStep] = useState(initialStep);
   const [storeId, setStoreId] = useState(initialParams.storeId);
   const [selectedNationality, setSelectedNationality] = useState(initialParams.nationality);
   const [selectedLanguageCode, setSelectedLanguageCode] = useState(initialParams.languageCode);
   const [partySize, setPartySize] = useState("");
   const [contact, setContact] = useState("");
   const [notes, setNotes] = useState("");
-  const [waitingId, setWaitingId] = useState("");
+  const [waitingId, setWaitingId] = useState(localStorage.getItem("waiting_id") || "");
   const [isCancelled, setIsCancelled] = useState(false);
 
   // ポップアップステータス管理
@@ -71,33 +79,17 @@ export function WaitingScreenProvider({ children }) {
   // 多国語Hook
   const t = useTranslation(selectedLanguageCode);
 
-
   // URLパラメータが変更される時、ステータスを更新
   useEffect(() => {
     setStoreId(initialParams.storeId);
     setSelectedNationality(initialParams.nationality);
     setSelectedLanguageCode(initialParams.languageCode);
-    setStep(1);
-    // 入力フィルド初期化
+    // stepはローカルストレージ優先で初期化されているのでここでは変更しない
     setPartySize("");
     setContact("");
     setNotes("");
-    setWaitingId("");
+    setWaitingId(localStorage.getItem("waiting_id") || "");
   }, [initialParams]);
-
-  // ページ転換ロジック
-  const goToNextStep = () => setStep(prev => prev + 1);
-  const goToPrevStep = () => setStep(prev => prev - 1);
-  const goBackToInputStep = (inputInfo) => {
-    if (inputInfo) {
-      setPartySize(inputInfo.partySize ?? "");
-      setContact(inputInfo.contact ?? "");
-      setNotes(inputInfo.notes ?? "");
-      setSelectedNationality(inputInfo.selectedNationality ?? "");
-      setSelectedLanguageCode(inputInfo.selectedLanguageCode ?? "");
-    }
-    setStep(1);
-  };
 
   // サーバー通信関係
   const _performSubmit = async (payload) => {
@@ -105,7 +97,7 @@ export function WaitingScreenProvider({ children }) {
       const res = await apiSubmitWaiting(payload);
       if (res.ok) {
         alert("登録が完了しました");
-        goToNextStep(); // step 3へ移動
+        setStep(3); // step 3へ移動
       } else {
         const err = await res.text();
         alert("登録に失敗しました: " + err);
@@ -121,7 +113,9 @@ export function WaitingScreenProvider({ children }) {
 
     const newWaitingId = generateWaitingId();
     setWaitingId(newWaitingId);
+    // waiting_id, store_idをローカルストレージに保存
     localStorage.setItem("waiting_id", newWaitingId);
+    if (storeId) localStorage.setItem("store_id", storeId);
 
     const payload = {
       store_id: storeId,
@@ -146,6 +140,10 @@ export function WaitingScreenProvider({ children }) {
       return;
     }
 
+    // waitingId, storeIdをローカルストレージに保存
+    if (waitingId) localStorage.setItem("waiting_id", waitingId);
+    if (storeId) localStorage.setItem("store_id", storeId);
+
     await _performSubmit(payload);
   };
 
@@ -158,6 +156,10 @@ export function WaitingScreenProvider({ children }) {
       }
       // 成功時、isCancelled状態をtrueに変更
       setIsCancelled(true);
+
+      // ローカルストレージからwaiting_idとstore_idを削除
+      localStorage.removeItem("waiting_id");
+      localStorage.removeItem("store_id");
     } catch (err) {
       alert(`キャンセル処理に失敗しました: ${err.message}`);
     }
@@ -178,7 +180,6 @@ export function WaitingScreenProvider({ children }) {
     setPendingPayload(null);
   };
 
-
   // Providerかchildに伝達する値
   const value = {
     // ステータス値
@@ -186,12 +187,14 @@ export function WaitingScreenProvider({ children }) {
     isCancelled,
     handleCancel,
     storeId,
+    setStoreId,
     selectedNationality,
     selectedLanguageCode,
     partySize,
     contact,
     notes,
     waitingId,
+    setWaitingId,
     isPopupVisible,
     popupInfo,
     t, // 多国語データ
@@ -202,14 +205,24 @@ export function WaitingScreenProvider({ children }) {
     setPartySize,
     setContact,
     setNotes,
+    setStep,
 
     // Action/Page転換関数
-    goToNextStep,
-    goToPrevStep,
+    goToNextStep: () => setStep(prev => prev + 1),
+    goToPrevStep: () => setStep(prev => prev - 1),
     handleSubmitWaiting,
     closePopupAndProceed,
     closePopupOnly,
-    goBackToInputStep,
+    goBackToInputStep: (inputInfo) => {
+      if (inputInfo) {
+        setPartySize(inputInfo.partySize ?? "");
+        setContact(inputInfo.contact ?? "");
+        setNotes(inputInfo.notes ?? "");
+        setSelectedNationality(inputInfo.selectedNationality ?? "");
+        setSelectedLanguageCode(inputInfo.selectedLanguageCode ?? "");
+      }
+      setStep(1);
+    },
   };
 
   return (

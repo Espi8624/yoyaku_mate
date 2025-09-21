@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 import { WaitingScreenProvider, useWaitingScreen } from "./WaitingScreenContext";
 import WaitingScreenInput from "./waiting-screen-input/WaitingScreenInput";
@@ -18,7 +18,20 @@ function CancellationCompleteView() {
 }
 
 function FlowController() {
-  const { step, storeId, isCancelled } = useWaitingScreen();
+  const { step, setStep, storeId, setStoreId, waitingId, setWaitingId, isCancelled } = useWaitingScreen();
+
+  // ローカルストレージから復元し、必要ならstepを3(WaitingScreen)に
+  useEffect(() => {
+    const storedStoreId = localStorage.getItem("store_id");
+    const storedWaitingId = localStorage.getItem("waiting_id");
+    if (storedStoreId && storedWaitingId) {
+      if (setStoreId) setStoreId(storedStoreId);
+      if (setWaitingId) setWaitingId(storedWaitingId);
+      if (step !== 3 && setStep) setStep(3);
+    }
+  // step, setStep, setStoreId, setWaitingIdは不変なので依存配列は空でOK
+  // eslint-disable-next-line
+  }, []);
 
   // isCancelledがtrueの場合、取消完了画面を最優先で表示
   if (isCancelled) {
