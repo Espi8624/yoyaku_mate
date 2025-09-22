@@ -62,7 +62,7 @@ function WaitingScreenInput() {
           onChange={(e) => setNotes(e.target.value)}
         />
 
-        <div style={{ display: 'flex', gap: '12px', marginTop: '16px' }}>
+        <div className="waiting-form-actions">
           <button type="submit" className="confirmation-btn">
             {waitingScreenInput.confirm}
           </button>
