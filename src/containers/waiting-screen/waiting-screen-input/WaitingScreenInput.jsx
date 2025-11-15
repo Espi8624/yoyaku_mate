@@ -13,6 +13,7 @@ function WaitingScreenInput() {
     notes, setNotes,
     goToNextStep,
     selectedLanguageCode,
+    isOffline,
   } = useWaitingScreen();
 
   // 多国語処理
@@ -30,6 +31,13 @@ function WaitingScreenInput() {
     goToNextStep();
   };
 
+  // 全角から半角に変換する関数を追加
+  const convertFullWidthToHalfWidth = (str) => {
+    return str.replace(/[０-９]/g, function(s) {
+      return String.fromCharCode(s.charCodeAt(0) - 0xFEE0);
+    });
+  };
+
   return (
     <div className="waiting-section">
       <div className="preview-label">{waitingScreenInput.input_label}</div>
@@ -40,7 +48,7 @@ function WaitingScreenInput() {
           label={waitingScreenInput.party_size_label}
           example="例: 2"
           value={partySize}
-          onChange={(e) => setPartySize(e.target.value)}
+          onChange={(e) => setPartySize(convertFullWidthToHalfWidth(e.target.value))}
           type="number" 
           required
         />
