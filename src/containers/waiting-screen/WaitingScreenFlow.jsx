@@ -4,6 +4,8 @@ import { WaitingScreenProvider, useWaitingScreen } from "./WaitingScreenContext"
 import WaitingScreenInput from "./waiting-screen-input/WaitingScreenInput";
 import WaitingScreenPreview from "./waiting-screen-preview/WaitingScreenPreview";
 import WaitingScreen from "./waiting-screen/WaitingScreen";
+import NotifiedScreen from "./waiting-screen-notified/NotifiedScreen";
+import { getWaitingDetails } from "../../api/waitingService";
 import './ErrorScreen.css';
 
 // 取り消し完了画面
@@ -20,16 +22,54 @@ function CancellationCompleteView() {
 function FlowController() {
   const { step, setStep, storeId, setStoreId, waitingId, setWaitingId, isCancelled } = useWaitingScreen();
 
-  // ローカルストレージから復元し、必要ならstepを3(WaitingScreen)に
+  // ローカルストレージから復元し、ステータスを確認してから復元するか判断
   useEffect(() => {
-    const storedStoreId = localStorage.getItem("store_id");
-    const storedWaitingId = localStorage.getItem("waiting_id");
-    if (storedStoreId && storedWaitingId) {
-      if (setStoreId) setStoreId(storedStoreId);
-      if (setWaitingId) setWaitingId(storedWaitingId);
-      if (step !== 3 && setStep) setStep(3);
-    }
-  // step, setStep, setStoreId, setWaitingIdは不変なので依存配列は空でOK
+    const checkAndRestore = async () => {
+      const storedStoreId = localStorage.getItem("store_id");
+      const storedWaitingId = localStorage.getItem("waiting_id");
+      
+      if (storedStoreId && storedWaitingId) {
+        try {
+          // サーバーから最新のステータスを取得
+          const details = await getWaitingDetails(storedStoreId, storedWaitingId);
+          
+          // completed, cancelledの場合はローカルストレージをクリア
+          if (details.status === 'completed' || details.status === 'cancelled') {
+            console.log(`[FlowController] ステータスが${details.status}のため、ローカルストレージをクリアします`);
+            localStorage.removeItem("store_id");
+            localStorage.removeItem("waiting_id");
+            // step 1にリセット（新規登録可能な状態）
+            if (setStep) setStep(1);
+          } else if (details.status === 'notified') {
+            // notifiedの場合はstep 4に復元
+            if (setStoreId) setStoreId(storedStoreId);
+            if (setWaitingId) setWaitingId(storedWaitingId);
+            if (setStep) setStep(4);
+          } else {
+            // waiting または called の場合はstep 3に復元
+            if (setStoreId) setStoreId(storedStoreId);
+            if (setWaitingId) setWaitingId(storedWaitingId);
+            if (step !== 3 && setStep) setStep(3);
+          }
+        } catch (err) {
+          // 404エラー（データが存在しない）の場合もクリア
+          if (err?.response?.status === 404 || err?.response?.status === 410) {
+            console.log('[FlowController] データが存在しないため、ローカルストレージをクリアします');
+            localStorage.removeItem("store_id");
+            localStorage.removeItem("waiting_id");
+            if (setStep) setStep(1);
+          } else {
+            console.error('[FlowController] ステータス確認エラー:', err);
+            // エラーの場合は一旦復元を試みる
+            if (setStoreId) setStoreId(storedStoreId);
+            if (setWaitingId) setWaitingId(storedWaitingId);
+            if (step !== 3 && setStep) setStep(3);
+          }
+        }
+      }
+    };
+
+    checkAndRestore();
   // eslint-disable-next-line
   }, []);
 
@@ -56,6 +96,9 @@ function FlowController() {
   }
   if (step === 3) {
     return <WaitingScreen />;
+  }
+  if (step === 4) {
+    return <NotifiedScreen />;
   }
   return <div>Loading...</div>;
 }

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useWaitingScreen } from "../WaitingScreenContext";
 import useTranslation from "../../../hook/useTranslation";
-import { getMenuList, getWaitingDetails } from "../../../api/waitingService";
+import { getMenuList, getWaitingDetails, getStoreInfo } from "../../../api/waitingService";
 import MenuDisplay from "./MenuDisplay";
 import "./WaitingScreen.css";
 
@@ -27,7 +27,9 @@ function WaitingScreen() {
     storeId,
     waitingId,
     selectedLanguageCode,
-    handleCancel
+    handleCancel,
+    setStep, // 追加
+    isOffline
   } = context;
 
   const t = useTranslation(selectedLanguageCode);
@@ -38,13 +40,31 @@ function WaitingScreen() {
   const [error, setError] = useState(null);
   const [waitingDetails, setWaitingDetails] = useState({});
   const [menuList, setMenuList] = useState([]);
+  const [storeName, setStoreName] = useState('');
   const [showCancelPopup, setShowCancelPopup] = useState(false);
-  const [showCalledPopup, setShowCalledPopup] = useState(false); 
+  const [showCalledPopup, setShowCalledPopup] = useState(false);
 
   // ポーリング用のref
   const pollingRef = useRef(null);
 
-  // データ取得関数
+  // 店舗情報を初回のみ取得
+  useEffect(() => {
+    if (!storeId || !restored) return;
+    
+    const fetchStoreInfo = async () => {
+      try {
+        const storeInfo = await getStoreInfo(storeId);
+        console.log("[fetchStoreInfo] storeInfo:", storeInfo);
+        setStoreName(storeInfo?.data?.store_name || '');
+      } catch (err) {
+        console.error("店舗情報の取得に失敗:", err);
+      }
+    };
+
+    fetchStoreInfo();
+  }, [storeId, restored]);
+
+  // データ取得関数（待機情報とメニューのみ）
   const loadAllData = async () => {
     if (!storeId || !waitingId) {
       setIsLoading(false);
@@ -59,6 +79,20 @@ function WaitingScreen() {
       console.log("[loadAllData] details:", details);
 
       const safeDetails = details || {};
+      
+      // ★ notifiedステータスをチェックしてstep 4に遷移
+      if (safeDetails.status === "notified") {
+        // ポーリングを停止
+        if (pollingRef.current) {
+          clearInterval(pollingRef.current);
+        }
+        // step 4 (NotifiedScreen)に遷移
+        if (setStep) {
+          setStep(4);
+        }
+        return;
+      }
+
       // status が called ならポップアップを表示
       if (safeDetails.status === "called") {
         setShowCalledPopup(true);
@@ -68,12 +102,7 @@ function WaitingScreen() {
       setMenuList(menu || []);
       setError(null);
     } catch (err) {
-      // console.error("[loadAllData] getWaitingDetails error:", err);
-      // console.log("[loadAllData] error.response?.status:", err?.response?.status);
-
       if (err?.response?.status === 404 || err?.response?.status === 410) {
-        // console.warn("[loadAllData] waiting finished → keep popup open");
-        // 404 の場合もポップアップを表示し続ける
         setShowCalledPopup(true);
         setError(null);
       } else {
@@ -109,6 +138,13 @@ function WaitingScreen() {
 
   return (
     <div className="waiting-section">
+      {/* 店名を表示 */}
+      {storeName && (
+        <div className="store-name-header">
+          <h2>{storeName}</h2>
+        </div>
+      )}
+      
       <div className="preview-label">{waitingScreenTexts.label_1}</div>
       {waitingScreenTexts.label_2 && (
         <div className="waiting-label-2">{waitingScreenTexts.label_2}</div>
