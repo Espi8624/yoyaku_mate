@@ -71,14 +71,37 @@ function WaitingScreen() {
       setError("店舗情報または待機番号がありません。");
       return;
     }
+    
+    console.log("[loadAllData] リクエストパラメータ:", { storeId, waitingId });
+    
     try {
       const [details, menu] = await Promise.all([
         getWaitingDetails(storeId, waitingId),
         getMenuList(storeId)
       ]);
-      console.log("[loadAllData] details:", details);
+      
+      console.log("[loadAllData] APIレスポンス details:", details);
+      console.log("[loadAllData] waiting_id一致確認:", {
+        localStorage: waitingId,
+        response: details?.waiting_id,
+        match: waitingId === details?.waiting_id
+      });
 
       const safeDetails = details || {};
+      
+      // ★ 取得したデータのwaiting_idが一致しない場合はエラー
+      if (safeDetails.waiting_id && safeDetails.waiting_id !== waitingId) {
+        console.error("[loadAllData] waiting_idの不一致を検出:", {
+          expected: waitingId,
+          actual: safeDetails.waiting_id
+        });
+        // ローカルストレージをクリアして再登録を促す
+        localStorage.removeItem("waiting_id");
+        localStorage.removeItem("store_id");
+        setError("待機情報が見つかりません。再度登録してください。");
+        setIsLoading(false);
+        return;
+      }
       
       // ★ notifiedステータスをチェックしてstep 4に遷移
       if (safeDetails.status === "notified") {
@@ -102,9 +125,12 @@ function WaitingScreen() {
       setMenuList(menu || []);
       setError(null);
     } catch (err) {
+      console.error("[loadAllData] エラー:", err);
       if (err?.response?.status === 404 || err?.response?.status === 410) {
-        setShowCalledPopup(true);
-        setError(null);
+        // データが見つからない場合はローカルストレージをクリア
+        localStorage.removeItem("waiting_id");
+        localStorage.removeItem("store_id");
+        setError("待機情報が見つかりません。再度登録してください。");
       } else {
         setError("データの読み込みに失敗しました。");
       }
