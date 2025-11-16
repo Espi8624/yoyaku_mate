@@ -73,6 +73,8 @@ export const getMenuList = async (storeId) => {
  */
 export const getWaitingDetails = async (storeId, waitingId) => {
   try {
+    console.log('[getWaitingDetails] リクエスト:', { storeId, waitingId });
+    
     const [detailsRes, listRes] = await Promise.all([
       axios.get(`${API_BASE_URL}/waiting-list`, {
         params: {
@@ -85,8 +87,21 @@ export const getWaitingDetails = async (storeId, waitingId) => {
       })
     ]);
 
-    const details = Array.isArray(detailsRes.data.data) ?
-      detailsRes.data.data[0] : (detailsRes.data.data || detailsRes.data);
+    console.log('[getWaitingDetails] detailsRes.data:', detailsRes.data);
+
+    // ★ 配列の場合、waiting_idが一致するものを探す
+    let details;
+    if (Array.isArray(detailsRes.data.data)) {
+      details = detailsRes.data.data.find(item => item.waiting_id === waitingId);
+      if (!details) {
+        throw new Error('指定されたwaiting_idのデータが見つかりません');
+      }
+    } else {
+      details = detailsRes.data.data || detailsRes.data;
+    }
+
+    console.log('[getWaitingDetails] 取得したdetails:', details);
+
     const waitingList = Array.isArray(listRes.data.data) ? listRes.data.data : [];
 
     const waitingCount = waitingList.filter(item => item.status === 'waiting').length;
@@ -98,7 +113,8 @@ export const getWaitingDetails = async (storeId, waitingId) => {
       estimated_waiting_time: estimatedWaitingTime,
     };
   } catch (error) {
-    throw new Error('待機情報の取得に失敗しました');
+    console.error('[getWaitingDetails] エラー:', error);
+    throw error;
   }
 };
 
