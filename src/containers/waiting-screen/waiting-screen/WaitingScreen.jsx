@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useWaitingScreen } from "../WaitingScreenContext";
 import useTranslation from "../../../hook/useTranslation";
-import { getMenuList, getWaitingDetails } from "../../../api/waitingService";
+import { getMenuList, getWaitingDetails, getStoreInfo } from "../../../api/waitingService";
 import MenuDisplay from "./MenuDisplay";
 import "./WaitingScreen.css";
 
@@ -27,7 +27,9 @@ function WaitingScreen() {
     storeId,
     waitingId,
     selectedLanguageCode,
-    handleCancel
+    handleCancel,
+    setStep, // 追加
+    isOffline
   } = context;
 
   const t = useTranslation(selectedLanguageCode);
@@ -38,27 +40,82 @@ function WaitingScreen() {
   const [error, setError] = useState(null);
   const [waitingDetails, setWaitingDetails] = useState({});
   const [menuList, setMenuList] = useState([]);
+  const [storeName, setStoreName] = useState('');
   const [showCancelPopup, setShowCancelPopup] = useState(false);
-  const [showCalledPopup, setShowCalledPopup] = useState(false); 
+  const [showCalledPopup, setShowCalledPopup] = useState(false);
 
   // ポーリング用のref
   const pollingRef = useRef(null);
 
-  // データ取得関数
+  // 店舗情報を初回のみ取得
+  useEffect(() => {
+    if (!storeId || !restored) return;
+    
+    const fetchStoreInfo = async () => {
+      try {
+        const storeInfo = await getStoreInfo(storeId);
+        console.log("[fetchStoreInfo] storeInfo:", storeInfo);
+        setStoreName(storeInfo?.data?.store_name || '');
+      } catch (err) {
+        console.error("店舗情報の取得に失敗:", err);
+      }
+    };
+
+    fetchStoreInfo();
+  }, [storeId, restored]);
+
+  // データ取得関数（待機情報とメニューのみ）
   const loadAllData = async () => {
     if (!storeId || !waitingId) {
       setIsLoading(false);
       setError("店舗情報または待機番号がありません。");
       return;
     }
+    
+    console.log("[loadAllData] リクエストパラメータ:", { storeId, waitingId });
+    
     try {
       const [details, menu] = await Promise.all([
         getWaitingDetails(storeId, waitingId),
         getMenuList(storeId)
       ]);
-      console.log("[loadAllData] details:", details);
+      
+      console.log("[loadAllData] APIレスポンス details:", details);
+      console.log("[loadAllData] waiting_id一致確認:", {
+        localStorage: waitingId,
+        response: details?.waiting_id,
+        match: waitingId === details?.waiting_id
+      });
 
       const safeDetails = details || {};
+      
+      // ★ 取得したデータのwaiting_idが一致しない場合はエラー
+      if (safeDetails.waiting_id && safeDetails.waiting_id !== waitingId) {
+        console.error("[loadAllData] waiting_idの不一致を検出:", {
+          expected: waitingId,
+          actual: safeDetails.waiting_id
+        });
+        // ローカルストレージをクリアして再登録を促す
+        localStorage.removeItem("waiting_id");
+        localStorage.removeItem("store_id");
+        setError("待機情報が見つかりません。再度登録してください。");
+        setIsLoading(false);
+        return;
+      }
+      
+      // ★ notifiedステータスをチェックしてstep 4に遷移
+      if (safeDetails.status === "notified") {
+        // ポーリングを停止
+        if (pollingRef.current) {
+          clearInterval(pollingRef.current);
+        }
+        // step 4 (NotifiedScreen)に遷移
+        if (setStep) {
+          setStep(4);
+        }
+        return;
+      }
+
       // status が called ならポップアップを表示
       if (safeDetails.status === "called") {
         setShowCalledPopup(true);
@@ -68,14 +125,12 @@ function WaitingScreen() {
       setMenuList(menu || []);
       setError(null);
     } catch (err) {
-      // console.error("[loadAllData] getWaitingDetails error:", err);
-      // console.log("[loadAllData] error.response?.status:", err?.response?.status);
-
+      console.error("[loadAllData] エラー:", err);
       if (err?.response?.status === 404 || err?.response?.status === 410) {
-        // console.warn("[loadAllData] waiting finished → keep popup open");
-        // 404 の場合もポップアップを表示し続ける
-        setShowCalledPopup(true);
-        setError(null);
+        // データが見つからない場合はローカルストレージをクリア
+        localStorage.removeItem("waiting_id");
+        localStorage.removeItem("store_id");
+        setError("待機情報が見つかりません。再度登録してください。");
       } else {
         setError("データの読み込みに失敗しました。");
       }
@@ -109,6 +164,13 @@ function WaitingScreen() {
 
   return (
     <div className="waiting-section">
+      {/* 店名を表示 */}
+      {storeName && (
+        <div className="store-name-header">
+          <h2>{storeName}</h2>
+        </div>
+      )}
+      
       <div className="preview-label">{waitingScreenTexts.label_1}</div>
       {waitingScreenTexts.label_2 && (
         <div className="waiting-label-2">{waitingScreenTexts.label_2}</div>

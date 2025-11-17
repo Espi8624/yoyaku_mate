@@ -3,6 +3,20 @@ import { useLocation } from 'react-router-dom';
 import nationalitiesData from '../../data/nationalities.json';
 import useTranslation from '../../hook/useTranslation';
 import { getWaitingStatus, submitWaiting as apiSubmitWaiting, cancelWaiting } from '../../api/waitingService';
+import './NetworkErrorPopup.css';  // CSSファイル名を変更
+
+// NetworkErrorPopupをインラインコンポーネントとして定義
+const NetworkErrorPopup = ({ isOffline }) => {
+  if (!isOffline) return null;
+
+  return (
+    <div className="network-error-popup">
+      <span className="network-error-message">
+        インターネット接続が不安定です
+      </span>
+    </div>
+  );
+};
 
 // Context Object生成
 const WaitingScreenContext = createContext(null);
@@ -76,6 +90,9 @@ export function WaitingScreenProvider({ children }) {
   const [popupInfo, setPopupInfo] = useState({ message: "", mode: "congestion" });
   const [pendingPayload, setPendingPayload] = useState(null);
 
+  // オフライン状態の管理を追加
+  const [isOffline, setIsOffline] = useState(!navigator.onLine);
+
   // 多国語Hook
   const t = useTranslation(selectedLanguageCode);
 
@@ -95,15 +112,24 @@ export function WaitingScreenProvider({ children }) {
   const _performSubmit = async (payload) => {
     try {
       const res = await apiSubmitWaiting(payload);
-      if (res.ok) {
+      // axiosは成功時に200-299のstatusを返す
+      if (res.status >= 200 && res.status < 300) {
         alert("登録が完了しました");
         setStep(3); // step 3へ移動
       } else {
-        const err = await res.text();
-        alert("登録に失敗しました: " + err);
+        // 登録失敗時にローカルストレージから削除
+        localStorage.removeItem("waiting_id");
+        localStorage.removeItem("store_id");
+        const errorMessage = res.data?.message || '登録に失敗しました';
+        alert("登録に失敗しました: " + errorMessage);
       }
     } catch (err) {
-      alert("通信エラー: " + err);
+      // エラー発生時もローカルストレージから削除
+      localStorage.removeItem("waiting_id");
+      localStorage.removeItem("store_id");
+      console.error("登録エラー:", err);
+      const errorMessage = err.response?.data?.message || err.message || '通信エラーが発生しました';
+      alert("通信エラー: " + errorMessage);
     }
   };
 
@@ -150,18 +176,28 @@ export function WaitingScreenProvider({ children }) {
   const handleCancel = async () => {
     try {
       const res = await cancelWaiting(storeId, waitingId);
-      if (!res.ok) {
-        const errorText = await res.text();
-        throw new Error(errorText || 'サーバーエラーが発生しました。');
+      // axiosは成功時に例外をスローしないので、status codeで判定
+      if (res.status >= 200 && res.status < 300) {
+        // 成功時、isCancelled状態をtrueに変更
+        setIsCancelled(true);
+        // ローカルストレージからwaiting_idとstore_idを削除
+        localStorage.removeItem("waiting_id");
+        localStorage.removeItem("store_id");
+        // 初期状態に戻す
+        setStep(1);
+        setPartySize('');
+        setSelectedNationality('その他');
+        setContact('');
+        setNotes('');
+        setWaitingId(null);
+        setPopupInfo({ message: '', mode: '' });
+      } else {
+        throw new Error(res.data?.message || 'サーバーエラーが発生しました。');
       }
-      // 成功時、isCancelled状態をtrueに変更
-      setIsCancelled(true);
-
-      // ローカルストレージからwaiting_idとstore_idを削除
-      localStorage.removeItem("waiting_id");
-      localStorage.removeItem("store_id");
     } catch (err) {
-      alert(`キャンセル処理に失敗しました: ${err.message}`);
+      console.error("キャンセルエラー:", err);
+      const errorMessage = err.response?.data?.message || err.message || 'キャンセルに失敗しました。';
+      alert("キャンセルエラー: " + errorMessage);
     }
   };
 
@@ -179,6 +215,20 @@ export function WaitingScreenProvider({ children }) {
     setPopupVisible(false);
     setPendingPayload(null);
   };
+
+  // 通信状態の監視
+  useEffect(() => {
+    const handleOnline = () => setIsOffline(false);
+    const handleOffline = () => setIsOffline(true);
+
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
+
+    return () => {
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('offline', handleOffline);
+    };
+  }, []);
 
   // Providerかchildに伝達する値
   const value = {
@@ -198,6 +248,7 @@ export function WaitingScreenProvider({ children }) {
     isPopupVisible,
     popupInfo,
     t, // 多国語データ
+    isOffline, // コンテキストに追加
 
     // ステータス変更関数
     setSelectedNationality,
@@ -227,6 +278,7 @@ export function WaitingScreenProvider({ children }) {
 
   return (
     <WaitingScreenContext.Provider value={value}>
+      <NetworkErrorPopup isOffline={isOffline} />
       {children}
     </WaitingScreenContext.Provider>
   );

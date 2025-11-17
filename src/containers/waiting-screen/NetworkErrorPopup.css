@@ -1,0 +1,26 @@
+.network-error-popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background-color: #f44336;
+  color: white;
+  text-align: center;
+  padding: 10px;
+  z-index: 9999;
+  animation: slideDown 0.3s ease-out;
+}
+
+.network-error-message {
+  font-size: 14px;
+  font-weight: bold;
+}
+
+@keyframes slideDown {
+  from {
+    transform: translateY(-100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
