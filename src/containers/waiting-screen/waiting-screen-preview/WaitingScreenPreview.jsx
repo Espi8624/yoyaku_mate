@@ -13,6 +13,7 @@ function WaitingScreenPreview() {
     goToPrevStep,
     handleSubmitWaiting,
     isPopupVisible,
+    isOffline
   } = useWaitingScreen();
 
   const t = useTranslation(selectedLanguageCode);

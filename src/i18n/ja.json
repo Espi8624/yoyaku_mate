@@ -17,6 +17,7 @@
         "name_label": "お名前",
         "party_size_label": "人数",
         "contact_label": "連絡先",
+        "note_label": "備考",
         "back": "修正する",
         "confirm": "この内容で受付する",
         "popup": {
@@ -38,6 +39,6 @@
         "menu_label": "お待ちの間にメニューをご覧になりませんか？",
         "menu_overview_label": "メニューを見る",
         "menu_close_label": "メニューを閉じる",
-        "category_overview_labe":"カテゴリーを見る"
+        "category_overview_labe": "カテゴリーを見る"
     }
 }

@@ -1,4 +1,6 @@
-const API_BASE_URL = "http://localhost:8080/api";
+import axios from 'axios';
+
+const API_BASE_URL = "https://saboten-server.fly.dev/api";
 
 /**
  * 現在待機状況と、店舗の待機制作を呼び出す
@@ -11,25 +13,21 @@ const API_BASE_URL = "http://localhost:8080/api";
  */
 export const getWaitingStatus = async (storeId) => {
   try {
-    // 待機リストAPI、店舗設定APIを同時に呼出
     const [waitingRes, settingsRes] = await Promise.all([
-      fetch(`${API_BASE_URL}/waiting-list?store_id=${storeId}`),
-      fetch(`${API_BASE_URL}/store_settings?store_id=${storeId}`)
+      axios.get(`${API_BASE_URL}/waiting-list`, {
+        params: { store_id: storeId }
+      }),
+      axios.get(`${API_BASE_URL}/store_settings`, {
+        params: { store_id: storeId }
+      })
     ]);
 
-    // 失敗したらエラー発生
-    if (!waitingRes.ok) throw new Error(`Failed to fetch waiting list: ${waitingRes.statusText}`);
-    if (!settingsRes.ok) throw new Error(`Failed to fetch store settings: ${settingsRes.statusText}`);
-
-    const waitingData = await waitingRes.json();
-    const settingsData = await settingsRes.json();
-    
-    const waitingList = Array.isArray(waitingData.data) ? waitingData.data : [];
+    const waitingList = Array.isArray(waitingRes.data.data) ? waitingRes.data.data : [];
     const waitingPartySum = waitingList
       .filter(item => item.status === 'waiting')
       .reduce((sum, item) => sum + (Number(item.party_size) || 0), 0);
-      
-    const waitingPolicy = settingsData?.data?.settings?.waiting_policy;
+
+    const waitingPolicy = settingsRes.data?.data?.settings?.waiting_policy;
 
     return {
       waitingPartySum,
@@ -37,8 +35,7 @@ export const getWaitingStatus = async (storeId) => {
       maxWaitingCount: waitingPolicy?.max_waiting_count ?? null,
     };
   } catch (error) {
-    console.error("Error fetching waiting status:", error);
-    // エラー発生時、止めないよう基本値を返却し、エラーを投げ返して呼び出した方から処理出来るようにする
+    console.error("待機状況の取得に失敗しました:", error);
     throw error;
   }
 };
@@ -49,11 +46,7 @@ export const getWaitingStatus = async (storeId) => {
  * @returns {Promise<Response>}
  */
 export const submitWaiting = async (payload) => {
-  return fetch(`${API_BASE_URL}/waiting-list`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload)
-  });
+  return axios.post(`${API_BASE_URL}/waiting-list`, payload);
 };
 
 /**
@@ -62,10 +55,14 @@ export const submitWaiting = async (payload) => {
  * @returns {Promise<Array>}
  */
 export const getMenuList = async (storeId) => {
-  const res = await fetch(`${API_BASE_URL}/menu-list?store_id=${storeId || ''}`);
-  if (!res.ok) throw new Error('Failed to fetch menu list');
-  const data = await res.json();
-  return Array.isArray(data.data) ? data.data : [];
+  try {
+    const response = await axios.get(`${API_BASE_URL}/menu-list`, {
+      params: { store_id: storeId || '' }
+    });
+    return Array.isArray(response.data.data) ? response.data.data : [];
+  } catch (error) {
+    throw new Error('メニューリストの取得に失敗しました');
+  }
 };
 
 /**
@@ -75,31 +72,50 @@ export const getMenuList = async (storeId) => {
  * @returns {Promise<object>}
  */
 export const getWaitingDetails = async (storeId, waitingId) => {
-  // 詳細情報、リスト情報を並列に呼出
-  const [detailsRes, listRes] = await Promise.all([
-    fetch(`${API_BASE_URL}/waiting-list?store_id=${storeId || ''}&waiting_id=${waitingId}`),
-    fetch(`${API_BASE_URL}/waiting-list?store_id=${storeId || ''}`)
-  ]);
-  
-  if (!detailsRes.ok) throw new Error('Failed to fetch waiting details');
-  if (!listRes.ok) throw new Error('Failed to fetch waiting list for count');
+  try {
+    console.log('[getWaitingDetails] リクエスト:', { storeId, waitingId });
+    
+    const [detailsRes, listRes] = await Promise.all([
+      axios.get(`${API_BASE_URL}/waiting-list`, {
+        params: {
+          store_id: storeId || '',
+          waiting_id: waitingId
+        }
+      }),
+      axios.get(`${API_BASE_URL}/waiting-list`, {
+        params: { store_id: storeId || '' }
+      })
+    ]);
 
-  const detailsData = await detailsRes.json();
-  const listData = await listRes.json();
+    console.log('[getWaitingDetails] detailsRes.data:', detailsRes.data);
 
-  const details = Array.isArray(detailsData.data) ? detailsData.data[0] : (detailsData.data || detailsData);
-  const waitingList = Array.isArray(listData.data) ? listData.data : [];
-  
-  const waitingCount = waitingList.filter(item => item.status === 'waiting').length;
-  // TODO: 平均待機時間API追加箇所
-  const estimatedWaitingTime = "-"; 
+    // ★ 配列の場合、waiting_idが一致するものを探す
+    let details;
+    if (Array.isArray(detailsRes.data.data)) {
+      details = detailsRes.data.data.find(item => item.waiting_id === waitingId);
+      if (!details) {
+        throw new Error('指定されたwaiting_idのデータが見つかりません');
+      }
+    } else {
+      details = detailsRes.data.data || detailsRes.data;
+    }
 
-  // 結果返却
-  return {
-    ...details,
-    waiting_count: waitingCount,
-    estimated_waiting_time: estimatedWaitingTime,
-  };
+    console.log('[getWaitingDetails] 取得したdetails:', details);
+
+    const waitingList = Array.isArray(listRes.data.data) ? listRes.data.data : [];
+
+    const waitingCount = waitingList.filter(item => item.status === 'waiting').length;
+    const estimatedWaitingTime = "-";
+
+    return {
+      ...details,
+      waiting_count: waitingCount,
+      estimated_waiting_time: estimatedWaitingTime,
+    };
+  } catch (error) {
+    console.error('[getWaitingDetails] エラー:', error);
+    throw error;
+  }
 };
 
 /**
@@ -109,13 +125,28 @@ export const getWaitingDetails = async (storeId, waitingId) => {
  * @returns {Promise<Response>}
  */
 export const cancelWaiting = async (storeId, waitingId) => {
-  return fetch(`${API_BASE_URL}/waiting-list?action=status`, {
-    method: 'PATCH',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      store_id: storeId || '',
-      waiting_id: waitingId,
-      status: 'cancelled'
-    })
+  return axios.patch(`${API_BASE_URL}/waiting-list`, {
+    store_id: storeId || '',
+    waiting_id: waitingId,
+    status: 'cancelled'
+  }, {
+    params: { action: 'status' }
   });
+};
+
+/**
+ * 店舗情報を取得
+ * @param {string} storeId - 店舗ID
+ * @returns {Promise<object>}
+ */
+export const getStoreInfo = async (storeId) => {
+  try {
+    const response = await axios.get(`${API_BASE_URL}/provider_store`, {
+      params: { store_id: storeId }
+    });
+    return response.data;
+  } catch (error) {
+    console.error('店舗情報の取得に失敗しました:', error);
+    throw error;
+  }
 };
