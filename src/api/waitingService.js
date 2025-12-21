@@ -59,8 +59,20 @@ export const getMenuList = async (storeId) => {
     const response = await axios.get(`${API_BASE_URL}/menu-list`, {
       params: { store_id: storeId || '' }
     });
+
+    // デバッグ: APIレスポンスの内容を確認（必要に応じてコメント解除）
+    // console.log('[getMenuList] APIレスポンス全体:', response.data);
+    // console.log('[getMenuList] メニューデータ:', response.data.data);
+
+    // 画像フィールドの確認（必要に応じてコメント解除）
+    // if (Array.isArray(response.data.data) && response.data.data.length > 0) {
+    //   console.log('[getMenuList] 最初のメニューアイテムのキー:', Object.keys(response.data.data[0]));
+    //   console.log('[getMenuList] 最初のメニューアイテム:', response.data.data[0]);
+    // }
+
     return Array.isArray(response.data.data) ? response.data.data : [];
   } catch (error) {
+    console.error('[getMenuList] エラー:', error);
     throw new Error('メニューリストの取得に失敗しました');
   }
 };
@@ -74,7 +86,7 @@ export const getMenuList = async (storeId) => {
 export const getWaitingDetails = async (storeId, waitingId) => {
   try {
     console.log('[getWaitingDetails] リクエスト:', { storeId, waitingId });
-    
+
     const [detailsRes, listRes] = await Promise.all([
       axios.get(`${API_BASE_URL}/waiting-list`, {
         params: {
@@ -125,13 +137,25 @@ export const getWaitingDetails = async (storeId, waitingId) => {
  * @returns {Promise<Response>}
  */
 export const cancelWaiting = async (storeId, waitingId) => {
-  return axios.patch(`${API_BASE_URL}/waiting-list`, {
-    store_id: storeId || '',
-    waiting_id: waitingId,
-    status: 'cancelled'
-  }, {
-    params: { action: 'status' }
-  });
+  try {
+    const response = await axios.patch(
+      `${API_BASE_URL}/waiting-list?action=status`,
+      {
+        store_id: storeId || '',
+        waiting_id: waitingId,
+        status: 'cancelled'
+      },
+      {
+        headers: { 'Content-Type': 'application/json' }
+      }
+    );
+    console.log('[cancelWaiting] 成功:', response.data);
+    return response;
+  } catch (error) {
+    console.error('[cancelWaiting] エラー:', error);
+    console.error('[cancelWaiting] エラー詳細:', error.response?.data);
+    throw error;
+  }
 };
 
 /**
