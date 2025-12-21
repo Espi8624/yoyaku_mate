@@ -6,15 +6,39 @@
   text-align: center;
   height: 100vh;
   padding: 24px;
+  background: var(--color-background);
 }
 
 .error-section h2 {
   font-size: 24px;
-  color: #d32f2f;
+  color: var(--color-error);
   margin-bottom: 16px;
 }
 
 .error-section p {
   font-size: 16px;
-  color: #616161;
+  color: var(--color-text-secondary);
+}
+
+.success-section {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  min-height: 100vh;
+  padding: 24px;
+  background: var(--color-background);
+}
+
+.success-section h2 {
+  font-size: 24px;
+  color: var(--color-success);
+  margin-bottom: 16px;
+}
+
+.success-section p {
+  font-size: 16px;
+  color: var(--color-text-secondary);
+  max-width: 420px;
 }

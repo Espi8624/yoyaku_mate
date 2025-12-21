@@ -27,12 +27,12 @@ function FlowController() {
     const checkAndRestore = async () => {
       const storedStoreId = localStorage.getItem("store_id");
       const storedWaitingId = localStorage.getItem("waiting_id");
-      
+
       if (storedStoreId && storedWaitingId) {
         try {
           // サーバーから最新のステータスを取得
           const details = await getWaitingDetails(storedStoreId, storedWaitingId);
-          
+
           // completed, cancelledの場合はローカルストレージをクリア
           if (details.status === 'completed' || details.status === 'cancelled') {
             console.log(`[FlowController] ステータスが${details.status}のため、ローカルストレージをクリアします`);
@@ -46,7 +46,7 @@ function FlowController() {
             if (setWaitingId) setWaitingId(storedWaitingId);
             if (setStep) setStep(4);
           } else {
-            // waiting または called の場合はstep 3に復元
+            // waiting の場合はstep 3に復元
             if (setStoreId) setStoreId(storedStoreId);
             if (setWaitingId) setWaitingId(storedWaitingId);
             if (step !== 3 && setStep) setStep(3);
@@ -60,6 +60,32 @@ function FlowController() {
             if (setStep) setStep(1);
           } else {
             console.error('[FlowController] ステータス確認エラー:', err);
+
+            // 開発環境での詳細情報出力
+            const isDevelopment = process.env.NODE_ENV === 'development';
+
+            if (isDevelopment) {
+              console.group('⚠️ [開発モード] 復元エラー詳細');
+              console.log('LocalStorage:', {
+                store_id: storedStoreId,
+                waiting_id: storedWaitingId,
+                timestamp: localStorage.getItem('waiting_timestamp')
+                  ? new Date(parseInt(localStorage.getItem('waiting_timestamp'))).toLocaleString()
+                  : 'タイムスタンプなし'
+              });
+              console.log('Error Details:', {
+                status: err?.response?.status,
+                message: err?.message,
+                responseData: err?.response?.data
+              });
+              console.warn('⚠️ Step 3 にフォールバックします。DBのデータを確認してください。');
+              console.groupEnd();
+
+              // モーダルで警告を表示
+              const errorInfo = `復元エラーが発生しました\n\nStore ID: ${storedStoreId}\nWaiting ID: ${storedWaitingId}\nエラー: ${err?.response?.status || 'Network Error'}\n\nDBのデータを確認してください。`;
+              setTimeout(() => alert(errorInfo), 100);
+            }
+
             // エラーの場合は一旦復元を試みる
             if (setStoreId) setStoreId(storedStoreId);
             if (setWaitingId) setWaitingId(storedWaitingId);
@@ -70,7 +96,7 @@ function FlowController() {
     };
 
     checkAndRestore();
-  // eslint-disable-next-line
+    // eslint-disable-next-line
   }, []);
 
   // isCancelledがtrueの場合、取消完了画面を最優先で表示
