@@ -42,7 +42,6 @@ function WaitingScreen() {
   const [menuList, setMenuList] = useState([]);
   const [storeName, setStoreName] = useState('');
   const [showCancelPopup, setShowCancelPopup] = useState(false);
-  const [showCalledPopup, setShowCalledPopup] = useState(false);
 
   // ポーリング用のref
   const pollingRef = useRef(null);
@@ -50,7 +49,7 @@ function WaitingScreen() {
   // 店舗情報を初回のみ取得
   useEffect(() => {
     if (!storeId || !restored) return;
-    
+
     const fetchStoreInfo = async () => {
       try {
         const storeInfo = await getStoreInfo(storeId);
@@ -71,15 +70,15 @@ function WaitingScreen() {
       setError("店舗情報または待機番号がありません。");
       return;
     }
-    
+
     console.log("[loadAllData] リクエストパラメータ:", { storeId, waitingId });
-    
+
     try {
       const [details, menu] = await Promise.all([
         getWaitingDetails(storeId, waitingId),
         getMenuList(storeId)
       ]);
-      
+
       console.log("[loadAllData] APIレスポンス details:", details);
       console.log("[loadAllData] waiting_id一致確認:", {
         localStorage: waitingId,
@@ -88,7 +87,7 @@ function WaitingScreen() {
       });
 
       const safeDetails = details || {};
-      
+
       // ★ 取得したデータのwaiting_idが一致しない場合はエラー
       if (safeDetails.waiting_id && safeDetails.waiting_id !== waitingId) {
         console.error("[loadAllData] waiting_idの不一致を検出:", {
@@ -102,7 +101,7 @@ function WaitingScreen() {
         setIsLoading(false);
         return;
       }
-      
+
       // ★ notifiedステータスをチェックしてstep 4に遷移
       if (safeDetails.status === "notified") {
         // ポーリングを停止
@@ -114,11 +113,6 @@ function WaitingScreen() {
           setStep(4);
         }
         return;
-      }
-
-      // status が called ならポップアップを表示
-      if (safeDetails.status === "called") {
-        setShowCalledPopup(true);
       }
 
       setWaitingDetails(safeDetails);
@@ -170,7 +164,7 @@ function WaitingScreen() {
           <h2>{storeName}</h2>
         </div>
       )}
-      
+
       <div className="preview-label">{waitingScreenTexts.label_1}</div>
       {waitingScreenTexts.label_2 && (
         <div className="waiting-label-2">{waitingScreenTexts.label_2}</div>
@@ -226,17 +220,7 @@ function WaitingScreen() {
             </div>
           )}
 
-          {/* 呼び出しポップアップ（閉じるボタンなし・表示しっぱなし） */}
-          {showCalledPopup && (
-            <div className="congestion-popup-overlay">
-              <div className="congestion-popup-modal">
-                <div className="congestion-popup-message">
-                  お待たせいたしました。<br />
-                  只今ご案内いたします。
-                </div>
-              </div>
-            </div>
-          )}
+
         </>
       )}
     </div>
