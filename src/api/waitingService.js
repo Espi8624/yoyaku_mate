@@ -42,11 +42,14 @@ export const getWaitingStatus = async (storeId) => {
 
 /**
  * 新しい待機をサーバーに登録
- * @param {object} payload - サーバに送る待機情報
+ * @param {object} payload - サーバ에 보낼 대기 정보
+ * @param {string} vToken - 보안 토큰
  * @returns {Promise<Response>}
  */
-export const submitWaiting = async (payload) => {
-  return axios.post(`${API_BASE_URL}/waiting-list`, payload);
+export const submitWaiting = async (payload, vToken) => {
+  return axios.post(`${API_BASE_URL}/waiting-list`, payload, {
+    params: { v_token: vToken }
+  });
 };
 
 /**
