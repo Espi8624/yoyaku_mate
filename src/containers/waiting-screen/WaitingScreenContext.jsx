@@ -61,6 +61,7 @@ export function WaitingScreenProvider({ children }) {
 
     return {
       storeId: searchParams.get("store_id") || "",
+      vToken: searchParams.get("v_token") || "",
       nationality: initialNationality.name,
       languageCode: initialNationality.languageCode,
     };
@@ -83,6 +84,7 @@ export function WaitingScreenProvider({ children }) {
   const [contact, setContact] = useState("");
   const [notes, setNotes] = useState("");
   const [waitingId, setWaitingId] = useState(localStorage.getItem("waiting_id") || "");
+  const [vToken, setVToken] = useState(initialParams.vToken);
   const [isCancelled, setIsCancelled] = useState(false);
 
   // ポップアップステータス管理
@@ -99,6 +101,7 @@ export function WaitingScreenProvider({ children }) {
   // URLパラメータが変更される時、ステータスを更新
   useEffect(() => {
     setStoreId(initialParams.storeId);
+    setVToken(initialParams.vToken);
     setSelectedNationality(initialParams.nationality);
     setSelectedLanguageCode(initialParams.languageCode);
     // stepはローカルストレージ優先で初期化されているのでここでは変更しない
@@ -111,7 +114,7 @@ export function WaitingScreenProvider({ children }) {
   // サーバー通信関係
   const _performSubmit = async (payload) => {
     try {
-      const res = await apiSubmitWaiting(payload);
+      const res = await apiSubmitWaiting(payload, vToken);
       // axiosは成功時に200-299のstatusを返す
       if (res.status >= 200 && res.status < 300) {
         alert("登録が完了しました");
