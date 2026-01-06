@@ -47,6 +47,7 @@ export const getWaitingStatus = async (storeId) => {
  * @returns {Promise<Response>}
  */
 export const submitWaiting = async (payload, vToken) => {
+  console.log('[API] submitWaiting called with vToken:', vToken);
   return axios.post(`${API_BASE_URL}/waiting-list`, payload, {
     params: { v_token: vToken }
   });

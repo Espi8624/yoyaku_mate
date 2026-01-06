@@ -67,6 +67,11 @@ export function WaitingScreenProvider({ children }) {
     };
   }, [location.search]);
 
+  useEffect(() => {
+    console.log('[Context] Initial Params:', initialParams);
+    console.log('[Context] v_token:', initialParams.vToken);
+  }, [initialParams]);
+
   // ★★ ここでローカルストレージからstep初期値を判定 ★★
   const initialStep = (() => {
     const storedStoreId = localStorage.getItem("store_id");
