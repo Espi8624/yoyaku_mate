@@ -16,18 +16,19 @@ function NotifiedScreen() {
       try {
         const details = await getWaitingDetails(storeId, waitingId);
         console.log('[NotifiedScreen] status:', details.status);
-        
+
         // completedになったらローカルストレージをクリアしてstep 1に
         if (details.status === 'completed') {
           console.log('[NotifiedScreen] 入店完了のため、ローカルストレージをクリアします');
           localStorage.removeItem("store_id");
           localStorage.removeItem("waiting_id");
-          
+          localStorage.removeItem("v_token");
+
           // ポーリング停止
           if (pollingRef.current) {
             clearInterval(pollingRef.current);
           }
-          
+
           // step 1にリセット（新規登録可能な状態）
           if (setStep) {
             setStep(1);

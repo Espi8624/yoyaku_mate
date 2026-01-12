@@ -89,7 +89,7 @@ export function WaitingScreenProvider({ children }) {
   const [contact, setContact] = useState("");
   const [notes, setNotes] = useState("");
   const [waitingId, setWaitingId] = useState(localStorage.getItem("waiting_id") || "");
-  const [vToken, setVToken] = useState(initialParams.vToken);
+  const [vToken, setVToken] = useState(initialParams.vToken || localStorage.getItem("v_token") || "");
   const [isCancelled, setIsCancelled] = useState(false);
 
   // ポップアップステータス管理
@@ -106,7 +106,10 @@ export function WaitingScreenProvider({ children }) {
   // URLパラメータが変更される時、ステータスを更新
   useEffect(() => {
     setStoreId(initialParams.storeId);
-    setVToken(initialParams.vToken);
+    if (initialParams.vToken) {
+      setVToken(initialParams.vToken);
+      localStorage.setItem("v_token", initialParams.vToken);
+    }
     setSelectedNationality(initialParams.nationality);
     setSelectedLanguageCode(initialParams.languageCode);
     // stepはローカルストレージ優先で初期化されているのでここでは変更しない
@@ -128,6 +131,7 @@ export function WaitingScreenProvider({ children }) {
         // 登録失敗時にローカルストレージから削除
         localStorage.removeItem("waiting_id");
         localStorage.removeItem("store_id");
+        localStorage.removeItem("v_token");
         const errorMessage = res.data?.message || '登録に失敗しました';
         alert("登録に失敗しました: " + errorMessage);
       }
@@ -135,6 +139,7 @@ export function WaitingScreenProvider({ children }) {
       // エラー発生時もローカルストレージから削除
       localStorage.removeItem("waiting_id");
       localStorage.removeItem("store_id");
+      localStorage.removeItem("v_token");
       console.error("登録エラー:", err);
       const errorMessage = err.response?.data?.message || err.message || '通信エラーが発生しました';
       alert("通信エラー: " + errorMessage);
@@ -191,6 +196,7 @@ export function WaitingScreenProvider({ children }) {
         // ローカルストレージからwaiting_idとstore_idを削除
         localStorage.removeItem("waiting_id");
         localStorage.removeItem("store_id");
+        localStorage.removeItem("v_token");
         // 初期状態に戻す
         setStep(1);
         setPartySize('');
