@@ -34,22 +34,24 @@ function FlowController() {
           const details = await getWaitingDetails(storedStoreId, storedWaitingId);
 
           // completed, cancelledの場合はローカルストレージをクリア
-          if (details.status === 'completed' || details.status === 'cancelled') {
-            console.log(`[FlowController] ステータスが${details.status}のため、ローカルストレージをクリアします`);
-            localStorage.removeItem("store_id");
-            localStorage.removeItem("waiting_id");
-            // step 1にリセット（新規登録可能な状態）
-            if (setStep) setStep(1);
-          } else if (details.status === 'notified') {
+          if (details.status === 'notified') {
             // notifiedの場合はstep 4に復元
             if (setStoreId) setStoreId(storedStoreId);
             if (setWaitingId) setWaitingId(storedWaitingId);
             if (setStep) setStep(4);
-          } else {
+          } else if (details.status === 'waiting') {
             // waiting の場合はstep 3に復元
             if (setStoreId) setStoreId(storedStoreId);
             if (setWaitingId) setWaitingId(storedWaitingId);
             if (step !== 3 && setStep) setStep(3);
+          } else {
+            // それ以外（completed, cancelled, no_showなど）はローカルストレージをクリア
+            console.log(`[FlowController] ステータスが${details.status}のため、ローカルストレージをクリアします`);
+            localStorage.removeItem("store_id");
+            localStorage.removeItem("waiting_id");
+            localStorage.removeItem("v_token");
+            // step 1にリセット（新規登録可能な状態）
+            if (setStep) setStep(1);
           }
         } catch (err) {
           // 404エラー（データが存在しない）の場合もクリア
@@ -57,6 +59,7 @@ function FlowController() {
             console.log('[FlowController] データが存在しないため、ローカルストレージをクリアします');
             localStorage.removeItem("store_id");
             localStorage.removeItem("waiting_id");
+            localStorage.removeItem("v_token");
             if (setStep) setStep(1);
           } else {
             console.error('[FlowController] ステータス確認エラー:', err);
