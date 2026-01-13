@@ -9,8 +9,7 @@ function WaitingScreenMenu() {
         storeId,
         selectedMenus,
         setSelectedMenus,
-        goToNextStep,
-        goToPrevStep,
+        setStep, // Add setStep
         selectedLanguageCode,
     } = useWaitingScreen();
 
@@ -260,10 +259,10 @@ function WaitingScreenMenu() {
             )}
 
             <div className="menu-actions">
-                <button type="button" className="confirmation-btn secondary" onClick={goToPrevStep}>
+                <button type="button" className="confirmation-btn secondary" onClick={() => setStep(1)}>
                     戻る
                 </button>
-                <button type="button" className="confirmation-btn" onClick={goToNextStep}>
+                <button type="button" className="confirmation-btn" onClick={() => setStep(2)}>
                     {menuText.confirm}
                 </button>
             </div>
