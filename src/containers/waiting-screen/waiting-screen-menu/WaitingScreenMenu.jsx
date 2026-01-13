@@ -100,18 +100,60 @@ function WaitingScreenMenu() {
                 <div className="menu-selection-container">
                     <div className="menu-list">
                         {menuList.map((menu) => (
-                            <div key={menu.menu_id} className="menu-item-card">
+                            <div
+                                key={menu.menu_id}
+                                className="menu-item-card"
+                                style={{
+                                    display: 'flex',
+                                    flexDirection: 'row',
+                                    width: '100%',
+                                    padding: '16px',
+                                    backgroundColor: '#fff',
+                                    borderBottom: '1px solid #f0f0f0',
+                                    alignItems: 'center'
+                                }}
+                            >
                                 {menu.menu_image_url ? (
-                                    <img src={menu.menu_image_url} alt={menu.title} className="menu-item-image" />
+                                    <img
+                                        src={menu.menu_image_url}
+                                        alt={menu.title}
+                                        className="menu-item-image"
+                                        style={{
+                                            width: '64px',
+                                            height: '64px',
+                                            minWidth: '64px',
+                                            maxWidth: '64px',
+                                            borderRadius: '8px',
+                                            objectFit: 'cover',
+                                            marginRight: '16px',
+                                            flexShrink: 0
+                                        }}
+                                    />
                                 ) : (
-                                    <div className="menu-item-placeholder">No Image</div>
+                                    <div
+                                        className="menu-item-placeholder"
+                                        style={{
+                                            width: '64px',
+                                            height: '64px',
+                                            minWidth: '64px',
+                                            borderRadius: '8px',
+                                            backgroundColor: '#eee',
+                                            marginRight: '16px',
+                                            flexShrink: 0,
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            fontSize: '10px',
+                                            color: '#999'
+                                        }}
+                                    >No Image</div>
                                 )}
-                                <div className="menu-item-details">
-                                    <div className="menu-item-info">
-                                        <div className="menu-item-title">{menu.title}</div>
-                                        <div className="menu-item-price">¥{menu.price.toFixed(1)}</div>
+                                <div className="menu-item-details" style={{ flex: 1, display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
+                                    <div className="menu-item-info" style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                                        <div className="menu-item-title" style={{ fontSize: '16px', fontWeight: 500, color: '#333' }}>{menu.title}</div>
+                                        <div className="menu-item-price" style={{ fontSize: '14px', color: '#666' }}>¥{menu.price.toFixed(1)}</div>
                                     </div>
-                                    <div className="menu-item-quantity-control">
+                                    <div className="menu-item-quantity-control" style={{ display: 'flex', alignItems: 'center', gap: '12px', marginLeft: '12px' }}>
                                         <button
                                             className="quantity-btn minus"
                                             onClick={() => handleQuantityChange(menu, -1)}
@@ -121,7 +163,7 @@ function WaitingScreenMenu() {
                                                 <rect width="12" height="2" rx="1" fill="currentColor" />
                                             </svg>
                                         </button>
-                                        <span className="quantity-value">{getQuantity(menu.menu_id)}</span>
+                                        <span className="quantity-value" style={{ fontSize: '16px', fontWeight: 500, minWidth: '24px', textAlign: 'center' }}>{getQuantity(menu.menu_id)}</span>
                                         <button
                                             className="quantity-btn plus"
                                             onClick={() => handleQuantityChange(menu, 1)}
