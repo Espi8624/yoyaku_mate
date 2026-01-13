@@ -100,6 +100,21 @@ export function WaitingScreenProvider({ children }) {
   // オフライン状態の管理を追加
   const [isOffline, setIsOffline] = useState(!navigator.onLine);
 
+  // メニュー選択機能の状態
+  const [enableMenuSelection, setEnableMenuSelection] = useState(false);
+  const [selectedMenus, setSelectedMenus] = useState([]); // Array of { menuId, name, quantity, price }
+
+  // 店舗設定（メニュー選択機能有効化など）を取得
+  useEffect(() => {
+    if (storeId) {
+      getWaitingStatus(storeId).then(status => {
+        setEnableMenuSelection(status.enableMenuSelection);
+      }).catch(err => {
+        console.error("店舗設定取得エラー:", err);
+      });
+    }
+  }, [storeId]);
+
   // 多国語Hook
   const t = useTranslation(selectedLanguageCode);
 
@@ -163,7 +178,12 @@ export function WaitingScreenProvider({ children }) {
       nationality: selectedNationality,
       contact: contact.trim() === "" ? "なし" : contact,
       notes: notes.trim() === "" ? "なし" : notes,
-      status: "waiting"
+      status: "waiting",
+      menu_items: selectedMenus.map(m => ({
+        menu_id: m.menuId,
+        name: m.name,
+        quantity: m.quantity
+      }))
     };
 
     if (maxWaitingCount !== null && Number(partySize) > maxWaitingCount) {
@@ -263,6 +283,11 @@ export function WaitingScreenProvider({ children }) {
     popupInfo,
     t, // 多国語データ
     isOffline, // コンテキストに追加
+
+    // メニュー選択関連
+    enableMenuSelection,
+    selectedMenus,
+    setSelectedMenus,
 
     // ステータス変更関数
     setSelectedNationality,

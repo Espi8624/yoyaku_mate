@@ -33,6 +33,7 @@ export const getWaitingStatus = async (storeId) => {
       waitingPartySum,
       estimatedWaitingCount: waitingPolicy?.estimated_waiting_count ?? null,
       maxWaitingCount: waitingPolicy?.max_waiting_count ?? null,
+      enableMenuSelection: waitingPolicy?.enable_menu_selection ?? false,
     };
   } catch (error) {
     console.error("待機状況の取得に失敗しました:", error);
@@ -42,8 +43,8 @@ export const getWaitingStatus = async (storeId) => {
 
 /**
  * 新しい待機をサーバーに登録
- * @param {object} payload - サーバ에 보낼 대기 정보
- * @param {string} vToken - 보안 토큰
+ * @param {object} payload - サーバーに送信する待機情報
+ * @param {string} vToken - バリデーショントークン
  * @returns {Promise<Response>}
  */
 export const submitWaiting = async (payload, vToken) => {
