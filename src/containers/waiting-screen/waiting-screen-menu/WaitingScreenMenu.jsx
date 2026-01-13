@@ -36,6 +36,12 @@ function WaitingScreenMenu() {
                 const availableMenus = menus.filter(
                     (m) => m.menu_status === "available" && m.is_pre_order_available
                 );
+
+                // DEBUG: 画像URLの確認
+                if (availableMenus.length > 0) {
+                    alert(`First Menu keys: ${Object.keys(availableMenus[0]).join(",")}\nImage URL: ${availableMenus[0].menu_image_url}`);
+                }
+
                 setMenuList(availableMenus);
             } catch (error) {
                 console.error("Failed to fetch menus", error);
@@ -107,9 +113,6 @@ function WaitingScreenMenu() {
                                 )}
                                 <div className="menu-item-details">
                                     <div className="menu-item-title">{menu.title}</div>
-                                    <div style={{ fontSize: '10px', color: 'red' }}>
-                                        Status: {menu.menu_status}, PreOrder: {String(menu.is_pre_order_available)}
-                                    </div>
                                     <div className="menu-item-price">¥{menu.price.toLocaleString()}</div>
                                     <div className="menu-item-quantity-control">
                                         <button
