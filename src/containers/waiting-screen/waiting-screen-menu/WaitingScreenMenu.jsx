@@ -32,11 +32,23 @@ function WaitingScreenMenu() {
             setIsLoading(true);
             try {
                 const menus = await getMenuList(storeId);
+                console.log("Fetched Menus:", menus);
+
+                // --- DEBUG: フィルタリングを一時無効化し、データを確認 ---
+                if (menus.length > 0) {
+                    // 最初のアイテムの構造をアラートで確認（実機デバッグ用）
+                    // alert("First Menu: " + JSON.stringify(menus[0]));
+                }
+                setMenuList(menus);
+
+                /* 
                 // ステータスがactiveかつ事予約可能(pre-order available)なメニューのみフィルタリング
                 const availableMenus = menus.filter(
                     (m) => m.menu_status === "active" && m.is_pre_order_available
                 );
+                console.log("Available Menus:", availableMenus); 
                 setMenuList(availableMenus);
+                */
             } catch (error) {
                 console.error("Failed to fetch menus", error);
             } finally {
@@ -107,6 +119,9 @@ function WaitingScreenMenu() {
                                 )}
                                 <div className="menu-item-details">
                                     <div className="menu-item-title">{menu.title}</div>
+                                    <div style={{ fontSize: '10px', color: 'red' }}>
+                                        Status: {menu.menu_status}, PreOrder: {String(menu.is_pre_order_available)}
+                                    </div>
                                     <div className="menu-item-price">¥{menu.price.toLocaleString()}</div>
                                     <div className="menu-item-quantity-control">
                                         <button
