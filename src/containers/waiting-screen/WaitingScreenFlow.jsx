@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 
 import { WaitingScreenProvider, useWaitingScreen } from "./WaitingScreenContext";
 import WaitingScreenInput from "./waiting-screen-input/WaitingScreenInput";
+import WaitingScreenMenu from "./waiting-screen-menu/WaitingScreenMenu";
 import WaitingScreenPreview from "./waiting-screen-preview/WaitingScreenPreview";
 import WaitingScreen from "./waiting-screen/WaitingScreen";
 import NotifiedScreen from "./waiting-screen-notified/NotifiedScreen";
@@ -122,6 +123,9 @@ function FlowController() {
   }
   if (step === 2) {
     return <WaitingScreenPreview />;
+  }
+  if (step === 5) {
+    return <WaitingScreenMenu />;
   }
   if (step === 3) {
     return <WaitingScreen />;

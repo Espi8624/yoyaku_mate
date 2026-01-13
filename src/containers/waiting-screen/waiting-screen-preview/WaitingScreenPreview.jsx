@@ -1,7 +1,7 @@
 import React from "react";
 import { useWaitingScreen } from "../WaitingScreenContext";
 import useTranslation from "../../../hook/useTranslation";
-import CongestionPopup from "./CongestionPopup"; 
+import CongestionPopup from "./CongestionPopup";
 import "./WaitingScreenPreview.css";
 
 function WaitingScreenPreview() {
@@ -10,10 +10,12 @@ function WaitingScreenPreview() {
     contact,
     notes,
     selectedLanguageCode,
-    goToPrevStep,
     handleSubmitWaiting,
     isPopupVisible,
-    isOffline
+    isOffline,
+    selectedMenus,
+    enableMenuSelection,
+    setStep
   } = useWaitingScreen();
 
   const t = useTranslation(selectedLanguageCode);
@@ -25,15 +27,34 @@ function WaitingScreenPreview() {
       <form className="preview-form" onSubmit={(e) => { e.preventDefault(); handleSubmitWaiting(); }}>
         <label className="preview-item-label">{watingScreenPreview.party_size_label}</label>
         <div className="preview-item-value">{partySize}</div>
-        
+
         <label className="preview-item-label">{watingScreenPreview.contact_label}</label>
         <div className="preview-item-value">{contact}</div>
-        
+
         <label className="preview-item-label">{watingScreenPreview.note_label}</label>
         <div className="preview-item-value">{notes}</div>
-        
+
+        {selectedMenus.length > 0 && (
+          <>
+            <label className="preview-item-label">事前注文</label>
+            <div className="preview-item-value">
+              {selectedMenus.map(menu => (
+                <div key={menu.menuId}>
+                  {menu.name} x{menu.quantity}
+                </div>
+              ))}
+            </div>
+          </>
+        )}
+
         <div className="preview-form-actions">
-          <button type="button" className="confirmation-btn" onClick={goToPrevStep}>
+          <button type="button" className="confirmation-btn" onClick={() => {
+            if (enableMenuSelection) {
+              setStep(5); // メニュー選択画面へ戻る
+            } else {
+              setStep(1); // 入力画面へ戻る
+            }
+          }}>
             {watingScreenPreview.back}
           </button>
           <button type="submit" className="confirmation-btn">
