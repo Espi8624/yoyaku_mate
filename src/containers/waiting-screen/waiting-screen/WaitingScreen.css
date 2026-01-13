@@ -34,11 +34,11 @@
 
 .waiting-section {
   max-width: 420px;
-  margin: 32px auto;
+  margin: 3px auto 32px;
   background: var(--color-card-background);
   border-radius: 12px;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
-  padding: 36px 28px 28px 28px;
+  padding: 36px 16px 28px 16px;
   border: 1px solid var(--color-border);
   box-sizing: border-box;
 }

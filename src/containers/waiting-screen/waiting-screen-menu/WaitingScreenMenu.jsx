@@ -16,13 +16,15 @@ function WaitingScreenMenu() {
     const [menuList, setMenuList] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [expandedMenus, setExpandedMenus] = useState(new Set()); // 展開されたメニューIDを追跡
-    const [showValidationPopup, setShowValidationPopup] = useState(false);
+    const [showErrorPopup, setShowErrorPopup] = useState(false);
 
-    const handleNextStep = () => {
-        if (selectedMenus.length === 0) {
-            setShowValidationPopup(true);
-        } else {
+    const handleNext = () => {
+        // Check if at least one menu is selected (quantity > 0)
+        const hasSelection = selectedMenus.some(item => item.quantity > 0);
+        if (hasSelection) {
             setStep(2);
+        } else {
+            setShowErrorPopup(true);
         }
     };
 
@@ -123,7 +125,7 @@ function WaitingScreenMenu() {
                 <div className="menu-empty">{menuText.no_menus}</div>
             ) : (
                 <div className="menu-selection-container">
-                    <div className="menu-list" style={{ paddingRight: '4px' }}>
+                    <div className="menu-list">
                         {menuList.map((menu) => (
                             <div
                                 key={menu.menu_id}
@@ -134,7 +136,7 @@ function WaitingScreenMenu() {
                                         <img
                                             src={menu.menu_image_url}
                                             alt={menu.title}
-                                            className="menu-item-image"
+                                            className="waiting-menu-item-image"
                                         />
                                     ) : (
                                         <div className="menu-item-placeholder">No Image</div>
@@ -191,27 +193,38 @@ function WaitingScreenMenu() {
                 <button type="button" className="confirmation-btn secondary" onClick={() => setStep(1)}>
                     戻る
                 </button>
-                <button type="button" className="confirmation-btn" onClick={handleNextStep}>
+                <button type="button" className="confirmation-btn" onClick={handleNext}>
                     {menuText.confirm}
                 </button>
             </div>
 
-            {showValidationPopup && (
-                <div className="congestion-popup-overlay">
-                    <div className="congestion-popup-modal">
-                        <button className="congestion-popup-close-btn" onClick={() => setShowValidationPopup(false)}>×</button>
-                        <div className="congestion-popup-message">
-                            メニューの選択は必須です。<br />
-                            少なくとも1つのメニューを選択してください。
-                        </div>
-                        <div className="congestion-popup-actions">
-                            <button className="confirmation-btn" onClick={() => setShowValidationPopup(false)}>
-                                確認
-                            </button>
+            {/* Error Popup for Menu Selection */}
+            {
+                showErrorPopup && (
+                    <div className="congestion-popup-overlay">
+                        <div className="congestion-popup-modal cancel-modal">
+                            <button
+                                className="congestion-popup-close-btn"
+                                onClick={() => setShowErrorPopup(false)}
+                                aria-label="閉じる"
+                                type="button"
+                            >×</button>
+                            <div className="congestion-popup-message">
+                                {menuText.select_at_least_one || "メニューを少なくとも1つ選択してください"}
+                            </div>
+                            <div className="congestion-popup-actions">
+                                <button
+                                    className="confirmation-btn"
+                                    onClick={() => setShowErrorPopup(false)}
+                                    type="button"
+                                >
+                                    確認
+                                </button>
+                            </div>
                         </div>
                     </div>
-                </div>
-            )}
+                )
+            }
         </div>
     );
 }
