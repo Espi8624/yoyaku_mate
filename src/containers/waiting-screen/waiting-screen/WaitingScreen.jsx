@@ -190,6 +190,36 @@ function WaitingScreen() {
             <div className="preview-item-value">{waitingDetails.estimated_waiting_time || "-"}</div>
           </form>
 
+          {/* Display selected menu items if any */}
+          {waitingDetails.menu_items && waitingDetails.menu_items.length > 0 && (
+            <div className="menu-container" style={{ marginBottom: '24px' }}>
+              <div className="preview-label" style={{ fontSize: '1.1em', marginBottom: '12px' }}>事前注文</div>
+              <div className="preview-menu-list">
+                {waitingDetails.menu_items.map((item, index) => {
+                  // Find the full menu object to get the image URL
+                  const fullMenu = menuList.find(m => m.menu_id === item.menu_id);
+                  const imageUrl = fullMenu ? fullMenu.menu_image_url : null;
+
+                  return (
+                    <div key={index} className="preview-menu-item">
+                      {imageUrl ? (
+                        <img src={imageUrl} alt={item.name} className="preview-menu-image" />
+                      ) : (
+                        <div className="preview-menu-placeholder">No Image</div>
+                      )}
+                      <div className="preview-menu-info">
+                        <div className="preview-menu-header">
+                          <span className="preview-menu-name">{item.name}</span>
+                          <span className="preview-menu-quantity">x{item.quantity}</span>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
           <MenuDisplay menuList={menuList} texts={waitingScreenTexts} />
 
           <button className="confirmation-btn cancel-btn" onClick={() => setShowCancelPopup(true)}>

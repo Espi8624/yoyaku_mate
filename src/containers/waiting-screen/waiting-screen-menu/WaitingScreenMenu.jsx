@@ -9,13 +9,22 @@ function WaitingScreenMenu() {
         storeId,
         selectedMenus,
         setSelectedMenus,
-        goToNextStep,
-        goToPrevStep,
+        setStep, // Add setStep
         selectedLanguageCode,
     } = useWaitingScreen();
 
     const [menuList, setMenuList] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [expandedMenus, setExpandedMenus] = useState(new Set()); // 展開されたメニューIDを追跡
+    const [showValidationPopup, setShowValidationPopup] = useState(false);
+
+    const handleNextStep = () => {
+        if (selectedMenus.length === 0) {
+            setShowValidationPopup(true);
+        } else {
+            setStep(2);
+        }
+    };
 
     const t = useTranslation(selectedLanguageCode);
     // 言語設定に基づいて翻訳データを取得
@@ -36,7 +45,7 @@ function WaitingScreenMenu() {
 
                 // ステータスがactiveかつ事予約可能(pre-order available)なメニューのみフィルタリング
                 const availableMenus = menus.filter(
-                    (m) => m.menu_status === "active" && m.is_pre_order_available
+                    (m) => m.menu_status === "available" && m.is_pre_order_available
                 );
                 console.log("Available Menus:", availableMenus); // Debug log
 
@@ -91,6 +100,19 @@ function WaitingScreenMenu() {
         return item ? item.quantity : 0;
     };
 
+    // メニュー説明の表示/非表示を切り替え
+    const toggleDescription = (menuId) => {
+        setExpandedMenus((prev) => {
+            const newSet = new Set(prev);
+            if (newSet.has(menuId)) {
+                newSet.delete(menuId);
+            } else {
+                newSet.add(menuId);
+            }
+            return newSet;
+        });
+    };
+
     return (
         <div className="waiting-section">
             <div className="preview-label">{menuText.title}</div>
@@ -101,34 +123,64 @@ function WaitingScreenMenu() {
                 <div className="menu-empty">{menuText.no_menus}</div>
             ) : (
                 <div className="menu-selection-container">
-                    <div className="menu-list">
+                    <div className="menu-list" style={{ paddingRight: '4px' }}>
                         {menuList.map((menu) => (
-                            <div key={menu.menu_id} className="menu-item-card">
-                                {menu.menu_image_url ? (
-                                    <img src={menu.menu_image_url} alt={menu.title} className="menu-item-image" />
-                                ) : (
-                                    <div className="menu-item-placeholder">No Image</div>
-                                )}
-                                <div className="menu-item-details">
-                                    <div className="menu-item-title">{menu.title}</div>
-                                    <div className="menu-item-price">¥{menu.price.toLocaleString()}</div>
-                                    <div className="menu-item-quantity-control">
-                                        <button
-                                            className="quantity-btn"
-                                            onClick={() => handleQuantityChange(menu, -1)}
-                                            disabled={getQuantity(menu.menu_id) === 0}
-                                        >
-                                            -
-                                        </button>
-                                        <span className="quantity-value">{getQuantity(menu.menu_id)}</span>
-                                        <button
-                                            className="quantity-btn"
-                                            onClick={() => handleQuantityChange(menu, 1)}
-                                        >
-                                            +
-                                        </button>
+                            <div
+                                key={menu.menu_id}
+                                className="menu-item-card"
+                            >
+                                <div className="menu-item-top-row">
+                                    {menu.menu_image_url ? (
+                                        <img
+                                            src={menu.menu_image_url}
+                                            alt={menu.title}
+                                            className="menu-item-image"
+                                        />
+                                    ) : (
+                                        <div className="menu-item-placeholder">No Image</div>
+                                    )}
+                                    <div className="menu-item-details">
+                                        <div className="menu-item-top-row">
+                                            <div className="menu-item-info">
+                                                <div className="menu-item-title">{menu.title}</div>
+                                                <div className="menu-item-price">¥{menu.price.toFixed(1)}</div>
+                                                {menu.description && (
+                                                    <button
+                                                        onClick={() => toggleDescription(menu.menu_id)}
+                                                        className="menu-item-toggle-btn"
+                                                    >
+                                                        {expandedMenus.has(menu.menu_id) ? '▲ 詳細を閉じる' : '▼ 詳細表示'}
+                                                    </button>
+                                                )}
+                                            </div>
+                                            <div className="menu-item-controls">
+                                                <button
+                                                    className="quantity-btn minus"
+                                                    onClick={() => handleQuantityChange(menu, -1)}
+                                                    disabled={getQuantity(menu.menu_id) === 0}
+                                                >
+                                                    <svg width="12" height="2" viewBox="0 0 12 2" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                        <rect width="12" height="2" rx="1" fill="#333" />
+                                                    </svg>
+                                                </button>
+                                                <span className="quantity-value">{getQuantity(menu.menu_id)}</span>
+                                                <button
+                                                    className="quantity-btn plus"
+                                                    onClick={() => handleQuantityChange(menu, 1)}
+                                                >
+                                                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                        <path fillRule="evenodd" clipRule="evenodd" d="M7 5V0H5V5H0V7H5V12H7V7H12V5H7Z" fill="#333" />
+                                                    </svg>
+                                                </button>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
+                                {expandedMenus.has(menu.menu_id) && menu.description && (
+                                    <div className="menu-item-description-box">
+                                        {menu.description}
+                                    </div>
+                                )}
                             </div>
                         ))}
                     </div>
@@ -136,13 +188,30 @@ function WaitingScreenMenu() {
             )}
 
             <div className="menu-actions">
-                <button type="button" className="confirmation-btn secondary" onClick={goToPrevStep}>
+                <button type="button" className="confirmation-btn secondary" onClick={() => setStep(1)}>
                     戻る
                 </button>
-                <button type="button" className="confirmation-btn" onClick={goToNextStep}>
+                <button type="button" className="confirmation-btn" onClick={handleNextStep}>
                     {menuText.confirm}
                 </button>
             </div>
+
+            {showValidationPopup && (
+                <div className="congestion-popup-overlay">
+                    <div className="congestion-popup-modal">
+                        <button className="congestion-popup-close-btn" onClick={() => setShowValidationPopup(false)}>×</button>
+                        <div className="congestion-popup-message">
+                            メニューの選択は必須です。<br />
+                            少なくとも1つのメニューを選択してください。
+                        </div>
+                        <div className="congestion-popup-actions">
+                            <button className="confirmation-btn" onClick={() => setShowValidationPopup(false)}>
+                                確認
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }
