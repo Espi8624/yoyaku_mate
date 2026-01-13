@@ -41,10 +41,13 @@ function WaitingScreenMenu() {
             setIsLoading(true);
             try {
                 const menus = await getMenuList(storeId);
-                // ステータスがavailableかつ事予約可能(pre-order available)なメニューのみフィルタリング
+                console.log("Fetched Menus:", menus); // Debug log
+
+                // ステータスがactiveかつ事予約可能(pre-order available)なメニューのみフィルタリング
                 const availableMenus = menus.filter(
                     (m) => m.menu_status === "available" && m.is_pre_order_available
                 );
+                console.log("Available Menus:", availableMenus); // Debug log
 
                 setMenuList(availableMenus);
             } catch (error) {
