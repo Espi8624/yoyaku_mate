@@ -148,12 +148,12 @@ function WaitingScreenMenu() {
                                         }}
                                     >No Image</div>
                                 )}
-                                <div className="menu-item-details" style={{ flex: 1, display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
-                                    <div className="menu-item-info" style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                                        <div className="menu-item-title" style={{ fontSize: '16px', fontWeight: 'bold', color: '#333' }}>{menu.title}</div>
+                                <div className="menu-item-details" style={{ flex: 1, display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', minWidth: 0 }}>
+                                    <div className="menu-item-info" style={{ display: 'flex', flexDirection: 'column', gap: '4px', minWidth: 0, paddingRight: '12px' }}>
+                                        <div className="menu-item-title" style={{ fontSize: '16px', fontWeight: 'bold', color: '#333', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{menu.title}</div>
                                         <div className="menu-item-price" style={{ fontSize: '15px', fontWeight: 'bold', color: '#333' }}>¥{menu.price.toFixed(1)}</div>
                                     </div>
-                                    <div className="menu-item-quantity-control" style={{ display: 'flex', alignItems: 'center', gap: '10px', marginLeft: 'auto' }}>
+                                    <div className="menu-item-quantity-control" style={{ display: 'flex', alignItems: 'center', gap: '10px', marginLeft: 'auto', flexShrink: 0 }}>
                                         <button
                                             className="quantity-btn minus"
                                             onClick={() => handleQuantityChange(menu, -1)}
@@ -171,10 +171,12 @@ function WaitingScreenMenu() {
                                                 opacity: getQuantity(menu.menu_id) === 0 ? 0.3 : 1,
                                                 padding: 0,
                                                 margin: 0,
-                                                lineHeight: 0
+                                                lineHeight: 0,
+                                                boxSizing: 'border-box',
+                                                flexShrink: 0
                                             }}
                                         >
-                                            <svg width="12" height="2" viewBox="0 0 12 2" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <svg width="12" height="2" viewBox="0 0 12 2" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ display: 'block' }}>
                                                 <rect width="12" height="2" rx="1" fill="#333" />
                                             </svg>
                                         </button>
@@ -194,10 +196,12 @@ function WaitingScreenMenu() {
                                                 cursor: 'pointer',
                                                 padding: 0,
                                                 margin: 0,
-                                                lineHeight: 0
+                                                lineHeight: 0,
+                                                boxSizing: 'border-box',
+                                                flexShrink: 0
                                             }}
                                         >
-                                            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ display: 'block' }}>
                                                 <path fillRule="evenodd" clipRule="evenodd" d="M7 5V0H5V5H0V7H5V12H7V7H12V5H7Z" fill="#333" />
                                             </svg>
                                         </button>
