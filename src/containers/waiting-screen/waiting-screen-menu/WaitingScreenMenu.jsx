@@ -150,26 +150,51 @@ function WaitingScreenMenu() {
                                 )}
                                 <div className="menu-item-details" style={{ flex: 1, display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
                                     <div className="menu-item-info" style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                                        <div className="menu-item-title" style={{ fontSize: '16px', fontWeight: 500, color: '#333' }}>{menu.title}</div>
-                                        <div className="menu-item-price" style={{ fontSize: '14px', color: '#666' }}>¥{menu.price.toFixed(1)}</div>
+                                        <div className="menu-item-title" style={{ fontSize: '16px', fontWeight: 'bold', color: '#333' }}>{menu.title}</div>
+                                        <div className="menu-item-price" style={{ fontSize: '15px', fontWeight: 'bold', color: '#333' }}>¥{menu.price.toFixed(1)}</div>
                                     </div>
                                     <div className="menu-item-quantity-control" style={{ display: 'flex', alignItems: 'center', gap: '12px', marginLeft: '12px' }}>
                                         <button
                                             className="quantity-btn minus"
                                             onClick={() => handleQuantityChange(menu, -1)}
                                             disabled={getQuantity(menu.menu_id) === 0}
+                                            style={{
+                                                width: '32px',
+                                                height: '32px',
+                                                borderRadius: '50%',
+                                                border: '1px solid #ccc',
+                                                backgroundColor: '#fff',
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                justifyContent: 'center',
+                                                cursor: getQuantity(menu.menu_id) === 0 ? 'not-allowed' : 'pointer',
+                                                opacity: getQuantity(menu.menu_id) === 0 ? 0.3 : 1,
+                                                padding: 0
+                                            }}
                                         >
                                             <svg width="12" height="2" viewBox="0 0 12 2" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <rect width="12" height="2" rx="1" fill="currentColor" />
+                                                <rect width="12" height="2" rx="1" fill="#333" />
                                             </svg>
                                         </button>
-                                        <span className="quantity-value" style={{ fontSize: '16px', fontWeight: 500, minWidth: '24px', textAlign: 'center' }}>{getQuantity(menu.menu_id)}</span>
+                                        <span className="quantity-value" style={{ fontSize: '16px', fontWeight: 'bold', minWidth: '24px', textAlign: 'center', color: '#333' }}>{getQuantity(menu.menu_id)}</span>
                                         <button
                                             className="quantity-btn plus"
                                             onClick={() => handleQuantityChange(menu, 1)}
+                                            style={{
+                                                width: '32px',
+                                                height: '32px',
+                                                borderRadius: '50%',
+                                                border: '1px solid #333',
+                                                backgroundColor: '#fff',
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                justifyContent: 'center',
+                                                cursor: 'pointer',
+                                                padding: 0
+                                            }}
                                         >
                                             <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <path fillRule="evenodd" clipRule="evenodd" d="M7 5V0H5V5H0V7H5V12H7V7H12V5H7Z" fill="currentColor" />
+                                                <path fillRule="evenodd" clipRule="evenodd" d="M7 5V0H5V5H0V7H5V12H7V7H12V5H7Z" fill="#333" />
                                             </svg>
                                         </button>
                                     </div>
