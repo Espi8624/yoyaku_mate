@@ -489,6 +489,13 @@ textarea {
 
 
 /* Shared Preview Menu Styles */
+.store-name-header h2 {
+  margin: 0;
+  color: var(--color-text-primary-light);
+  font-size: 24px;
+  font-weight: bold;
+}
+
 .preview-menu-list {
   display: flex;
   flex-direction: column;
