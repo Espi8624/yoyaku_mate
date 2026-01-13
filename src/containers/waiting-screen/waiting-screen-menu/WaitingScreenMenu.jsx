@@ -32,23 +32,11 @@ function WaitingScreenMenu() {
             setIsLoading(true);
             try {
                 const menus = await getMenuList(storeId);
-                console.log("Fetched Menus:", menus);
-
-                // --- DEBUG: フィルタリングを一時無効化し、データを確認 ---
-                if (menus.length > 0) {
-                    // 最初のアイテムの構造をアラートで確認（実機デバッグ用）
-                    // alert("First Menu: " + JSON.stringify(menus[0]));
-                }
-                setMenuList(menus);
-
-                /* 
-                // ステータスがactiveかつ事予約可能(pre-order available)なメニューのみフィルタリング
+                // ステータスがavailableかつ事予約可能(pre-order available)なメニューのみフィルタリング
                 const availableMenus = menus.filter(
-                    (m) => m.menu_status === "active" && m.is_pre_order_available
+                    (m) => m.menu_status === "available" && m.is_pre_order_available
                 );
-                console.log("Available Menus:", availableMenus); 
                 setMenuList(availableMenus);
-                */
             } catch (error) {
                 console.error("Failed to fetch menus", error);
             } finally {
@@ -86,7 +74,7 @@ function WaitingScreenMenu() {
                             name: menu.title,
                             price: menu.price,
                             quantity: newQuantity,
-                            imageUrl: menu.image_url,
+                            imageUrl: menu.menu_image_url,
                         },
                     ];
                 }
@@ -112,8 +100,8 @@ function WaitingScreenMenu() {
                     <div className="menu-list">
                         {menuList.map((menu) => (
                             <div key={menu.menu_id} className="menu-item-card">
-                                {menu.image_url ? (
-                                    <img src={menu.image_url} alt={menu.title} className="menu-item-image" />
+                                {menu.menu_image_url ? (
+                                    <img src={menu.menu_image_url} alt={menu.title} className="menu-item-image" />
                                 ) : (
                                     <div className="menu-item-placeholder">No Image</div>
                                 )}
