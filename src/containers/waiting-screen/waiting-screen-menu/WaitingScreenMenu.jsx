@@ -32,10 +32,14 @@ function WaitingScreenMenu() {
             setIsLoading(true);
             try {
                 const menus = await getMenuList(storeId);
+                console.log("Fetched Menus:", menus); // Debug log
+
                 // ステータスがactiveかつ事予約可能(pre-order available)なメニューのみフィルタリング
                 const availableMenus = menus.filter(
                     (m) => m.menu_status === "active" && m.is_pre_order_available
                 );
+                console.log("Available Menus:", availableMenus); // Debug log
+
                 setMenuList(availableMenus);
             } catch (error) {
                 console.error("Failed to fetch menus", error);
@@ -74,7 +78,7 @@ function WaitingScreenMenu() {
                             name: menu.title,
                             price: menu.price,
                             quantity: newQuantity,
-                            imageUrl: menu.image_url,
+                            imageUrl: menu.menu_image_url,
                         },
                     ];
                 }
@@ -100,8 +104,8 @@ function WaitingScreenMenu() {
                     <div className="menu-list">
                         {menuList.map((menu) => (
                             <div key={menu.menu_id} className="menu-item-card">
-                                {menu.image_url ? (
-                                    <img src={menu.image_url} alt={menu.title} className="menu-item-image" />
+                                {menu.menu_image_url ? (
+                                    <img src={menu.menu_image_url} alt={menu.title} className="menu-item-image" />
                                 ) : (
                                     <div className="menu-item-placeholder">No Image</div>
                                 )}
