@@ -18,6 +18,10 @@
 
 .menu-item-card {
     display: flex;
+    flex-direction: row;
+    /* Explicitly set row */
+    width: 100%;
+    /* Ensure full width */
     background-color: #fff;
     padding: 16px;
     align-items: center;
@@ -34,8 +38,12 @@
 
 .menu-item-image {
     width: 64px;
-    /* Slightly smaller as per screenshot */
     height: 64px;
+    min-width: 64px;
+    /* Prevent shrinking */
+    max-width: 64px;
+    /* Prevent growing */
+    border-radius: 8px;
     border-radius: 8px;
     /* Slightly rounder */
     object-fit: cover;
