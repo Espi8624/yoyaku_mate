@@ -107,22 +107,28 @@ function WaitingScreenMenu() {
                                     <div className="menu-item-placeholder">No Image</div>
                                 )}
                                 <div className="menu-item-details">
-                                    <div className="menu-item-title">{menu.title}</div>
-                                    <div className="menu-item-price">¥{menu.price.toLocaleString()}</div>
+                                    <div className="menu-item-info">
+                                        <div className="menu-item-title">{menu.title}</div>
+                                        <div className="menu-item-price">¥{menu.price.toFixed(1)}</div>
+                                    </div>
                                     <div className="menu-item-quantity-control">
                                         <button
-                                            className="quantity-btn"
+                                            className="quantity-btn minus"
                                             onClick={() => handleQuantityChange(menu, -1)}
                                             disabled={getQuantity(menu.menu_id) === 0}
                                         >
-                                            -
+                                            <svg width="12" height="2" viewBox="0 0 12 2" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <rect width="12" height="2" rx="1" fill="currentColor" />
+                                            </svg>
                                         </button>
                                         <span className="quantity-value">{getQuantity(menu.menu_id)}</span>
                                         <button
-                                            className="quantity-btn"
+                                            className="quantity-btn plus"
                                             onClick={() => handleQuantityChange(menu, 1)}
                                         >
-                                            +
+                                            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path fillRule="evenodd" clipRule="evenodd" d="M7 5V0H5V5H0V7H5V12H7V7H12V5H7Z" fill="currentColor" />
+                                            </svg>
                                         </button>
                                     </div>
                                 </div>
