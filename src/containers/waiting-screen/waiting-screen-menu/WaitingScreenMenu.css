@@ -223,3 +223,66 @@
     background-color: #e0e0e0;
     color: #333;
 }
+
+.congestion-popup-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.congestion-popup-modal {
+    background-color: #fff;
+    padding: 24px;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 320px;
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    position: relative;
+    animation: popup-fade-in 0.2s ease-out;
+}
+
+@keyframes popup-fade-in {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.congestion-popup-close-btn {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: none;
+    border: none;
+    font-size: 24px;
+    line-height: 1;
+    color: #999;
+    cursor: pointer;
+    padding: 0;
+}
+
+.congestion-popup-message {
+    margin: 20px 0;
+    font-size: 16px;
+    line-height: 1.5;
+    color: #333;
+}
+
+.congestion-popup-actions {
+    margin-top: 24px;
+    display: flex;
+    justify-content: center;
+}
