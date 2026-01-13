@@ -8,6 +8,7 @@ import WaitingScreen from "./waiting-screen/WaitingScreen";
 import NotifiedScreen from "./waiting-screen-notified/NotifiedScreen";
 import { getWaitingDetails } from "../../api/waitingService";
 import './ErrorScreen.css';
+import ChatbotButton from "./ChatbotButton";
 
 // 取り消し完了画面
 function CancellationCompleteView() {
@@ -136,10 +137,13 @@ function FlowController() {
   return <div>Loading...</div>;
 }
 
+
+
 function WaitingScreenFlow() {
   return (
     <WaitingScreenProvider>
       <FlowController />
+      <ChatbotButton />
     </WaitingScreenProvider>
   );
 }

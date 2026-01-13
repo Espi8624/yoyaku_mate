@@ -20,8 +20,9 @@
     /* Explicitly set row */
     width: 100%;
     /* Ensure full width */
+    box-sizing: border-box;
     background-color: #fff;
-    padding: 16px;
+    padding: 16px 16px 16px 16px;
     align-items: stretch;
     border-bottom: 1px solid #f0f0f0;
     border-radius: 0;
@@ -34,7 +35,7 @@
     border-bottom: none;
 }
 
-.menu-item-image {
+.waiting-menu-item-image {
     width: 64px;
     height: 64px;
     min-width: 64px;
