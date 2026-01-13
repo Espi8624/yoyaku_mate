@@ -97,6 +97,7 @@ function WaitingScreen() {
         // ローカルストレージをクリアして再登録を促す
         localStorage.removeItem("waiting_id");
         localStorage.removeItem("store_id");
+        localStorage.removeItem("v_token");
         setError("待機情報が見つかりません。再度登録してください。");
         setIsLoading(false);
         return;
@@ -124,6 +125,7 @@ function WaitingScreen() {
         // データが見つからない場合はローカルストレージをクリア
         localStorage.removeItem("waiting_id");
         localStorage.removeItem("store_id");
+        localStorage.removeItem("v_token");
         setError("待機情報が見つかりません。再度登録してください。");
       } else {
         setError("データの読み込みに失敗しました。");
