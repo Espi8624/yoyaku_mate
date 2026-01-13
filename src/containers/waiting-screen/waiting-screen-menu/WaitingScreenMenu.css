@@ -152,3 +152,73 @@
     padding: 40px 0;
     color: #666;
 }
+
+.menu-item-top-row {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    align-items: center;
+}
+
+.menu-item-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+    padding-right: 12px;
+}
+
+.menu-item-title {
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.menu-item-price {
+    font-size: 15px;
+    font-weight: bold;
+    color: #333;
+}
+
+.menu-item-toggle-btn {
+    background: none;
+    border: none;
+    color: #666;
+    font-size: 12px;
+    padding: 4px 0;
+    cursor: pointer;
+    text-align: left;
+    text-decoration: underline;
+}
+
+.menu-item-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-left: auto;
+    flex-shrink: 0;
+}
+
+.menu-item-description-box {
+    margin-top: 12px;
+    padding: 12px;
+    background-color: #f9f9f9;
+    border-radius: 6px;
+    font-size: 14px;
+    color: #555;
+    line-height: 1.5;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.quantity-btn svg {
+    display: block;
+}
+
+.confirmation-btn.secondary {
+    background-color: #e0e0e0;
+    color: #333;
+}

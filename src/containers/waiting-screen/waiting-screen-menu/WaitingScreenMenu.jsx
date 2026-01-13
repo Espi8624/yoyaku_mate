@@ -116,124 +116,47 @@ function WaitingScreenMenu() {
                             <div
                                 key={menu.menu_id}
                                 className="menu-item-card"
-                                style={{
-                                    display: 'flex',
-                                    flexDirection: 'column',
-                                    width: '100%',
-                                    padding: '16px',
-                                    backgroundColor: '#fff',
-                                    borderBottom: '1px solid #f0f0f0',
-                                    alignItems: 'stretch'
-                                }}
                             >
-                                <div style={{ display: 'flex', flexDirection: 'row', width: '100%', alignItems: 'center' }}>
+                                <div className="menu-item-top-row">
                                     {menu.menu_image_url ? (
                                         <img
                                             src={menu.menu_image_url}
                                             alt={menu.title}
                                             className="menu-item-image"
-                                            style={{
-                                                width: '64px',
-                                                height: '64px',
-                                                minWidth: '64px',
-                                                maxWidth: '64px',
-                                                borderRadius: '8px',
-                                                objectFit: 'cover',
-                                                marginRight: '16px',
-                                                flexShrink: 0
-                                            }}
                                         />
                                     ) : (
-                                        <div
-                                            className="menu-item-placeholder"
-                                            style={{
-                                                width: '64px',
-                                                height: '64px',
-                                                minWidth: '64px',
-                                                borderRadius: '8px',
-                                                backgroundColor: '#eee',
-                                                marginRight: '16px',
-                                                flexShrink: 0,
-                                                display: 'flex',
-                                                alignItems: 'center',
-                                                justifyContent: 'center',
-                                                fontSize: '10px',
-                                                color: '#999'
-                                            }}
-                                        >No Image</div>
+                                        <div className="menu-item-placeholder">No Image</div>
                                     )}
-                                    <div className="menu-item-details" style={{ flex: 1, display: 'flex', flexDirection: 'column', minWidth: 0 }}>
-                                        <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
-                                            <div className="menu-item-info" style={{ display: 'flex', flexDirection: 'column', gap: '4px', minWidth: 0, paddingRight: '12px' }}>
-                                                <div className="menu-item-title" style={{ fontSize: '16px', fontWeight: 'bold', color: '#333', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{menu.title}</div>
-                                                <div className="menu-item-price" style={{ fontSize: '15px', fontWeight: 'bold', color: '#333' }}>¥{menu.price.toFixed(1)}</div>
+                                    <div className="menu-item-details">
+                                        <div className="menu-item-top-row">
+                                            <div className="menu-item-info">
+                                                <div className="menu-item-title">{menu.title}</div>
+                                                <div className="menu-item-price">¥{menu.price.toFixed(1)}</div>
                                                 {menu.description && (
                                                     <button
                                                         onClick={() => toggleDescription(menu.menu_id)}
-                                                        style={{
-                                                            background: 'none',
-                                                            border: 'none',
-                                                            color: '#666',
-                                                            fontSize: '12px',
-                                                            padding: '4px 0',
-                                                            cursor: 'pointer',
-                                                            textAlign: 'left',
-                                                            textDecoration: 'underline'
-                                                        }}
+                                                        className="menu-item-toggle-btn"
                                                     >
                                                         {expandedMenus.has(menu.menu_id) ? '▲ 詳細を閉じる' : '▼ 詳細表示'}
                                                     </button>
                                                 )}
                                             </div>
-                                            <div className="menu-item-quantity-control" style={{ display: 'flex', alignItems: 'center', gap: '10px', marginLeft: 'auto', flexShrink: 0 }}>
+                                            <div className="menu-item-controls">
                                                 <button
                                                     className="quantity-btn minus"
                                                     onClick={() => handleQuantityChange(menu, -1)}
                                                     disabled={getQuantity(menu.menu_id) === 0}
-                                                    style={{
-                                                        width: '32px',
-                                                        height: '32px',
-                                                        borderRadius: '50%',
-                                                        border: '1px solid #ccc',
-                                                        backgroundColor: '#fff',
-                                                        display: 'flex',
-                                                        alignItems: 'center',
-                                                        justifyContent: 'center',
-                                                        cursor: getQuantity(menu.menu_id) === 0 ? 'not-allowed' : 'pointer',
-                                                        opacity: getQuantity(menu.menu_id) === 0 ? 0.3 : 1,
-                                                        padding: 0,
-                                                        margin: 0,
-                                                        lineHeight: 0,
-                                                        boxSizing: 'border-box',
-                                                        flexShrink: 0
-                                                    }}
                                                 >
-                                                    <svg width="12" height="2" viewBox="0 0 12 2" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ display: 'block' }}>
+                                                    <svg width="12" height="2" viewBox="0 0 12 2" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                         <rect width="12" height="2" rx="1" fill="#333" />
                                                     </svg>
                                                 </button>
-                                                <span className="quantity-value" style={{ fontSize: '16px', fontWeight: 'bold', minWidth: '24px', textAlign: 'center', color: '#333', lineHeight: '1' }}>{getQuantity(menu.menu_id)}</span>
+                                                <span className="quantity-value">{getQuantity(menu.menu_id)}</span>
                                                 <button
                                                     className="quantity-btn plus"
                                                     onClick={() => handleQuantityChange(menu, 1)}
-                                                    style={{
-                                                        width: '32px',
-                                                        height: '32px',
-                                                        borderRadius: '50%',
-                                                        border: '1px solid #333',
-                                                        backgroundColor: '#fff',
-                                                        display: 'flex',
-                                                        alignItems: 'center',
-                                                        justifyContent: 'center',
-                                                        cursor: 'pointer',
-                                                        padding: 0,
-                                                        margin: 0,
-                                                        lineHeight: 0,
-                                                        boxSizing: 'border-box',
-                                                        flexShrink: 0
-                                                    }}
                                                 >
-                                                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ display: 'block' }}>
+                                                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                         <path fillRule="evenodd" clipRule="evenodd" d="M7 5V0H5V5H0V7H5V12H7V7H12V5H7Z" fill="#333" />
                                                     </svg>
                                                 </button>
@@ -242,17 +165,7 @@ function WaitingScreenMenu() {
                                     </div>
                                 </div>
                                 {expandedMenus.has(menu.menu_id) && menu.description && (
-                                    <div style={{
-                                        marginTop: '12px',
-                                        padding: '12px',
-                                        backgroundColor: '#f9f9f9',
-                                        borderRadius: '6px',
-                                        fontSize: '14px',
-                                        color: '#555',
-                                        lineHeight: '1.5',
-                                        width: '100%',
-                                        boxSizing: 'border-box'
-                                    }}>
+                                    <div className="menu-item-description-box">
                                         {menu.description}
                                     </div>
                                 )}
