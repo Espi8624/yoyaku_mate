@@ -16,6 +16,15 @@ function WaitingScreenMenu() {
     const [menuList, setMenuList] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [expandedMenus, setExpandedMenus] = useState(new Set()); // 展開されたメニューIDを追跡
+    const [showValidationPopup, setShowValidationPopup] = useState(false);
+
+    const handleNextStep = () => {
+        if (selectedMenus.length === 0) {
+            setShowValidationPopup(true);
+        } else {
+            setStep(2);
+        }
+    };
 
     const t = useTranslation(selectedLanguageCode);
     // 言語設定に基づいて翻訳データを取得
@@ -179,10 +188,27 @@ function WaitingScreenMenu() {
                 <button type="button" className="confirmation-btn secondary" onClick={() => setStep(1)}>
                     戻る
                 </button>
-                <button type="button" className="confirmation-btn" onClick={() => setStep(2)}>
+                <button type="button" className="confirmation-btn" onClick={handleNextStep}>
                     {menuText.confirm}
                 </button>
             </div>
+
+            {showValidationPopup && (
+                <div className="congestion-popup-overlay">
+                    <div className="congestion-popup-modal">
+                        <button className="congestion-popup-close-btn" onClick={() => setShowValidationPopup(false)}>×</button>
+                        <div className="congestion-popup-message">
+                            メニューの選択は必須です。<br />
+                            少なくとも1つのメニューを選択してください。
+                        </div>
+                        <div className="congestion-popup-actions">
+                            <button className="confirmation-btn" onClick={() => setShowValidationPopup(false)}>
+                                確認
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }
