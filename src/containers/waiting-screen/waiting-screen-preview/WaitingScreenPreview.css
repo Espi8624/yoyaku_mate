@@ -107,10 +107,73 @@
   border: none;
   border-radius: 6px;
   font-size: 1em;
-  background: #2C2C2C;
+  background: white;
   margin-bottom: 6px;
   color: #333;
   box-sizing: border-box;
+}
+
+.preview-menu-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.preview-menu-item {
+  display: flex;
+  align-items: center;
+  padding: 8px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  border: 1px solid #eee;
+}
+
+.preview-menu-image {
+  width: 48px;
+  height: 48px;
+  border-radius: 6px;
+  object-fit: cover;
+  margin-right: 12px;
+  background-color: #eee;
+}
+
+.preview-menu-placeholder {
+  width: 48px;
+  height: 48px;
+  border-radius: 6px;
+  margin-right: 12px;
+  background-color: #eee;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 8px;
+  color: #999;
+}
+
+.preview-menu-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.preview-menu-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.preview-menu-name {
+  font-weight: 500;
+  font-size: 14px;
+  color: #333;
+}
+
+.preview-menu-quantity {
+  font-weight: bold;
+  font-size: 14px;
+  color: #333;
 }
 
 input,

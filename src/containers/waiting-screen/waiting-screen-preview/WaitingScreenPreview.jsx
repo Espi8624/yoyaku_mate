@@ -37,10 +37,20 @@ function WaitingScreenPreview() {
         {selectedMenus.length > 0 && (
           <>
             <label className="preview-item-label">事前注文</label>
-            <div className="preview-item-value">
+            <div className="preview-menu-list">
               {selectedMenus.map(menu => (
-                <div key={menu.menuId}>
-                  {menu.name} x{menu.quantity}
+                <div key={menu.menuId} className="preview-menu-item">
+                  {menu.imageUrl ? (
+                    <img src={menu.imageUrl} alt={menu.name} className="preview-menu-image" />
+                  ) : (
+                    <div className="preview-menu-placeholder">No Image</div>
+                  )}
+                  <div className="preview-menu-info">
+                    <div className="preview-menu-header">
+                      <span className="preview-menu-name">{menu.name}</span>
+                      <span className="preview-menu-quantity">x{menu.quantity}</span>
+                    </div>
+                  </div>
                 </div>
               ))}
             </div>
