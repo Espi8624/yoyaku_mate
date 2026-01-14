@@ -34,7 +34,40 @@ export function WaitingScreenProvider({ children }) {
 
   // --- Helper Functions ---
   const getNationalityFromLanguage = (language) => {
-    const langCode = language.split('-')[0]; // 'ko-KR' -> 'ko'
+    // 1. Try to determine by Region Code first (more accurate)
+    const parts = language.split('-');
+    if (parts.length > 1) {
+      const regionCode = parts[1].toUpperCase();
+      try {
+        // Get country name in English (to match nationalities.json)
+        const regionNames = new Intl.DisplayNames(['en'], { type: 'region' });
+        const countryName = regionNames.of(regionCode);
+
+        if (countryName) {
+          // Find exact match first
+          let match = nationalitiesData.nationalities.find(n => n.name.toLowerCase() === countryName.toLowerCase());
+
+          // Handle known discrepancies if exact match fails
+          if (!match) {
+            // e.g. "Republic of Korea" -> "South Korea"
+            if (countryName === "South Korea" || countryName.includes("Korea")) {
+              match = nationalitiesData.nationalities.find(n => n.name === "South Korea");
+            } else if (countryName === "United States" || countryName.includes("United States")) {
+              match = nationalitiesData.nationalities.find(n => n.name === "United States");
+            } else if (countryName === "United Kingdom" || countryName.includes("United Kingdom")) {
+              match = nationalitiesData.nationalities.find(n => n.name === "United Kingdom");
+            }
+          }
+
+          if (match) return match;
+        }
+      } catch (e) {
+        console.warn("Intl.DisplayNames not supported or invalid code", e);
+      }
+    }
+
+    // 2. Fallback to existing Language Code logic
+    const langCode = parts[0]; // 'ko-KR' -> 'ko'
     const match = nationalitiesData.nationalities.find(n => n.languageCode === langCode);
     // 一致する言語がない場合基本値返却
     return match || nationalitiesData.nationalities.find(n => n.languageCode === 'ja');
