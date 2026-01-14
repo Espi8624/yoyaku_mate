@@ -62,6 +62,7 @@ export function WaitingScreenProvider({ children }) {
     return {
       storeId: searchParams.get("store_id") || "",
       vToken: searchParams.get("v_token") || "",
+      waitingId: searchParams.get("waiting_id") || "", // Add waiting_id parsing
       nationality: initialNationality.name,
       languageCode: initialNationality.languageCode,
     };
@@ -74,8 +75,8 @@ export function WaitingScreenProvider({ children }) {
 
   // ★★ ここでローカルストレージからstep初期値を判定 ★★
   const initialStep = (() => {
-    const storedStoreId = localStorage.getItem("store_id");
-    const storedWaitingId = localStorage.getItem("waiting_id");
+    const storedStoreId = localStorage.getItem("store_id") || initialParams.storeId;
+    const storedWaitingId = localStorage.getItem("waiting_id") || initialParams.waitingId;
     if (storedStoreId && storedWaitingId) return 3;
     return 1;
   })();
@@ -88,7 +89,7 @@ export function WaitingScreenProvider({ children }) {
   const [partySize, setPartySize] = useState("");
   const [contact, setContact] = useState("");
   const [notes, setNotes] = useState("");
-  const [waitingId, setWaitingId] = useState(localStorage.getItem("waiting_id") || "");
+  const [waitingId, setWaitingId] = useState(initialParams.waitingId || localStorage.getItem("waiting_id") || "");
   const [vToken, setVToken] = useState(initialParams.vToken || localStorage.getItem("v_token") || "");
   const [isCancelled, setIsCancelled] = useState(false);
 
@@ -124,6 +125,10 @@ export function WaitingScreenProvider({ children }) {
     if (initialParams.vToken) {
       setVToken(initialParams.vToken);
       localStorage.setItem("v_token", initialParams.vToken);
+    }
+    if (initialParams.waitingId) {
+      setWaitingId(initialParams.waitingId);
+      localStorage.setItem("waiting_id", initialParams.waitingId);
     }
     setSelectedNationality(initialParams.nationality);
     setSelectedLanguageCode(initialParams.languageCode);
