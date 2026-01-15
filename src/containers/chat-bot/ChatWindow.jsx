@@ -1,10 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useWaitingScreen } from '../waiting-screen/WaitingScreenContext';
 import { getStoreAIContext } from '../../api/waitingService';
-import { GEMINI_API_KEY } from '../../config';
+// import { GEMINI_API_KEY } from '../../config'; // config.js might be missing in production
 import { generateSystemPrompt } from './SystemPrompt';
 import { getInitialGreeting, getErrorMessage } from './ChatMessages';
 import './ChatWindow.css';
+
+const GEMINI_API_KEY = process.env.REACT_APP_GEMINI_API_KEY;
 
 const ChatWindow = () => {
     const { isChatOpen, toggleChat, storeId, selectedNationality, selectedLanguageCode } = useWaitingScreen();
@@ -37,7 +39,8 @@ const ChatWindow = () => {
 
     const callGemini = async (userMessage) => {
         if (!GEMINI_API_KEY || GEMINI_API_KEY === "YOUR_API_KEY_HERE") {
-            return "API Keyが設定されていません。src/config.jsを確認してください。";
+            // If env var is missing in production, this error will show.
+            return "API Keyが設定されていません。環境変数 REACT_APP_GEMINI_API_KEY を確認してください。";
         }
 
         try {
