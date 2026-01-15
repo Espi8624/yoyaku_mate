@@ -1,8 +1,3 @@
-/**
- * Helper to get the initial greeting message based on language code.
- * @param {string} lang - The language code (e.g., 'en', 'ko', 'ja').
- * @returns {string} The localized greeting message.
- */
 export const getInitialGreeting = (lang) => {
     if (lang?.startsWith('ko')) return "안녕하세요! 주문이나 가게에 대해 궁금한 점이 있으시면 말씀해주세요.";
     if (lang?.startsWith('en')) return "Hello! Please let me know if you have any questions about your order or the store.";
@@ -15,12 +10,6 @@ export const getInitialGreeting = (lang) => {
     return "こんにちは！ご注文やお店についてご質問があればお答えします。";
 };
 
-/**
- * Helper to get error messages based on type and language.
- * @param {string} type - Error type ('429' or 'general').
- * @param {string} lang - The language code.
- * @returns {string} The localized error message.
- */
 export const getErrorMessage = (type, lang) => {
     if (type === '429') {
         if (lang?.startsWith('ko')) return "죄송합니다. 현재 접속량이 많아 응답할 수 없습니다. 잠시 후 다시 시도해주세요.";
