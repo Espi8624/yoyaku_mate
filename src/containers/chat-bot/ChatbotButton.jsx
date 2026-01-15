@@ -1,9 +1,9 @@
 import React from 'react';
-import { useWaitingScreen } from './WaitingScreenContext';
+import { useWaitingScreen } from '../waiting-screen/WaitingScreenContext';
 import './ChatbotButton.css';
 
 const ChatbotButton = () => {
-    const { storeId } = useWaitingScreen();
+    const { storeId, toggleChat, isChatOpen } = useWaitingScreen();
 
     // storeIdがない場合（不正アクセスなど）は表示しない
     if (!storeId) {
@@ -11,8 +11,7 @@ const ChatbotButton = () => {
     }
 
     const handleClick = () => {
-        // 将来的にチャットボット機能を開く処理をここに実装
-        console.log("Chatbot button clicked");
+        toggleChat();
     };
 
     return (
