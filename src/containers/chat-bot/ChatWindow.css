@@ -1,0 +1,150 @@
+.chat-window {
+    position: fixed;
+    bottom: 90px;
+    right: 20px;
+    width: 360px;
+    height: 550px;
+    background-color: white;
+    border-radius: 16px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    display: flex;
+    flex-direction: column;
+    z-index: 999;
+    overflow: hidden;
+    animation: slideIn 0.3s ease-out;
+    border: 1px solid #eee;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.chat-header {
+    background-color: #2C2C2C;
+    color: white;
+    padding: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.chat-title {
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.close-button {
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    font-size: 20px;
+    padding: 0;
+    line-height: 1;
+}
+
+.chat-messages {
+    flex: 1;
+    padding: 16px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    background-color: #f9f9f9;
+}
+
+.message {
+    max-width: 80%;
+    padding: 10px 14px;
+    border-radius: 12px;
+    font-size: 14px;
+    line-height: 1.4;
+    white-space: pre-wrap;
+}
+
+.message.bot {
+    align-self: flex-start;
+    background-color: white;
+    border: 1px solid #eee;
+    border-bottom-left-radius: 2px;
+}
+
+.message.user {
+    align-self: flex-end;
+    background-color: #2C2C2C;
+    color: white;
+    border-bottom-right-radius: 2px;
+}
+
+.chat-input-area {
+    padding: 12px;
+    border-top: 1px solid #eee;
+    display: flex;
+    gap: 8px;
+    background-color: white;
+    align-items: flex-end;
+    /* Align button to bottom when textarea grows */
+}
+
+.chat-input {
+    flex: 1;
+    padding: 8px 12px;
+    /* Tighter padding */
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    /* Pill shape */
+    outline: none;
+    font-size: 14px;
+    resize: none;
+    /* Disable manual resize */
+    overflow-y: auto;
+    /* Show scrollbar if max-height reached */
+    min-height: 38px;
+    /* Fixed initial height for single line (14px * 1.4 + 16px padding approx) */
+    max-height: 120px;
+    line-height: 1.4;
+    font-family: inherit;
+    box-sizing: border-box;
+    /* Ensure padding is included in height */
+
+    /* Hide scrollbar */
+    scrollbar-width: none;
+    /* Firefox */
+    -ms-overflow-style: none;
+    /* IE/Edge */
+}
+
+.chat-input::-webkit-scrollbar {
+    display: none;
+    /* Chrome/Safari */
+}
+
+.chat-input:focus {
+    border-color: #2C2C2C;
+}
+
+.send-button {
+    background-color: #2C2C2C;
+    color: white;
+    border: none;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.send-button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}

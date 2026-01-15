@@ -92,41 +92,59 @@ export const getWaitingDetails = async (storeId, waitingId) => {
   try {
     console.log('[getWaitingDetails] リクエスト:', { storeId, waitingId });
 
-    const [detailsRes, listRes] = await Promise.all([
+    // 以前の方式（全リスト取得）に戻しつつ、予想時間計算ロジックをフロントエンドに残す
+    // /api/waiting-list-user が404を返す問題があるため、確実な /api/waiting-list を使用
+    const [listRes, settingsRes] = await Promise.all([
       axios.get(`${API_BASE_URL}/waiting-list`, {
-        params: {
-          store_id: storeId || '',
-          waiting_id: waitingId
-        }
+        params: { store_id: storeId || '' }
       }),
-      axios.get(`${API_BASE_URL}/waiting-list`, {
+      axios.get(`${API_BASE_URL}/store_settings`, {
         params: { store_id: storeId || '' }
       })
     ]);
 
-    console.log('[getWaitingDetails] detailsRes.data:', detailsRes.data);
+    // 1. リストから該当データを検索
+    const waitingList = Array.isArray(listRes.data.data) ? listRes.data.data : (Array.isArray(listRes.data) ? listRes.data : []);
+    const details = waitingList.find(item => item.waiting_id === waitingId);
 
-    // ★ 配列の場合、waiting_idが一致するものを探す
-    let details;
-    if (Array.isArray(detailsRes.data.data)) {
-      details = detailsRes.data.data.find(item => item.waiting_id === waitingId);
-      if (!details) {
-        throw new Error('指定されたwaiting_idのデータが見つかりません');
-      }
-    } else {
-      details = detailsRes.data.data || detailsRes.data;
+    console.log('[getWaitingDetails] 検索結果:', details);
+
+    if (!details) {
+      // 見つからない場合はエラー (これによりローカルストレージクリア等のフローが動く)
+      const error = new Error('指定されたwaiting_idのデータが見つかりません');
+      error.response = { status: 404 };
+      throw error;
     }
 
-    console.log('[getWaitingDetails] 取得したdetails:', details);
+    // 2. 待機数を計算 (自分より前の waiting/notified の数)
+    // リストは通常古い順になっているはずだが、queue_numberで確実にソートしてカウント
+    const activeItems = waitingList
+      .filter(item => item.status === 'waiting' || item.status === 'notified')
+      .sort((a, b) => a.queue_number - b.queue_number);
 
-    const waitingList = Array.isArray(listRes.data.data) ? listRes.data.data : [];
+    // 自分より前の人数をカウント
+    let waitingCount = 0;
+    for (let i = 0; i < activeItems.length; i++) {
+      if (activeItems[i].waiting_id === waitingId) {
+        waitingCount = i; // 0-indexed count implies number of people ahead
+        break;
+      }
+    }
 
-    const waitingCount = waitingList.filter(item => item.status === 'waiting').length;
-    const estimatedWaitingTime = "-";
+    // 全体の待機数 (表示用)
+    const currentWaitingCount = activeItems.length;
+
+    // 3. 設定からチームあたりの時間を取得
+    const waitingPolicy = settingsRes.data?.data?.settings?.waiting_policy;
+    const minutesPerTeam = waitingPolicy?.estimated_wait_time > 0 ? waitingPolicy.estimated_wait_time : 10;
+
+    // 4. 時間計算
+    const totalEstimatedMinutes = waitingCount * minutesPerTeam;
+    const estimatedWaitingTime = totalEstimatedMinutes > 0 ? `${totalEstimatedMinutes} mins` : "0 mins";
 
     return {
       ...details,
-      waiting_count: waitingCount,
+      waiting_count: currentWaitingCount,
       estimated_waiting_time: estimatedWaitingTime,
     };
   } catch (error) {
@@ -173,9 +191,34 @@ export const getStoreInfo = async (storeId) => {
     const response = await axios.get(`${API_BASE_URL}/provider_store`, {
       params: { store_id: storeId }
     });
-    return response.data;
+    return response.data.data;
   } catch (error) {
-    console.error('店舗情報の取得に失敗しました:', error);
+    throw error;
+  }
+};
+
+/**
+ * AIチャットボット用リアルタイム店舗コンテキストデータ取得
+ * @param {string} storeId - 店舗ID
+ * @returns {Promise<{
+ *   store_name: string,
+ *   phone: string,
+ *   opening_hours: string,
+ *   current_wait_count: number,
+ *   estimated_wait_time: number,
+ *   max_capacity: number,
+ *   last_updated: string
+ * }>}
+ */
+export const getStoreAIContext = async (storeId) => {
+  try {
+    const response = await axios.get(`${API_BASE_URL}/public/store_ai_context`, {
+      params: { store_id: storeId }
+    });
+    return response.data.data;
+  } catch (error) {
+    console.error('AI Store Context 取得失敗:', error);
+    // 失敗時はデフォルト値（空オブジェクト）を返すかエラーを投げる -> チャットボットで処理
     throw error;
   }
 };
