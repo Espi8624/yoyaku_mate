@@ -134,6 +134,10 @@ export function WaitingScreenProvider({ children }) {
   // オフライン状態の管理を追加
   const [isOffline, setIsOffline] = useState(!navigator.onLine);
 
+  // チャットボット状態
+  const [isChatOpen, setIsChatOpen] = useState(false);
+  const toggleChat = () => setIsChatOpen(prev => !prev);
+
   // メニュー選択機能の状態
   const [enableMenuSelection, setEnableMenuSelection] = useState(false);
   const [selectedMenus, setSelectedMenus] = useState([]); // Array of { menuId, name, quantity, price }
@@ -341,6 +345,8 @@ export function WaitingScreenProvider({ children }) {
     handleSubmitWaiting,
     closePopupAndProceed,
     closePopupOnly,
+    isChatOpen,
+    toggleChat,
     goBackToInputStep: (inputInfo) => {
       if (inputInfo) {
         setPartySize(inputInfo.partySize ?? "");
