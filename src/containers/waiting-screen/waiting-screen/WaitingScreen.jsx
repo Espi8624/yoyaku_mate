@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useWaitingScreen } from "../WaitingScreenContext";
 import useTranslation from "../../../hook/useTranslation";
 import { getMenuList, getWaitingDetails, getStoreInfo } from "../../../api/waitingService";
@@ -29,14 +29,12 @@ function WaitingScreen() {
     selectedLanguageCode,
     handleCancel,
     setStep, // 追加
-    isOffline
   } = context;
 
   const t = useTranslation(selectedLanguageCode);
   const waitingScreenTexts = t.waiting_screen;
 
   // ステータス管理
-  const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [waitingDetails, setWaitingDetails] = useState({});
   const [menuList, setMenuList] = useState([]);
@@ -64,9 +62,8 @@ function WaitingScreen() {
   }, [storeId, restored]);
 
   // データ取得関数（待機情報とメニューのみ）
-  const loadAllData = async () => {
+  const loadAllData = useCallback(async () => {
     if (!storeId || !waitingId) {
-      setIsLoading(false);
       setError("店舗情報または待機番号がありません。");
       return;
     }
@@ -98,8 +95,8 @@ function WaitingScreen() {
         localStorage.removeItem("waiting_id");
         localStorage.removeItem("store_id");
         localStorage.removeItem("v_token");
+        localStorage.removeItem("v_token");
         setError("待機情報が見つかりません。再度登録してください。");
-        setIsLoading(false);
         return;
       }
 
@@ -131,15 +128,13 @@ function WaitingScreen() {
         setError("データの読み込みに失敗しました。");
       }
     } finally {
-      setIsLoading(false);
+      // setIsLoading(false); // Removed
     }
-  };
+  }, [storeId, waitingId, setStep]);
 
-  // 初回＆ポーリング
   useEffect(() => {
     if (!restored) return;
     let isMounted = true;
-    setIsLoading(true);
     setError(null);
 
     loadAllData();
@@ -156,7 +151,7 @@ function WaitingScreen() {
         clearInterval(pollingRef.current);
       }
     };
-  }, [storeId, waitingId, restored]);
+  }, [loadAllData, restored]);
 
   return (
     <div className="waiting-section">
@@ -186,6 +181,27 @@ function WaitingScreen() {
             <div className="preview-item-value">{waitingDetails.notes || '-'}</div>
             <label className="preview-item-label">{waitingScreenTexts.current_waiting_label}</label>
             <div className="preview-item-value">{waitingDetails.waiting_count - 1 || 0}{waitingScreenTexts.group_label}</div>
+
+            {/* 登録時間を表示 */}
+            <label className="preview-item-label">
+              {(() => {
+                switch (selectedLanguageCode) {
+                  case 'ko': return '접수 시간';
+                  case 'en': return 'Registration Time';
+                  case 'zh-CN': return '挂号时间';
+                  case 'zh-TW': return '掛號時間';
+                  case 'vi': return 'Thời gian đăng ký';
+                  default: return '受付時間';
+                }
+              })()}
+            </label>
+            <div className="preview-item-value">
+              {waitingDetails.registration_time ? (() => {
+                const date = new Date(waitingDetails.registration_time);
+                return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
+              })() : '-'}
+            </div>
+
             <label className="preview-item-label">{waitingScreenTexts.estimated_wait_time_label}</label>
             <div className="preview-item-value">{waitingDetails.estimated_waiting_time || "-"}</div>
           </form>
