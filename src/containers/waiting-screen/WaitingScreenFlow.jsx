@@ -6,22 +6,14 @@ import WaitingScreenMenu from "./waiting-screen-menu/WaitingScreenMenu";
 import WaitingScreenPreview from "./waiting-screen-preview/WaitingScreenPreview";
 import WaitingScreen from "./waiting-screen/WaitingScreen";
 import NotifiedScreen from "./waiting-screen-notified/NotifiedScreen";
+import CancelledScreen from "./waiting-screen-cancelled/CancelledScreen";
 import { getWaitingDetails } from "../../api/waitingService";
 import './ErrorScreen.css';
 // Chatbot components
 import ChatbotButton from "../chat-bot/ChatbotButton";
 import ChatWindow from "../chat-bot/ChatWindow";
 
-// 取り消し完了画面
-function CancellationCompleteView() {
-  return (
-    <div className="waiting-section success-section">
-      <svg className="success-icon" /* ... 今後アイコン追加 ... */ > ... </svg>
-      <h2>キャンセルされました</h2>
-      <p>ご利用ありがとうございました。再度ご利用の場合は、もう一度QRコードをスキャンしてください。</p>
-    </div>
-  );
-}
+
 
 function FlowController() {
   const { step, setStep, storeId, setStoreId, waitingId, setWaitingId, isCancelled } = useWaitingScreen();
@@ -107,8 +99,10 @@ function FlowController() {
   }, []);
 
   // isCancelledがtrueの場合、取消完了画面を最優先で表示
-  if (isCancelled) {
-    return <CancellationCompleteView />;
+  const { cancellationReason } = useWaitingScreen(); // Retrieve cancellationReason from context
+
+  if (isCancelled || cancellationReason) {
+    return <CancelledScreen reason={cancellationReason || 'user'} />;
   }
 
   // storeIdの状態確認
