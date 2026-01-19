@@ -1,11 +1,11 @@
 import React from "react";
 import { useWaitingScreen } from "../WaitingScreenContext";
-import "./WaitingScreenPreview.css";
+import CommonPopup from "../../../components/CommonPopup";
 
 function CongestionPopup() {
   // Contextから必要なものを持ってくる
-  const { 
-    popupInfo, 
+  const {
+    popupInfo,
     closePopupAndProceed,
     closePopupOnly,
     t // 다국어 데이터를 가져옵니다.
@@ -14,41 +14,25 @@ function CongestionPopup() {
   // 多国語データ呼出
   const popupTexts = t.waiting_screen_preview.popup;
 
+  const actions = (
+    <button
+      className="confirmation-btn"
+      onClick={closePopupAndProceed}
+    >
+      {/* 「最大人員超過」時、戻るボタン、その外確認ボタンを表示 */}
+      {popupInfo.mode === "max" ? popupTexts.back : popupTexts.confirm}
+    </button>
+  );
+
   return (
-    <div className="congestion-popup-overlay">
-      <div className="congestion-popup-modal">
-        {/* 「最大人員超過」で無い場合のみ、閉じるボタンを表示 */}
-        {popupInfo.mode !== "max" && (
-           <button
-            className="congestion-popup-close-btn"
-            onClick={closePopupOnly} 
-            aria-label={popupTexts.close}
-          >
-            ×
-          </button>
-        )}
-       
-        <div className="congestion-popup-message">
-          {/* Contextで受けたメッセージを表示 */}
-          {popupInfo.message.split('\n').map((line, index) => (
-            <React.Fragment key={index}>
-              {line}
-              <br />
-            </React.Fragment>
-          ))}
-        </div>
-        
-        <div className="congestion-popup-actions">
-          <button
-            className="confirmation-btn"
-            onClick={closePopupAndProceed}
-          >
-            {/* 「最大人員超過」時、戻るボタン、その外確認ボタンを表示 */}
-            {popupInfo.mode === "max" ? popupTexts.back : popupTexts.confirm}
-          </button>
-        </div>
-      </div>
-    </div>
+    <CommonPopup
+      isOpen={true} // CongestionPopup is conditionally rendered by parent, so always true if mounted
+      onClose={popupInfo.mode !== "max" ? closePopupOnly : undefined}
+      closeLabel={popupTexts.close}
+      message={popupInfo.message}
+      actions={actions}
+      showCloseButton={popupInfo.mode !== "max"}
+    />
   );
 }
 

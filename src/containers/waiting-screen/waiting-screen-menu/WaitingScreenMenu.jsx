@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useWaitingScreen } from "../WaitingScreenContext";
 import useTranslation from "../../../hook/useTranslation";
 import { getMenuList } from "../../../api/waitingService";
+import CommonPopup from "../../../components/CommonPopup";
 import "./WaitingScreenMenu.css";
 
 function WaitingScreenMenu() {
@@ -199,32 +200,20 @@ function WaitingScreenMenu() {
             </div>
 
             {/* Error Popup for Menu Selection */}
-            {
-                showErrorPopup && (
-                    <div className="congestion-popup-overlay">
-                        <div className="congestion-popup-modal cancel-modal">
-                            <button
-                                className="congestion-popup-close-btn"
-                                onClick={() => setShowErrorPopup(false)}
-                                aria-label="閉じる"
-                                type="button"
-                            >×</button>
-                            <div className="congestion-popup-message">
-                                {menuText.select_at_least_one || "メニューを少なくとも1つ選択してください"}
-                            </div>
-                            <div className="congestion-popup-actions">
-                                <button
-                                    className="confirmation-btn"
-                                    onClick={() => setShowErrorPopup(false)}
-                                    type="button"
-                                >
-                                    確認
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                )
-            }
+            <CommonPopup
+                isOpen={showErrorPopup}
+                onClose={() => setShowErrorPopup(false)}
+                message={menuText.select_at_least_one || "メニューを少なくとも1つ選択してください"}
+                actions={
+                    <button
+                        className="confirmation-btn"
+                        onClick={() => setShowErrorPopup(false)}
+                        type="button"
+                    >
+                        確認
+                    </button>
+                }
+            />
         </div>
     );
 }

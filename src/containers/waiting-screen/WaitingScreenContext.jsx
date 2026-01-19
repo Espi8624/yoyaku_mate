@@ -125,6 +125,7 @@ export function WaitingScreenProvider({ children }) {
   const [waitingId, setWaitingId] = useState(initialParams.waitingId || localStorage.getItem("waiting_id") || "");
   const [vToken, setVToken] = useState(initialParams.vToken || localStorage.getItem("v_token") || "");
   const [isCancelled, setIsCancelled] = useState(false);
+  const [cancellationReason, setCancellationReason] = useState(null); // 'user', 'store', 'absence'
 
   // ポップアップステータス管理
   const [isPopupVisible, setPopupVisible] = useState(false);
@@ -255,6 +256,7 @@ export function WaitingScreenProvider({ children }) {
       if (res.status >= 200 && res.status < 300) {
         // 成功時、isCancelled状態をtrueに変更
         setIsCancelled(true);
+        setCancellationReason('user');
         // ローカルストレージからwaiting_idとstore_idを削除
         localStorage.removeItem("waiting_id");
         localStorage.removeItem("store_id");
@@ -338,6 +340,11 @@ export function WaitingScreenProvider({ children }) {
     setContact,
     setNotes,
     setStep,
+    setCancellationReason: (reason) => {
+      setIsCancelled(true);
+      setCancellationReason(reason);
+    },
+    cancellationReason,
 
     // Action/Page転換関数
     goToNextStep: () => setStep(prev => prev + 1),

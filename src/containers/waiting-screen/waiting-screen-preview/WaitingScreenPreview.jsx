@@ -58,7 +58,7 @@ function WaitingScreenPreview() {
         )}
 
         <div className="preview-form-actions">
-          <button type="button" className="confirmation-btn" onClick={() => {
+          <button type="button" className="confirmation-btn secondary" onClick={() => {
             if (enableMenuSelection) {
               setStep(5); // メニュー選択画面へ戻る
             } else {
