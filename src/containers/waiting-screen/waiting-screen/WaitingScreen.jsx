@@ -95,8 +95,22 @@ function WaitingScreen() {
         localStorage.removeItem("waiting_id");
         localStorage.removeItem("store_id");
         localStorage.removeItem("v_token");
-        localStorage.removeItem("v_token");
         setError("待機情報が見つかりません。再度登録してください。");
+        return;
+      }
+
+      // ★ ステータスチェック (Cancelled / Absence / Notified)
+      if (safeDetails.status === "cancelled") {
+        if (!context.cancellationReason) {
+          context.setCancellationReason && context.setCancellationReason('store');
+        }
+        return;
+      }
+
+      if (safeDetails.status === "absence") { // Changed from no_show to absence
+        if (!context.cancellationReason) {
+          context.setCancellationReason && context.setCancellationReason('absence');
+        }
         return;
       }
 
@@ -119,18 +133,22 @@ function WaitingScreen() {
     } catch (err) {
       console.error("[loadAllData] エラー:", err);
       if (err?.response?.status === 404 || err?.response?.status === 410) {
-        // データが見つからない場合はローカルストレージをクリア
+        // データが見つからない場合(404)は、店舗削除とみなす
+        if (!context.cancellationReason) {
+          context.setCancellationReason && context.setCancellationReason('store');
+        }
+        // ローカルストレージクリアはContext側かここで行うが、CancelledScreen表示のために状態保持が望ましい
         localStorage.removeItem("waiting_id");
         localStorage.removeItem("store_id");
         localStorage.removeItem("v_token");
-        setError("待機情報が見つかりません。再度登録してください。");
+
       } else {
         setError("データの読み込みに失敗しました。");
       }
     } finally {
       // setIsLoading(false); // Removed
     }
-  }, [storeId, waitingId, setStep]);
+  }, [storeId, waitingId, setStep, context]);
 
   useEffect(() => {
     if (!restored) return;

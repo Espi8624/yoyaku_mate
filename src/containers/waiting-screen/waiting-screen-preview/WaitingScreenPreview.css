@@ -1,65 +1,9 @@
-.congestion-popup-close-btn {
-  position: absolute;
-  top: 8px;
-  right: 8px;
-  background: transparent;
-  border: none;
-  font-size: 1.8em;
-  cursor: pointer;
-  z-index: 10;
-  line-height: 1;
-  padding: 0 4px;
-  transition: color 0.2s, transform 0.2s;
-}
-
 .preview-form-actions {
   display: flex;
   flex-direction: column;
   align-items: stretch;
   gap: 12px;
   margin-top: 24px;
-}
-
-.congestion-popup-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: rgba(0, 0, 0, 0.3);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 9999;
-}
-
-.congestion-popup-modal {
-  position: relative;
-  background: #fff;
-  padding: 32px;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-  min-width: 320px;
-  text-align: center;
-}
-
-.congestion-popup-message {
-  margin-bottom: 24px;
-  font-size: 1.1em;
-  white-space: pre-line;
-}
-
-.congestion-popup-actions {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 12px;
-}
-
-.congestion-cancel-btn {
-  width: 100%;
-  background: #ccc;
-  color: #333;
 }
 
 /* 不要なlog-in-page系など全削除。現行SPAで使うクラスのみ残す */
@@ -199,4 +143,9 @@ textarea {
 .confirmation-btn:hover {
   opacity: 0.9;
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+}
+
+.confirmation-btn.secondary {
+  background-color: #e0e0e0;
+  color: #333;
 }
