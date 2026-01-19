@@ -98,10 +98,20 @@ function Board() {
         .sort((a, b) => a.queue_number - b.queue_number);
 
     // QRコードのURL生成
-    const baseUrl = window.location.origin;
-    const qrUrl = qrData
-        ? `${baseUrl}/waiting-screen-flow?store_id=${storeId}&v_token=${qrData.v_token}`
-        : '';
+    const qrUrl = useMemo(() => {
+        if (!qrData || !storeId) return '';
+        try {
+            const url = new URL('/waiting-screen-flow', window.location.origin);
+            url.searchParams.set('store_id', storeId);
+            if (qrData.v_token) {
+                url.searchParams.set('v_token', qrData.v_token);
+            }
+            return url.toString();
+        } catch (e) {
+            console.error('URL generation error:', e);
+            return '';
+        }
+    }, [qrData, storeId]);
 
     return (
         <div className="board-container">
