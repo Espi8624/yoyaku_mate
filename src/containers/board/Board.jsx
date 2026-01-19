@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { getWaitingList, getStoreInfo, subscribeToWaitingList, getQRToken, getStoreSettings } from '../../api/waitingService';
 import { QRCodeCanvas } from 'qrcode.react';
