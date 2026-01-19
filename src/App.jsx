@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-d
 
 import './App.css';
 import WaitingScreenFlow from './containers/waiting-screen/WaitingScreenFlow';
+import Board from './containers/board/Board';
 
 
 function App() {
@@ -17,6 +18,9 @@ function App() {
         {/* 待ち画面:SPAフロー */}
         <Route path='/waiting-screen-flow'
           element={<WaitingScreenFlow />} />
+
+        {/* 待機ボード（サイネージ用） */}
+        <Route path='/board' element={<Board />} />
 
         {/* 間違えたURLで接近 */}
         <Route path='*' element={<Navigate to="/" />} />

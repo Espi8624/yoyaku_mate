@@ -42,6 +42,40 @@ export const getWaitingStatus = async (storeId) => {
 };
 
 /**
+ * 店舗設定を取得 (待機ポリシーなど)
+ * @param {string} storeId
+ * @returns {Promise<object>}
+ */
+export const getStoreSettings = async (storeId) => {
+  try {
+    const response = await axios.get(`${API_BASE_URL}/store_settings`, {
+      params: { store_id: storeId }
+    });
+    return response.data?.data?.settings || {};
+  } catch (error) {
+    console.error('[getStoreSettings] Error:', error);
+    return {};
+  }
+};
+
+/**
+ * 店舗の待機リスト全体を取得
+ * @param {string} storeId
+ * @returns {Promise<Array>}
+ */
+export const getWaitingList = async (storeId) => {
+  try {
+    const response = await axios.get(`${API_BASE_URL}/waiting-list`, {
+      params: { store_id: storeId || '' }
+    });
+    return Array.isArray(response.data.data) ? response.data.data : [];
+  } catch (error) {
+    console.error('[getWaitingList] エラー:', error);
+    throw error;
+  }
+};
+
+/**
  * 新しい待機をサーバーに登録
  * @param {object} payload - サーバーに送信する待機情報
  * @param {string} vToken - バリデーショントークン
@@ -52,6 +86,55 @@ export const submitWaiting = async (payload, vToken) => {
   return axios.post(`${API_BASE_URL}/waiting-list`, payload, {
     params: { v_token: vToken }
   });
+};
+
+/**
+ * 待機リストのリアルタイム更新を購読 (SSE)
+ * @param {string} storeId
+ * @param {function} onMessage - データ受信時のコールバック
+ * @param {function} onError - エラー時のコールバック
+ * @returns {EventSource} - 接続オブジェクト (クリーンアップ用)
+ */
+export const subscribeToWaitingList = (storeId, onMessage, onError) => {
+  const url = `${API_BASE_URL}/waiting-list/stream?store_id=${storeId}`;
+  const eventSource = new EventSource(url);
+
+  eventSource.onmessage = (event) => {
+    try {
+      const data = JSON.parse(event.data);
+      onMessage(data);
+    } catch (e) {
+      console.error('[SSE] JSON parse error:', e);
+    }
+  };
+
+  eventSource.onerror = (error) => {
+    console.warn('[SSE] Connection error:', error);
+    if (onError) onError(error);
+  };
+
+  return eventSource;
+};
+
+/**
+ * 店舗のQRトークンを取得 (Board用)
+ * @param {string} storeId
+ * @returns {Promise<{v_token: string, date: string}>}
+ */
+export const getQRToken = async (storeId) => {
+  try {
+    // 認証不要に変更された endpoint
+    const response = await axios.get(`${API_BASE_URL}/waiting-list`, {
+      params: {
+        action: 'qr_token',
+        store_id: storeId
+      }
+    });
+    return response.data.data;
+  } catch (error) {
+    console.error('[getQRToken] エラー:', error);
+    throw error;
+  }
 };
 
 /**
