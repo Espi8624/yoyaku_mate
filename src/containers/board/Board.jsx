@@ -83,21 +83,7 @@ function Board() {
         };
     }, [storeId]);
 
-    if (!storeId) return <div className="board-error">Store ID is missing.</div>;
-    if (loading && waitingList.length === 0) return <div className="board-loading">Loading...</div>;
-
-    const notifiedItems = waitingList
-        .filter(item => item.status === 'notified')
-        .sort((a, b) => {
-            const timeA = a.called_time ? new Date(a.called_time).getTime() : 0;
-            const timeB = b.called_time ? new Date(b.called_time).getTime() : 0;
-            return timeB - timeA; // Descending: Latest first
-        });
-    const waitingItems = waitingList
-        .filter(item => item.status === 'waiting')
-        .sort((a, b) => a.queue_number - b.queue_number);
-
-    // QRコードのURL生成
+    // QRコードのURL生成 (Must be before early returns - React Hooks rules)
     const qrUrl = useMemo(() => {
         if (!qrData || !storeId) return '';
         try {
@@ -112,6 +98,20 @@ function Board() {
             return '';
         }
     }, [qrData, storeId]);
+
+    if (!storeId) return <div className="board-error">Store ID is missing.</div>;
+    if (loading && waitingList.length === 0) return <div className="board-loading">Loading...</div>;
+
+    const notifiedItems = waitingList
+        .filter(item => item.status === 'notified')
+        .sort((a, b) => {
+            const timeA = a.called_time ? new Date(a.called_time).getTime() : 0;
+            const timeB = b.called_time ? new Date(b.called_time).getTime() : 0;
+            return timeB - timeA; // Descending: Latest first
+        });
+    const waitingItems = waitingList
+        .filter(item => item.status === 'waiting')
+        .sort((a, b) => a.queue_number - b.queue_number);
 
     return (
         <div className="board-container">
