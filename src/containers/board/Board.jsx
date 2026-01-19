@@ -98,8 +98,9 @@ function Board() {
         .sort((a, b) => a.queue_number - b.queue_number);
 
     // QRコードのURL生成
+    const baseUrl = window.location.origin;
     const qrUrl = qrData
-        ? `https://yoyaku-mate.vercel.app/waiting-screen-flow?store_id=${storeId}&v_token=${qrData.v_token}`
+        ? `${baseUrl}/waiting-screen-flow?store_id=${storeId}&v_token=${qrData.v_token}`
         : '';
 
     return (
