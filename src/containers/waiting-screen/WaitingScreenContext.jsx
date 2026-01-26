@@ -141,6 +141,7 @@ export function WaitingScreenProvider({ children }) {
 
   // メニュー選択機能の状態
   const [enableMenuSelection, setEnableMenuSelection] = useState(false);
+  const [requireOneMenuPerPerson, setRequireOneMenuPerPerson] = useState(false);
   const [selectedMenus, setSelectedMenus] = useState([]); // Array of { menuId, name, quantity, price }
 
   // 店舗設定（メニュー選択機能有効化など）を取得
@@ -148,6 +149,7 @@ export function WaitingScreenProvider({ children }) {
     if (storeId) {
       getWaitingStatus(storeId).then(status => {
         setEnableMenuSelection(status.enableMenuSelection);
+        setRequireOneMenuPerPerson(status.requireOneMenuPerPerson);
       }).catch(err => {
         console.error("店舗設定取得エラー:", err);
       });
@@ -345,6 +347,7 @@ export function WaitingScreenProvider({ children }) {
       setCancellationReason(reason);
     },
     cancellationReason,
+    requireOneMenuPerPerson, // expose new setting
 
     // Action/Page転換関数
     goToNextStep: () => setStep(prev => prev + 1),
