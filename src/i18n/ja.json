@@ -8,23 +8,35 @@
         "input_label": "以下の情報をご記入いただければ、順番をお取りいたします！",
         "name_label": "このお名前でお呼びします。",
         "party_size_label": "何名様でご来店されましたか？",
+        "party_size_placeholder": "例: 2",
         "contact_label": "何かございましたら、こちらのご連絡先にご連絡いたします。",
+        "contact_placeholder": "例: 080-1234-5678",
         "note_label": "お店側にお伝えしたいことがございますでしょうか？",
+        "note_placeholder": "例: 窓際希望 / アレルギーあり",
         "confirm": "次へ"
     },
+    "waiting_screen_menu": {
+        "title": "メニュー選択",
+        "skip": "スキップ",
+        "confirm": "次へ",
+        "no_menus": "現在注文可能なメニューがありません",
+        "view_details": "詳細表示",
+        "close_details": "詳細を閉じる",
+        "select_at_least_one": "メニューを少なくとも1つ選択してください",
+        "back": "戻る"
+    },
     "waiting_screen_preview": {
-        "preview_label": "ご記入いただいた情報をもとに、順番をお取りいたします！",
-        "name_label": "お名前",
+        "preview_label": "入力内容の確認",
         "party_size_label": "人数",
         "contact_label": "連絡先",
         "note_label": "備考",
-        "back": "修正する",
-        "confirm": "この内容で受付する",
-        "popup": {
-            "close": "閉じる",
-            "back": "戻る",
-            "confirm": "確認"
-        }
+        "pre_order": "事前注文",
+        "back": "戻る",
+        "confirm": "確定する"
+    },
+    "waiting_screen_notified": {
+        "title": "大変お待たせいたしました。",
+        "message": "只今ご案内いたします。"
     },
     "waiting_screen": {
         "label_1": "ご記入いただいた情報で登録が完了しました！",
@@ -36,9 +48,17 @@
         "current_waiting_label": "現在お待ちのお客様",
         "group_label": "組",
         "estimated_wait_time_label": "予想待機時間",
+        "registration_time_label": "受付時間",
+        "pre_order": "事前注文",
+        "cancel_reservation": "予約をキャンセル",
         "menu_label": "お待ちの間にメニューをご覧になりませんか？",
         "menu_overview_label": "メニューを見る",
         "menu_close_label": "メニューを閉じる",
-        "category_overview_labe": "カテゴリーを見る"
+        "category_overview_labe": "カテゴリーを見る",
+        "cancel_popup": {
+            "message": "予約をキャンセルいたします",
+            "close": "閉じる",
+            "confirm": "確認"
+        }
     }
 }

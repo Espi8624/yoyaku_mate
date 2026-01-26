@@ -3,6 +3,7 @@ import { useWaitingScreen } from "../WaitingScreenContext";
 import useTranslation from "../../../hook/useTranslation";
 import { getMenuList } from "../../../api/waitingService";
 import CommonPopup from "../../../components/CommonPopup";
+import BackButton from "../../../components/BackButton";
 import "./WaitingScreenMenu.css";
 
 function WaitingScreenMenu() {
@@ -30,14 +31,7 @@ function WaitingScreenMenu() {
     };
 
     const t = useTranslation(selectedLanguageCode);
-    // 言語設定に基づいて翻訳データを取得
-    // メニュー画面用の翻訳キーがない場合のフォールバック（将来的に翻訳ファイルに追加推奨）
-    const menuText = t.waiting_screen_menu || {
-        title: "メニュー選択",
-        skip: "スキップ",
-        confirm: "次へ",
-        no_menus: "現在注文可能なメニューがありません"
-    };
+    const menuText = t.waiting_screen_menu; // Use the object from resources
 
     useEffect(() => {
         const fetchMenus = async () => {
@@ -118,7 +112,10 @@ function WaitingScreenMenu() {
 
     return (
         <div className="waiting-section">
-            <div className="preview-label">{menuText.title}</div>
+            <div className="menu-header-row" style={{ display: 'flex', alignItems: 'center', marginBottom: '18px' }}>
+                <BackButton onClick={() => setStep(1)} />
+                <div className="preview-label" style={{ marginBottom: 0 }}>{menuText.title}</div>
+            </div>
 
             {isLoading ? (
                 <div className="menu-loading">Loading...</div>
@@ -152,7 +149,7 @@ function WaitingScreenMenu() {
                                                         onClick={() => toggleDescription(menu.menu_id)}
                                                         className="menu-item-toggle-btn"
                                                     >
-                                                        {expandedMenus.has(menu.menu_id) ? '▲ 詳細を閉じる' : '▼ 詳細表示'}
+                                                        {expandedMenus.has(menu.menu_id) ? `▲ ${menuText.close_details}` : `▼ ${menuText.view_details}`}
                                                     </button>
                                                 )}
                                             </div>
@@ -191,9 +188,6 @@ function WaitingScreenMenu() {
             )}
 
             <div className="menu-actions">
-                <button type="button" className="confirmation-btn secondary" onClick={() => setStep(1)}>
-                    戻る
-                </button>
                 <button type="button" className="confirmation-btn" onClick={handleNext}>
                     {menuText.confirm}
                 </button>

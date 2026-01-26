@@ -202,16 +202,7 @@ function WaitingScreen() {
 
             {/* 登録時間を表示 */}
             <label className="preview-item-label">
-              {(() => {
-                switch (selectedLanguageCode) {
-                  case 'ko': return '접수 시간';
-                  case 'en': return 'Registration Time';
-                  case 'zh-CN': return '挂号时间';
-                  case 'zh-TW': return '掛號時間';
-                  case 'vi': return 'Thời gian đăng ký';
-                  default: return '受付時間';
-                }
-              })()}
+              {waitingScreenTexts.registration_time_label}
             </label>
             <div className="preview-item-value">
               {waitingDetails.registration_time ? (() => {
@@ -227,7 +218,7 @@ function WaitingScreen() {
           {/* Display selected menu items if any */}
           {waitingDetails.menu_items && waitingDetails.menu_items.length > 0 && (
             <div className="menu-container" style={{ marginBottom: '24px' }}>
-              <div className="preview-label" style={{ fontSize: '1.1em', marginBottom: '12px' }}>事前注文</div>
+              <div className="preview-label" style={{ fontSize: '1.1em', marginBottom: '12px' }}>{waitingScreenTexts.pre_order}</div>
               <div className="preview-menu-list">
                 {waitingDetails.menu_items.map((item, index) => {
                   // Find the full menu object to get the image URL
@@ -257,7 +248,7 @@ function WaitingScreen() {
           <MenuDisplay menuList={menuList} texts={waitingScreenTexts} />
 
           <button className="confirmation-btn cancel-btn" onClick={() => setShowCancelPopup(true)}>
-            予約をキャンセル
+            {waitingScreenTexts.cancel_reservation}
           </button>
 
           {/* 取り消しポップアップ */}
@@ -267,11 +258,11 @@ function WaitingScreen() {
                 <button
                   className="congestion-popup-close-btn"
                   onClick={() => setShowCancelPopup(false)}
-                  aria-label="閉じる"
+                  aria-label={waitingScreenTexts.cancel_popup.close}
                   type="button"
                 >×</button>
                 <div className="congestion-popup-message">
-                  予約をキャンセルいたします
+                  {waitingScreenTexts.cancel_popup.message}
                 </div>
                 <div className="congestion-popup-actions">
                   <button
@@ -279,7 +270,7 @@ function WaitingScreen() {
                     onClick={handleCancel}
                     type="button"
                   >
-                    確認
+                    {waitingScreenTexts.cancel_popup.confirm}
                   </button>
                 </div>
               </div>
