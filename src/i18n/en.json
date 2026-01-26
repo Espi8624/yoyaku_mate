@@ -12,6 +12,16 @@
         "note_label": "Is there anything you'd like us to inform the restaurant about?",
         "confirm": "Next"
     },
+    "waiting_screen_menu": {
+        "title": "Select Menu",
+        "skip": "Skip",
+        "confirm": "Next",
+        "no_menus": "No menus available at the moment",
+        "view_details": "View Details",
+        "close_details": "Close Details",
+        "select_at_least_one": "Please select at least one menu item",
+        "back": "Back"
+    },
     "waiting_screen_preview": {
         "preview_label": "We will proceed with the waiting list based on the information you provided!",
         "name_label": "Name",
