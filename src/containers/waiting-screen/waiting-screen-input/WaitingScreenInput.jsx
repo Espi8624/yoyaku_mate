@@ -52,7 +52,7 @@ function WaitingScreenInput() {
         <FormField
           id="party_size"
           label={waitingScreenInput.party_size_label}
-          example="例: 2"
+          example={waitingScreenInput.party_size_placeholder}
           value={partySize}
           onChange={(e) => setPartySize(convertFullWidthToHalfWidth(e.target.value))}
           type="number"
@@ -62,7 +62,7 @@ function WaitingScreenInput() {
         <FormField
           id="contact"
           label={waitingScreenInput.contact_label}
-          example="例: 080-1234-5678"
+          example={waitingScreenInput.contact_placeholder}
           value={contact}
           onChange={(e) => setContact(e.target.value)}
           type="tel"
@@ -71,7 +71,7 @@ function WaitingScreenInput() {
         <FormField
           id="notes"
           label={waitingScreenInput.note_label}
-          example="例: 窓際希望 / アレルギーあり"
+          example={waitingScreenInput.note_placeholder}
           value={notes}
           onChange={(e) => setNotes(e.target.value)}
         />
