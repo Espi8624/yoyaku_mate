@@ -1,12 +1,16 @@
 // src/containers/waiting-screen/waiting-screen-notified/NotifiedScreen.jsx
-import React, { useState, useEffect, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import { useWaitingScreen } from "../WaitingScreenContext";
 import { getWaitingDetails } from "../../../api/waitingService";
+import useTranslation from "../../../hook/useTranslation";
 import "./NotifiedScreen.css";
 
 function NotifiedScreen() {
-  const { storeId, waitingId, setStep } = useWaitingScreen();
+  const { storeId, waitingId, setStep, selectedLanguageCode } = useWaitingScreen();
   const pollingRef = useRef(null);
+
+  const t = useTranslation(selectedLanguageCode);
+  const notifiedText = t.waiting_screen_notified || { title: "大変お待たせいたしました。", message: "只今ご案内いたします。" };
 
   // completedステータスをポーリングで監視
   useEffect(() => {
@@ -56,8 +60,8 @@ function NotifiedScreen() {
     <div className="notified-screen">
       <div className="notified-content">
         <div className="notified-icon">✓</div>
-        <h1 className="notified-title">大変お待たせいたしました。</h1>
-        <p className="notified-message">只今ご案内いたします。</p>
+        <h1 className="notified-title">{notifiedText.title}</h1>
+        <p className="notified-message">{notifiedText.message}</p>
       </div>
     </div>
   );

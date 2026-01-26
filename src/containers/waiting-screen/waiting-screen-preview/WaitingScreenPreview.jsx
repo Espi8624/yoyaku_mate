@@ -2,6 +2,7 @@ import React from "react";
 import { useWaitingScreen } from "../WaitingScreenContext";
 import useTranslation from "../../../hook/useTranslation";
 import CongestionPopup from "./CongestionPopup";
+import BackButton from "../../../components/BackButton";
 import "./WaitingScreenPreview.css";
 
 function WaitingScreenPreview() {
@@ -23,7 +24,16 @@ function WaitingScreenPreview() {
 
   return (
     <div className="waiting-section">
-      <div className="preview-label">{watingScreenPreview.preview_label}</div>
+      <div className="preview-header-row" style={{ display: 'flex', alignItems: 'center', marginBottom: '18px' }}>
+        <BackButton onClick={() => {
+          if (enableMenuSelection) {
+            setStep(5); // メニュー選択画面へ戻る
+          } else {
+            setStep(1); // 入力画面へ戻る
+          }
+        }} />
+        <div className="preview-label" style={{ marginBottom: 0 }}>{watingScreenPreview.preview_label}</div>
+      </div>
       <form className="preview-form" onSubmit={(e) => { e.preventDefault(); handleSubmitWaiting(); }}>
         <label className="preview-item-label">{watingScreenPreview.party_size_label}</label>
         <div className="preview-item-value">{partySize}</div>
@@ -36,7 +46,7 @@ function WaitingScreenPreview() {
 
         {selectedMenus.length > 0 && (
           <>
-            <label className="preview-item-label">事前注文</label>
+            <label className="preview-item-label">{watingScreenPreview.pre_order}</label>
             <div className="preview-menu-list">
               {selectedMenus.map(menu => (
                 <div key={menu.menuId} className="preview-menu-item">
@@ -58,15 +68,6 @@ function WaitingScreenPreview() {
         )}
 
         <div className="preview-form-actions">
-          <button type="button" className="confirmation-btn secondary" onClick={() => {
-            if (enableMenuSelection) {
-              setStep(5); // メニュー選択画面へ戻る
-            } else {
-              setStep(1); // 入力画面へ戻る
-            }
-          }}>
-            {watingScreenPreview.back}
-          </button>
           <button type="submit" className="confirmation-btn">
             {watingScreenPreview.confirm}
           </button>
