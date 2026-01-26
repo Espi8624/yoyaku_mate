@@ -49,6 +49,12 @@
         "menu_label": "How about checking the menu while you wait?",
         "menu_overview_label": "View Menu",
         "menu_close_label": "Close Menu",
-        "category_overview_labe": "View Category"
+        "category_overview_labe": "View Category",
+        "cancel_reservation": "Cancel Reservation",
+        "cancel_popup": {
+            "message": "Are you sure you want to cancel your reservation?",
+            "close": "Close",
+            "confirm": "Confirm"
+        }
     }
 }
