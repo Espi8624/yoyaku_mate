@@ -11,23 +11,44 @@ function WaitingScreenMenu() {
         storeId,
         selectedMenus,
         setSelectedMenus,
-        setStep, // Add setStep
+        setStep,
         selectedLanguageCode,
+        partySize, // Get partySize
+        requireOneMenuPerPerson, // Get setting
     } = useWaitingScreen();
 
     const [menuList, setMenuList] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
-    const [expandedMenus, setExpandedMenus] = useState(new Set()); // 展開されたメニューIDを追跡
+    const [expandedMenus, setExpandedMenus] = useState(new Set());
     const [showErrorPopup, setShowErrorPopup] = useState(false);
+    const [popupMessage, setPopupMessage] = useState(""); // Add state for dynamic message
 
     const handleNext = () => {
-        // Check if at least one menu is selected (quantity > 0)
-        const hasSelection = selectedMenus.some(item => item.quantity > 0);
-        if (hasSelection) {
-            setStep(2);
-        } else {
+        // Calculate total quantity
+        const totalQuantity = selectedMenus.reduce((sum, item) => sum + item.quantity, 0);
+
+        console.log("Validation Debug:", {
+            requireOneMenuPerPerson,
+            partySize: Number(partySize),
+            totalQuantity,
+            condition: requireOneMenuPerPerson && totalQuantity < Number(partySize)
+        });
+
+        // 1. Basic check: at least one item
+        if (totalQuantity === 0) {
+            setPopupMessage(menuText.select_at_least_one || "メニューを少なくとも1つ選択してください");
             setShowErrorPopup(true);
+            return;
         }
+
+        // 2. One menu per person check
+        if (requireOneMenuPerPerson && totalQuantity < Number(partySize)) {
+            setPopupMessage(menuText.one_menu_per_person_error || "お一人様につき少なくとも1つのメニューを注文してください");
+            setShowErrorPopup(true);
+            return;
+        }
+
+        setStep(2);
     };
 
     const t = useTranslation(selectedLanguageCode);
@@ -197,7 +218,7 @@ function WaitingScreenMenu() {
             <CommonPopup
                 isOpen={showErrorPopup}
                 onClose={() => setShowErrorPopup(false)}
-                message={menuText.select_at_least_one || "メニューを少なくとも1つ選択してください"}
+                message={popupMessage}
                 actions={
                     <button
                         className="confirmation-btn"

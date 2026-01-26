@@ -20,6 +20,7 @@
         "view_details": "상세 보기",
         "close_details": "상세 닫기",
         "select_at_least_one": "메뉴를 최소 1개 선택해주세요",
+        "one_menu_per_person_error": "인원 수만큼 메뉴를 주문해주세요",
         "back": "뒤로가기"
     },
     "waiting_screen_preview": {
