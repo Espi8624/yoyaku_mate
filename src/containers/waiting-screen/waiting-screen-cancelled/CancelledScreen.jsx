@@ -1,9 +1,14 @@
 import React from "react";
-import "../ErrorScreen.css"; // Reuse existing styles if applicable, or create new structure
+import "../ErrorScreen.css";
+import { useWaitingScreen } from "../WaitingScreenContext";
+import useTranslation from "../../../hook/useTranslation";
 
 const CancelledScreen = ({ reason }) => {
-    // 理由に応じたテキスト定義
-    const content = {
+    const { selectedLanguageCode } = useWaitingScreen();
+    const t = useTranslation(selectedLanguageCode);
+
+    const content = t.cancelled_screen || {
+        // Fallback (Japanese)
         user: {
             title: "キャンセルされました",
             body: "ご利用ありがとうございました。再度ご利用の場合は、もう一度QRコードをスキャンしてください。",
@@ -18,16 +23,10 @@ const CancelledScreen = ({ reason }) => {
         },
     };
 
-    // デフォルトのみユーザー都合にしておく（あるいはエラー表示）
     const info = content[reason] || content.user;
 
     return (
         <div className="waiting-section success-section">
-            {/* 
-         Icon/Illustration placeholder 
-         既存のCancellationCompleteViewに倣い、必要であればsvg等を追加 
-         一旦はテキスト中心で実装
-      */}
             <h2>{info.title}</h2>
             <p>{info.body}</p>
         </div>

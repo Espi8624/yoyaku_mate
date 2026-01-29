@@ -1,0 +1,13 @@
+{
+    "chat_bot": {
+        "greeting": "Halo! Beri tahu saya jika Anda memiliki pertanyaan tentang pesanan Anda atau toko.",
+        "ui": {
+            "title": "Asisten AI",
+            "placeholder": "Ketik pesan..."
+        },
+        "errors": {
+            "429": "Maaf, lalu lintas sedang padat. Silakan coba lagi nanti.",
+            "general": "Terjadi kesalahan. Silakan coba lagi nanti."
+        }
+    }
+}

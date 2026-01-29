@@ -139,6 +139,9 @@ export function WaitingScreenProvider({ children }) {
   const [isChatOpen, setIsChatOpen] = useState(false);
   const toggleChat = () => setIsChatOpen(prev => !prev);
 
+  // 現在のページ判定 (step 1,2: registration, step 3: status)
+  const currentPage = step < 3 ? 'registration' : 'status';
+
   // メニュー選択機能の状態
   const [enableMenuSelection, setEnableMenuSelection] = useState(false);
   const [requireOneMenuPerPerson, setRequireOneMenuPerPerson] = useState(false);
@@ -357,6 +360,7 @@ export function WaitingScreenProvider({ children }) {
     closePopupOnly,
     isChatOpen,
     toggleChat,
+    currentPage, // Added currentPage
     goBackToInputStep: (inputInfo) => {
       if (inputInfo) {
         setPartySize(inputInfo.partySize ?? "");

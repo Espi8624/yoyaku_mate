@@ -57,5 +57,30 @@
             "close": "Close",
             "confirm": "Confirm"
         }
+    },
+    "cancelled_screen": {
+        "user": {
+            "title": "Cancelled",
+            "body": "Thank you for visiting. If you wish to register again, please scan the QR code again."
+        },
+        "store": {
+            "title": "Cancelled",
+            "body": "We apologize deeply. Your reservation was cancelled by the store. Please contact the staff for assistance."
+        },
+        "absence": {
+            "title": "Cancelled",
+            "body": "Your reservation was cancelled because you were not present when called. Please scan the QR code again to re-register."
+        }
+    },
+    "chat_bot": {
+        "greeting": "Hello! Please let me know if you have any questions about your order or the store.",
+        "ui": {
+            "title": "AI Assistant",
+            "placeholder": "Type a message..."
+        },
+        "errors": {
+            "429": "Sorry, we are experiencing high traffic. Please try again later.",
+            "general": "An error occurred. Please try again later."
+        }
     }
 }
