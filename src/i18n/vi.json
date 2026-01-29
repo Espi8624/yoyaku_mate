@@ -1,0 +1,13 @@
+{
+    "chat_bot": {
+        "greeting": "Xin chào! Nếu bạn có câu hỏi nào về đơn hàng hoặc cửa hàng, vui lòng cho tôi biết.",
+        "ui": {
+            "title": "Trợ lý AI",
+            "placeholder": "Nhập tin nhắn..."
+        },
+        "errors": {
+            "429": "Xin lỗi, hiện tại đang có quá nhiều truy cập. Vui lòng thử lại sau.",
+            "general": "Đã xảy ra lỗi. Vui lòng thử lại sau."
+        }
+    }
+}

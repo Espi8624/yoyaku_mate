@@ -21,9 +21,9 @@
         "confirm": "S’inscrire avec ces informations",
         "back": "Retour",
         "popup": {
-          "close": "Fermer",
-          "back": "Retour",
-          "confirm": "Confirmer"
+            "close": "Fermer",
+            "back": "Retour",
+            "confirm": "Confirmer"
         }
     },
     "waiting_screen": {
@@ -37,6 +37,37 @@
         "menu_label": "Souhaitez-vous jeter un œil au menu pendant l’attente ?",
         "menu_overview_label": "Afficher le menu",
         "menu_close_label": "Fermer le menu",
-        "category_overview_labe": "Afficher les catégories"
+        "category_overview_labe": "Afficher les catégories",
+        "cancel_reservation": "Annuler la réservation",
+        "cancel_popup": {
+            "message": "Êtes-vous sûr de vouloir annuler votre réservation ?",
+            "close": "Fermer",
+            "confirm": "Confirmer"
+        }
+    },
+    "cancelled_screen": {
+        "user": {
+            "title": "Annulé",
+            "body": "Merci de votre visite. Si vous souhaitez vous réinscrire, veuillez scanner à nouveau le code QR."
+        },
+        "store": {
+            "title": "Annulé",
+            "body": "Nous sommes sincèrement désolés. Votre réservation a été annulée par le magasin. Veuillez contacter le personnel."
+        },
+        "absence": {
+            "title": "Annulé",
+            "body": "Votre réservation a été annulée car vous étiez absent lors de l'appel. Veuillez scanner à nouveau le code QR pour vous réinscrire."
+        }
+    },
+    "chat_bot": {
+        "greeting": "Bonjour ! Si vous avez des questions sur votre commande ou le magasin, n'hésitez pas.",
+        "ui": {
+            "title": "Assistant IA",
+            "placeholder": "Entrez un message..."
+        },
+        "errors": {
+            "429": "Désolé, nous connaissons un fort trafic. Veuillez réessayer plus tard.",
+            "general": "Une erreur s'est produite. Veuillez réessayer plus tard."
+        }
     }
 }

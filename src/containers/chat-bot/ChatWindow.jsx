@@ -3,24 +3,26 @@ import { useWaitingScreen } from '../waiting-screen/WaitingScreenContext';
 import { getStoreAIContext } from '../../api/waitingService';
 // import { GEMINI_API_KEY } from '../../config'; // config.js might be missing in production
 import { generateSystemPrompt } from './SystemPrompt';
-import { getInitialGreeting, getErrorMessage } from './ChatMessages';
+import useTranslation from '../../hook/useTranslation';
 import './ChatWindow.css';
 
 const GEMINI_API_KEY = process.env.REACT_APP_GEMINI_API_KEY;
 
 const ChatWindow = () => {
-    const { isChatOpen, toggleChat, storeId, selectedNationality, selectedLanguageCode } = useWaitingScreen();
+    const { isChatOpen, toggleChat, storeId, selectedNationality, selectedLanguageCode, currentPage } = useWaitingScreen();
 
-
+    const t = useTranslation(selectedLanguageCode);
+    const chatBotText = t.chat_bot || {}; // Fallback if missing
+    const uiText = chatBotText.ui || { title: "AI Assistant", placeholder: "Type a message..." };
 
     const [messages, setMessages] = useState([]);
 
     // Update greeting when chat opens or language changes
     useEffect(() => {
         if (messages.length === 0) {
-            setMessages([{ id: 1, text: getInitialGreeting(selectedLanguageCode), sender: 'bot' }]);
+            setMessages([{ id: 1, text: chatBotText.greeting || "Hello", sender: 'bot' }]);
         }
-    }, [selectedLanguageCode, messages.length]);
+    }, [selectedLanguageCode, messages.length, chatBotText.greeting]);
 
     const [inputText, setInputText] = useState("");
     const [isLoading, setIsLoading] = useState(false);
@@ -54,7 +56,7 @@ const ChatWindow = () => {
             }
 
             // 2. 動的プロンプトを構築 (SystemPrompt.jsから生成)
-            const systemPrompt = generateSystemPrompt(liveContext, selectedNationality, selectedLanguageCode);
+            const systemPrompt = generateSystemPrompt(liveContext, selectedNationality, selectedLanguageCode, currentPage);
 
             const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_API_KEY}`, {
                 method: 'POST',
@@ -69,13 +71,13 @@ const ChatWindow = () => {
                 })
             });
             if (response.status === 429) {
-                return getErrorMessage('429', selectedLanguageCode);
+                return chatBotText.errors?.['429'] || "Busy.";
             }
             const data = await response.json();
             return data.candidates?.[0]?.content?.parts?.[0]?.text || "すみません、うまく聞き取れませんでした。";
         } catch (error) {
             console.error("Gemini API Error:", error);
-            return getErrorMessage('general', selectedLanguageCode);
+            return chatBotText.errors?.general || "Error.";
         }
     };
 
@@ -134,7 +136,7 @@ const ChatWindow = () => {
     return (
         <div className="chat-window">
             <div className="chat-header">
-                <span className="chat-title">AI アシスタント</span>
+                <span className="chat-title">{uiText.title}</span>
                 <button className="close-button" onClick={toggleChat}>×</button>
             </div>
 
@@ -152,7 +154,7 @@ const ChatWindow = () => {
                 <textarea
                     ref={inputRef}
                     className="chat-input"
-                    placeholder="メッセージを入力..."
+                    placeholder={uiText.placeholder}
                     value={inputText}
                     onChange={handleInputChange}
                     onKeyDown={handleKeyDown}
