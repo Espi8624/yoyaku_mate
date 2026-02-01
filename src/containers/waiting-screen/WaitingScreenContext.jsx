@@ -73,18 +73,7 @@ export function WaitingScreenProvider({ children }) {
     return match || nationalitiesData.nationalities.find(n => n.languageCode === 'ja');
   };
 
-  const generateWaitingId = () => {
-    const now = new Date();
-    return (
-      now.getFullYear().toString() +
-      ("0" + (now.getMonth() + 1)).slice(-2) +
-      ("0" + now.getDate()).slice(-2) + "-" +
-      ("0" + now.getHours()).slice(-2) +
-      ("0" + now.getMinutes()).slice(-2) +
-      ("0" + now.getSeconds()).slice(-2) +
-      '-' + Math.random().toString(36).substring(2, 8)
-    );
-  };
+
 
   // URLパラメータパース
   const initialParams = useMemo(() => {
@@ -188,6 +177,15 @@ export function WaitingScreenProvider({ children }) {
       const res = await apiSubmitWaiting(payload, vToken);
       // axiosは成功時に200-299のstatusを返す
       if (res.status >= 200 && res.status < 300) {
+
+        // サーバーから返却されたwaiting_idを取得して保存
+        const serverWaitingId = res.data?.data?.waiting_id;
+        if (serverWaitingId) {
+          setWaitingId(serverWaitingId);
+          localStorage.setItem("waiting_id", serverWaitingId);
+          if (storeId) localStorage.setItem("store_id", storeId);
+        }
+
         alert("登録が完了しました");
         setStep(3); // step 3へ移動
       } else {
@@ -213,15 +211,14 @@ export function WaitingScreenProvider({ children }) {
     const { waitingPartySum, estimatedWaitingCount, maxWaitingCount } = await getWaitingStatus(storeId);
     const currentWaitingCount = waitingPartySum + Number(partySize);
 
-    const newWaitingId = generateWaitingId();
-    setWaitingId(newWaitingId);
-    // waiting_id, store_idをローカルストレージに保存
-    localStorage.setItem("waiting_id", newWaitingId);
-    if (storeId) localStorage.setItem("store_id", storeId);
+    // Client側でのID生成を廃止 (Server側で生成)
+    // const newWaitingId = generateWaitingId(); 
+    // setWaitingId(newWaitingId);
 
+    // Payloadからwaiting_idを除外
     const payload = {
       store_id: storeId,
-      waiting_id: newWaitingId,
+      // waiting_id: newWaitingId, // Removed
       party_size: Number(partySize),
       nationality: selectedNationality,
       contact: contact.trim() === "" ? "なし" : contact,
@@ -247,9 +244,7 @@ export function WaitingScreenProvider({ children }) {
       return;
     }
 
-    // waitingId, storeIdをローカルストレージに保存
-    if (waitingId) localStorage.setItem("waiting_id", waitingId);
-    if (storeId) localStorage.setItem("store_id", storeId);
+    // 初回登録時はまだwaitingIdがないため、localStorageへの保存は _performSubmit 内で行う
 
     await _performSubmit(payload);
   };
