@@ -1,25 +1,36 @@
 {
     "waiting_screen_nationality": {
-        "welcome": "いらっしゃいませ！",
-        "origin": "Which country are you visiting from?",
+        "welcome": "Bienvenue !",
+        "origin": "De quel pays venez-vous ?",
         "confirm": "→"
     },
     "waiting_screen_input": {
-        "input_label": "Merci de remplir les informations ci-dessous pour que nous puissions vous ajouter à la liste d’attente!",
-        "name_label": "Nous vous appellerons par ce nom.",
-        "party_size_label": "Combien de personnes y a-t-il dans votre groupe?",
-        "contact_label": "Nous vous contacterons à ce numéro en cas de problème.",
-        "note_label": "Souhaitez-vous laisser un message pour le restaurant ?",
+        "input_label": "Veuillez remplir les informations ci-dessous pour rejoindre la liste d'attente.",
+        "name_label": "Nom d'appel",
+        "party_size_label": "Nombre de personnes",
+        "contact_label": "Numéro de contact (en cas d'urgence)",
+        "note_label": "Remarques particulières pour le restaurant",
         "confirm": "Suivant"
     },
+    "waiting_screen_menu": {
+        "title": "Choix du menu",
+        "skip": "Passer",
+        "confirm": "Suivant",
+        "no_menus": "Aucun menu disponible pour le moment",
+        "view_details": "Voir les détails",
+        "close_details": "Fermer les détails",
+        "select_at_least_one": "Veuillez sélectionner au moins un menu",
+        "one_menu_per_person_error": "Veuillez commander au moins un menu par personne",
+        "back": "Retour"
+    },
     "waiting_screen_preview": {
-        "preview_label": "Nous vous inscrivons sur la liste d’attente avec les informations fournies!",
+        "preview_label": "Vérifiez vos informations avant de confirmer l'inscription.",
         "name_label": "Nom",
         "party_size_label": "Nombre de personnes",
-        "contact_label": "Numéro de téléphone",
+        "contact_label": "Contact",
         "note_label": "Notes",
-        "confirm": "S’inscrire avec ces informations",
-        "back": "Retour",
+        "back": "Modifier",
+        "confirm": "Confirmer l'inscription",
         "popup": {
             "close": "Fermer",
             "back": "Retour",
@@ -27,20 +38,22 @@
         }
     },
     "waiting_screen": {
-        "label_1": "Merci! Vos informations ont bien été enregistrées!",
-        "label_2": "Merci de patienter, nous vous appellerons dès que votre tour arrivera.",
-        "waiting_number_label": "numéro d’appel",
+        "label_1": "Inscription réussie !",
+        "label_2": "Veuillez patienter, nous vous appellerons dès que possible.",
+        "waiting_number_label": "Numéro d'attente",
         "name_label": "Nom",
         "party_size_label": "Nombre de personnes",
         "note_label": "Notes",
         "estimated_wait_time_label": "Temps d'attente estimé",
-        "menu_label": "Souhaitez-vous jeter un œil au menu pendant l’attente ?",
+        "current_waiting_label": "Clients en attente",
+        "group_label": "Groupe(s)",
+        "menu_label": "Souhaitez-vous consulter le menu pendant votre attente ?",
         "menu_overview_label": "Afficher le menu",
         "menu_close_label": "Fermer le menu",
         "category_overview_labe": "Afficher les catégories",
         "cancel_reservation": "Annuler la réservation",
         "cancel_popup": {
-            "message": "Êtes-vous sûr de vouloir annuler votre réservation ?",
+            "message": "Voulez-vous vraiment annuler votre réservation ?",
             "close": "Fermer",
             "confirm": "Confirmer"
         }
@@ -48,26 +61,26 @@
     "cancelled_screen": {
         "user": {
             "title": "Annulé",
-            "body": "Merci de votre visite. Si vous souhaitez vous réinscrire, veuillez scanner à nouveau le code QR."
+            "body": "Merci de votre visite. Pour vous inscrire à nouveau, veuillez scanner le code QR."
         },
         "store": {
             "title": "Annulé",
-            "body": "Nous sommes sincèrement désolés. Votre réservation a été annulée par le magasin. Veuillez contacter le personnel."
+            "body": "Nous sommes désolés. Votre réservation a été annulée par l'établissement. Veuillez contacter le personnel."
         },
         "absence": {
             "title": "Annulé",
-            "body": "Votre réservation a été annulée car vous étiez absent lors de l'appel. Veuillez scanner à nouveau le code QR pour vous réinscrire."
+            "body": "Réservation annulée pour cause d'absence lors de l'appel. Veuillez scanner le code QR pour vous réinscrire."
         }
     },
     "chat_bot": {
-        "greeting": "Bonjour ! Si vous avez des questions sur votre commande ou le magasin, n'hésitez pas.",
+        "greeting": "Bonjour ! Je suis là pour répondre à vos questions sur la commande 또는 le magasin.",
         "ui": {
             "title": "Assistant IA",
-            "placeholder": "Entrez un message..."
+            "placeholder": "Écrivez votre message..."
         },
         "errors": {
-            "429": "Désolé, nous connaissons un fort trafic. Veuillez réessayer plus tard.",
-            "general": "Une erreur s'est produite. Veuillez réessayer plus tard."
+            "429": "Désolé, le service est surchargé. Veuillez réessayer dans un instant.",
+            "general": "Une erreur est survenue. Veuillez réessayer plus tard."
         }
     }
 }
