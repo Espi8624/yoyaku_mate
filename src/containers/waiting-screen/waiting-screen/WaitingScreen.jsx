@@ -3,6 +3,7 @@ import { useWaitingScreen } from "../WaitingScreenContext";
 import useTranslation from "../../../hook/useTranslation";
 import { getMenuList, getWaitingDetails, getStoreInfo } from "../../../api/waitingService";
 import MenuDisplay from "./MenuDisplay";
+import { getTranslatedText } from "../../../utils/i18nHelper";
 import "./WaitingScreen.css";
 
 function WaitingScreen() {
@@ -128,6 +129,11 @@ function WaitingScreen() {
       }
 
       setWaitingDetails(safeDetails);
+      if (menu && menu.length > 0) {
+        console.log("[Debug] Menu Item 0:", menu[0]);
+        console.log("[Debug] Title Translations:", menu[0].title_translations);
+        console.log("[Debug] Selected Language:", selectedLanguageCode);
+      }
       setMenuList(menu || []);
       setError(null);
     } catch (err) {
@@ -221,20 +227,26 @@ function WaitingScreen() {
               <div className="preview-label" style={{ fontSize: '1.1em', marginBottom: '12px' }}>{waitingScreenTexts.pre_order}</div>
               <div className="preview-menu-list">
                 {waitingDetails.menu_items.map((item, index) => {
-                  // Find the full menu object to get the image URL
+                  // Find the full menu object to get the image URL and translations
                   const fullMenu = menuList.find(m => m.menu_id === item.menu_id);
                   const imageUrl = fullMenu ? fullMenu.menu_image_url : null;
+
+                  // 翻訳テキスト取得
+                  let displayName = item.name;
+                  if (fullMenu && fullMenu.title_translations) {
+                    displayName = getTranslatedText(item.name, fullMenu.title_translations, selectedLanguageCode);
+                  }
 
                   return (
                     <div key={index} className="preview-menu-item">
                       {imageUrl ? (
-                        <img src={imageUrl} alt={item.name} className="preview-menu-image" />
+                        <img src={imageUrl} alt={displayName} className="preview-menu-image" />
                       ) : (
                         <div className="preview-menu-placeholder">No Image</div>
                       )}
                       <div className="preview-menu-info">
                         <div className="preview-menu-header">
-                          <span className="preview-menu-name">{item.name}</span>
+                          <span className="preview-menu-name">{displayName}</span>
                           <span className="preview-menu-quantity">x{item.quantity}</span>
                         </div>
                       </div>
@@ -245,7 +257,7 @@ function WaitingScreen() {
             </div>
           )}
 
-          <MenuDisplay menuList={menuList} texts={waitingScreenTexts} />
+          <MenuDisplay menuList={menuList} texts={waitingScreenTexts} selectedLanguageCode={selectedLanguageCode} />
 
           <button className="confirmation-btn cancel-btn" onClick={() => setShowCancelPopup(true)}>
             {waitingScreenTexts.cancel_reservation}

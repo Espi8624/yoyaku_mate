@@ -1,13 +1,86 @@
 {
+    "waiting_screen_nationality": {
+        "welcome": "歡迎光臨！",
+        "origin": "請問您是來自哪個國家/地區的遊客？",
+        "confirm": "→"
+    },
+    "waiting_screen_input": {
+        "input_label": "請填寫以下資訊，我們將為您安排候位！",
+        "name_label": "請問該如何稱呼您？",
+        "party_size_label": "請問共有幾位用餐？",
+        "contact_label": "若有任何狀況，我們將透過此號碼與您聯繫。",
+        "note_label": "是否有任何需要提前告知店家的事項？",
+        "confirm": "下一步"
+    },
+    "waiting_screen_menu": {
+        "title": "選擇菜單",
+        "skip": "跳過",
+        "confirm": "下一步",
+        "no_menus": "目前沒有可供選擇的菜單",
+        "view_details": "查看詳情",
+        "close_details": "關閉詳情",
+        "select_at_least_one": "請至少選擇一項餐點",
+        "one_menu_per_person_error": "請依照人數點購相應數量的餐點",
+        "back": "返回"
+    },
+    "waiting_screen_preview": {
+        "preview_label": "我們將根據您填寫的資訊進行候位登記！",
+        "name_label": "姓名",
+        "party_size_label": "人數",
+        "contact_label": "聯絡電話",
+        "note_label": "備註",
+        "back": "修改資訊",
+        "confirm": "確認登記",
+        "popup": {
+            "close": "關閉",
+            "back": "返回",
+            "confirm": "確認"
+        }
+    },
+    "waiting_screen": {
+        "label_1": "已使用您提供的資訊完成登記！",
+        "label_2": "請稍作等待，店家將儘快為您安排叫號。",
+        "waiting_number_label": "候位號碼",
+        "name_label": "姓名",
+        "party_size_label": "人數",
+        "note_label": "備註",
+        "estimated_wait_time_label": "預計等待時間",
+        "current_waiting_label": "目前候位組數",
+        "group_label": "組",
+        "menu_label": "等待期間，要不要先看看菜單呢？",
+        "menu_overview_label": "查看菜單",
+        "menu_close_label": "關閉菜單",
+        "category_overview_labe": "查看分類",
+        "cancel_reservation": "取消預約",
+        "cancel_popup": {
+            "message": "確定要取消您的預約嗎？",
+            "close": "關閉",
+            "confirm": "確認取消"
+        }
+    },
+    "cancelled_screen": {
+        "user": {
+            "title": "已取消",
+            "body": "感謝您的蒞臨。若需重新登記，請再次掃描 QR Code。"
+        },
+        "store": {
+            "title": "已取消",
+            "body": "非常抱歉，因店家因素您的預約已被取消，請洽詢店內工作人員。"
+        },
+        "absence": {
+            "title": "已取消",
+            "body": "因叫號時您不在現場，預約已取消。若需重新候位，請再次掃描 QR Code。"
+        }
+    },
     "chat_bot": {
-        "greeting": "您好！如果您对订单或店铺有任何疑问，请随时告诉我。",
+        "greeting": "您好！如果您對訂單或店鋪有任何疑問，請隨時告訴我。",
         "ui": {
             "title": "AI 助手",
-            "placeholder": "输入消息..."
+            "placeholder": "輸入訊息..."
         },
         "errors": {
-            "429": "抱歉，目前访问量较大，无法响应。请稍后再试。",
-            "general": "发生错误，请稍后再试。"
+            "429": "抱歉，目前訪問量較大，暫時無法回應。請稍後再試。",
+            "general": "發生錯誤，請稍後再試。"
         }
     }
 }

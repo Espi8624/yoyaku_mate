@@ -1,4 +1,77 @@
 {
+    "waiting_screen_nationality": {
+        "welcome": "Selamat datang!",
+        "origin": "Dari negara mana Anda berasal?",
+        "confirm": "→"
+    },
+    "waiting_screen_input": {
+        "input_label": "Silakan isi informasi di bawah ini untuk bergabung dalam daftar tunggu!",
+        "name_label": "Nama panggilan Anda",
+        "party_size_label": "Berapa orang dalam grup Anda?",
+        "contact_label": "Kami akan menghubungi nomor ini jika ada kendala.",
+        "note_label": "Ada pesan khusus untuk pihak restoran?",
+        "confirm": "Selanjutnya"
+    },
+    "waiting_screen_menu": {
+        "title": "Pilih Menu",
+        "skip": "Lewati",
+        "confirm": "Selanjutnya",
+        "no_menus": "Saat ini tidak ada menu yang tersedia",
+        "view_details": "Lihat Detail",
+        "close_details": "Tutup Detail",
+        "select_at_least_one": "Silakan pilih setidaknya satu menu",
+        "one_menu_per_person_error": "Mohon pesan menu sesuai jumlah orang",
+        "back": "Kembali"
+    },
+    "waiting_screen_preview": {
+        "preview_label": "Kami akan mendaftarkan Anda berdasarkan informasi yang diberikan!",
+        "name_label": "Nama",
+        "party_size_label": "Jumlah Orang",
+        "contact_label": "Kontak",
+        "note_label": "Catatan",
+        "back": "Ubah",
+        "confirm": "Konfirmasi Pendaftaran",
+        "popup": {
+            "close": "Tutup",
+            "back": "Kembali",
+            "confirm": "Konfirmasi"
+        }
+    },
+    "waiting_screen": {
+        "label_1": "Pendaftaran berhasil!",
+        "label_2": "Mohon tunggu sebentar, kami akan segera memanggil Anda.",
+        "waiting_number_label": "Nomor Antrean",
+        "name_label": "Nama",
+        "party_size_label": "Jumlah Orang",
+        "note_label": "Catatan",
+        "estimated_wait_time_label": "Estimasi Waktu Tunggu",
+        "current_waiting_label": "Pelanggan dalam antrean",
+        "group_label": "Grup",
+        "menu_label": "Ingin melihat menu sambil menunggu?",
+        "menu_overview_label": "Lihat Menu",
+        "menu_close_label": "Tutup Menu",
+        "category_overview_labe": "Lihat Kategori",
+        "cancel_reservation": "Batalkan Reservasi",
+        "cancel_popup": {
+            "message": "Apakah Anda yakin ingin membatalkan reservasi?",
+            "close": "Tutup",
+            "confirm": "Ya, Batalkan"
+        }
+    },
+    "cancelled_screen": {
+        "user": {
+            "title": "Dibatalkan",
+            "body": "Terima kasih atas kunjungan Anda. Silakan pindai kode QR lagi jika ingin mendaftar kembali."
+        },
+        "store": {
+            "title": "Dibatalkan",
+            "body": "Kami mohon maaf. Reservasi Anda dibatalkan karena alasan operasional toko. Silakan hubungi staf kami."
+        },
+        "absence": {
+            "title": "Dibatalkan",
+            "body": "Reservasi dibatalkan karena Anda tidak hadir saat dipanggil. Silakan pindai kembali kode QR untuk mengantre lagi."
+        }
+    },
     "chat_bot": {
         "greeting": "Halo! Beri tahu saya jika Anda memiliki pertanyaan tentang pesanan Anda atau toko.",
         "ui": {

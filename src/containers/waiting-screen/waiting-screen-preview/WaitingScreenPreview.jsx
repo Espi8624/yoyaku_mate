@@ -3,6 +3,7 @@ import { useWaitingScreen } from "../WaitingScreenContext";
 import useTranslation from "../../../hook/useTranslation";
 import CongestionPopup from "./CongestionPopup";
 import BackButton from "../../../components/BackButton";
+import { getTranslatedText } from "../../../utils/i18nHelper";
 import "./WaitingScreenPreview.css";
 
 function WaitingScreenPreview() {
@@ -13,7 +14,6 @@ function WaitingScreenPreview() {
     selectedLanguageCode,
     handleSubmitWaiting,
     isPopupVisible,
-    isOffline,
     selectedMenus,
     enableMenuSelection,
     setStep
@@ -48,21 +48,24 @@ function WaitingScreenPreview() {
           <>
             <label className="preview-item-label">{watingScreenPreview.pre_order}</label>
             <div className="preview-menu-list">
-              {selectedMenus.map(menu => (
-                <div key={menu.menuId} className="preview-menu-item">
-                  {menu.imageUrl ? (
-                    <img src={menu.imageUrl} alt={menu.name} className="preview-menu-image" />
-                  ) : (
-                    <div className="preview-menu-placeholder">No Image</div>
-                  )}
-                  <div className="preview-menu-info">
-                    <div className="preview-menu-header">
-                      <span className="preview-menu-name">{menu.name}</span>
-                      <span className="preview-menu-quantity">x{menu.quantity}</span>
+              {selectedMenus.map(menu => {
+                const displayName = getTranslatedText(menu.name, menu.title_translations, selectedLanguageCode);
+                return (
+                  <div key={menu.menuId} className="preview-menu-item">
+                    {menu.imageUrl ? (
+                      <img src={menu.imageUrl} alt={displayName} className="preview-menu-image" />
+                    ) : (
+                      <div className="preview-menu-placeholder">No Image</div>
+                    )}
+                    <div className="preview-menu-info">
+                      <div className="preview-menu-header">
+                        <span className="preview-menu-name">{displayName}</span>
+                        <span className="preview-menu-quantity">x{menu.quantity}</span>
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                )
+              })}
             </div>
           </>
         )}

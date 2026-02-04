@@ -1,7 +1,7 @@
 export const generateSystemPrompt = (liveContext, selectedNationality, selectedLanguageCode, currentPage = 'unknown') => {
     const menuData = liveContext.menus || [];
     const menuText = menuData.map(m =>
-        `- ${m.title} (${m.price}円): ${m.description || ''} ${m.menu_status === 'sold_out' ? '[品切れ]' : ''}`
+        `- ${m.title} (¥${m.price}): ${m.description || ''} ${m.menu_status === 'sold_out' ? '[品切れ]' : ''}`
     ).join('\n');
 
     const waitTimeInfo = liveContext.current_wait_count !== undefined
