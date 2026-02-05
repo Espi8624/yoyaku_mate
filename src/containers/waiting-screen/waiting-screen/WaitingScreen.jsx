@@ -135,7 +135,17 @@ function WaitingScreen() {
           const AudioContext = window.AudioContext || window.webkitAudioContext;
           if (AudioContext) {
             console.log("Attempting sound notification...");
-            const ctx = new AudioContext();
+
+            // Unlock済みのContextがあればそれを使う。なければ新規作成(ブロックされる可能性あり)
+            let ctx = audioCtxRef.current;
+            if (!ctx) {
+              ctx = new AudioContext();
+            }
+
+            // ContextがSuspendedなら再開を試みる (ユーザーアクションがないと失敗する)
+            if (ctx.state === 'suspended') {
+              ctx.resume().catch(e => console.error("Auto-resume failed:", e));
+            }
 
             const playChime = (startTime) => {
               const osc = ctx.createOscillator();
@@ -157,8 +167,9 @@ function WaitingScreen() {
             };
 
             // 「ピンポン」のような効果のために2回再生
-            playChime(ctx.currentTime);
-            playChime(ctx.currentTime + 0.8);
+            const now = ctx.currentTime;
+            playChime(now);
+            playChime(now + 0.8);
 
           }
         } catch (e) {
@@ -221,6 +232,41 @@ function WaitingScreen() {
       }
     };
   }, [loadAllData, restored]);
+
+  // ★ Audio Context (Unlock logic)
+  const audioCtxRef = useRef(null);
+
+  useEffect(() => {
+    // ユーザーインタラクションでAudioContextを再開/初期化する関数
+    const unlockAudio = () => {
+      if (!audioCtxRef.current) {
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        if (AudioContext) {
+          audioCtxRef.current = new AudioContext();
+        }
+      }
+      if (audioCtxRef.current && audioCtxRef.current.state === 'suspended') {
+        audioCtxRef.current.resume().then(() => {
+          console.log("AudioContext resumed");
+        });
+      }
+      // イベントリスナーを削除 (一度だけでOK)
+      document.removeEventListener('click', unlockAudio);
+      document.removeEventListener('touchstart', unlockAudio);
+    };
+
+    // 画面のどこかをタップしたらUnlock
+    document.addEventListener('click', unlockAudio);
+    document.addEventListener('touchstart', unlockAudio);
+
+    return () => {
+      document.removeEventListener('click', unlockAudio);
+      document.removeEventListener('touchstart', unlockAudio);
+      if (audioCtxRef.current) {
+        audioCtxRef.current.close();
+      }
+    };
+  }, []);
 
   // ★ Wake Lock (画面常時ON) 機能
   useEffect(() => {
