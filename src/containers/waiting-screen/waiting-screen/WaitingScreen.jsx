@@ -121,6 +121,51 @@ function WaitingScreen() {
         if (pollingRef.current) {
           clearInterval(pollingRef.current);
         }
+
+        // --- 通知ロジック (バイブレーション + 音) ---
+        try {
+          // 1. バイブレーション (Androidのみ)
+          if (navigator.vibrate) {
+            console.log("Attempting vibration...");
+            // バイブレーションパターン: 1秒オン, 0.5秒オフ, 1秒オン, 0.5秒オフ, 3秒オン
+            navigator.vibrate([1000, 500, 1000, 500, 3000]);
+          }
+
+          // 2. 音声通知 (Web Audio API - シンプルなチャイム音)
+          const AudioContext = window.AudioContext || window.webkitAudioContext;
+          if (AudioContext) {
+            console.log("Attempting sound notification...");
+            const ctx = new AudioContext();
+
+            const playChime = (startTime) => {
+              const osc = ctx.createOscillator();
+              const gain = ctx.createGain();
+
+              osc.connect(gain);
+              gain.connect(ctx.destination);
+
+              // シンプルな「ピン」という音 (エンベロープ付きサイン波)
+              osc.type = 'sine';
+              osc.frequency.setValueAtTime(880, startTime); // A5
+              osc.frequency.exponentialRampToValueAtTime(440, startTime + 0.6); // A4へ下がる
+
+              gain.gain.setValueAtTime(0.3, startTime);
+              gain.gain.exponentialRampToValueAtTime(0.001, startTime + 0.6);
+
+              osc.start(startTime);
+              osc.stop(startTime + 0.6);
+            };
+
+            // 「ピンポン」のような効果のために2回再生
+            playChime(ctx.currentTime);
+            playChime(ctx.currentTime + 0.8);
+
+          }
+        } catch (e) {
+          console.error("Notification failed:", e);
+        }
+        // ----------------------------------------------
+
         // step 4 (NotifiedScreen)に遷移
         if (setStep) {
           setStep(4);
@@ -176,6 +221,43 @@ function WaitingScreen() {
       }
     };
   }, [loadAllData, restored]);
+
+  // ★ Wake Lock (画面常時ON) 機能
+  useEffect(() => {
+    let wakeLock = null;
+
+    const requestWakeLock = async () => {
+      try {
+        if ('wakeLock' in navigator) {
+          wakeLock = await navigator.wakeLock.request('screen');
+          console.log('Wake Lock is active');
+        }
+      } catch (err) {
+        console.error(`Wake Lock failed: ${err.name}, ${err.message}`);
+      }
+    };
+
+    // コンポーネントマウント時にリクエスト
+    requestWakeLock();
+
+    // 画面表示状態が変わった時の再取得ロジック
+    const handleVisibilityChange = async () => {
+      if (wakeLock !== null && document.visibilityState === 'visible') {
+        await requestWakeLock();
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      if (wakeLock !== null) {
+        wakeLock.release()
+          .then(() => console.log('Wake Lock released'))
+          .catch(err => console.error('Wake Lock release failed:', err));
+      }
+    };
+  }, []);
 
   return (
     <div className="waiting-section">
