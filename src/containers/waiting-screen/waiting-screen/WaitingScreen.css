@@ -555,7 +555,46 @@ textarea {
 }
 
 .preview-menu-quantity {
-  font-weight: bold;
   font-size: 14px;
   color: var(--color-text-primary);
+}
+
+/* Google Maps InfoWindow Scrollbar Removal */
+.gm-style-iw,
+.gm-style-iw-c,
+.gm-style-iw-d {
+  overflow: visible !important;
+  padding: 0 !important;
+}
+
+/* For Webkit browsers - Hide Scrollbars */
+.gm-style-iw::-webkit-scrollbar,
+.gm-style-iw-c::-webkit-scrollbar,
+.gm-style-iw-d::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+/* Remove focus outline on map elements */
+.gm-style :focus {
+  outline: none !important;
+  border: none !important;
+}
+
+.gm-style-iw-c:focus {
+  outline: none !important;
+}
+
+/* Ensure max-height doesn't clip prematurely */
+.gm-style-iw-d {
+  max-height: none !important;
+  overflow-y: visible !important;
+  /* Allow negative margins to show content */
+  overflow-x: visible !important;
+}
+
+/* Hide default Google Maps InfoWindow Close Button */
+.gm-ui-hover-effect {
+  display: none !important;
 }
