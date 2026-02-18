@@ -280,6 +280,41 @@ export function WaitingScreenProvider({ children }) {
 
   const handleCancel = async () => {
     try {
+      // 1. キャンセル前に最新ステータスを確認
+      // catchブロックでエラーハンドリングするため、ここで try-catch は不要(外側のcatchに任せる)
+      // ただし、getWaitingDetailsは404でthrowするので注意
+      let details;
+      try {
+        // getWaitingDetailsは内部でAPIを呼ぶ
+        // storeId, waitingIdが必要
+        if (!storeId || !waitingId) throw new Error("ID情報が不足しています");
+        details = await getWaitingDetails(storeId, waitingId);
+      } catch (checkErr) {
+        // 404などが見つからない場合は、キャンセル処理に進むか、エラーにするか
+        // ここでは「見つからない=既に削除orキャンセル」とみなして、そのままキャンセルAPIを呼ぶか、
+        // ユーザーに通知する。
+        // 安全のため、チェック失敗時はキャンセル処理を続行させる（サーバー側でハンドリング）
+        // または、本当に存在しないならキャンセルAPIもエラーになるはず
+        console.warn("キャンセル前のステータス確認失敗:", checkErr);
+      }
+
+      // 2. ステータスが completed (入店完了) の場合はキャンセルさせない
+      if (details && details.status === 'completed') {
+        console.log("既に入店完了済みのため、キャンセルを中断します");
+        // 画面遷移せず、ポップアップで通知のみ行う
+        // setIsCancelled(true); // Removed
+        // setCancellationReason('completed'); // Removed
+
+        // ポップアップを表示
+        setPopupInfo({
+          message: selectedLanguageCode === 'ja' ? "既に入店手続きが完了しています。" : "This visit has already been completed.",
+          mode: "completed_notification"
+        });
+        setPopupVisible(true);
+        return;
+      }
+
+      // 3. 通常のキャンセル処理
       const res = await cancelWaiting(storeId, waitingId);
       // axiosは成功時に例外をスローしないので、status codeで判定
       if (res.status >= 200 && res.status < 300) {
@@ -314,6 +349,8 @@ export function WaitingScreenProvider({ children }) {
       await _performSubmit(pendingPayload);
     } else if (popupInfo.mode === "max") {
       setStep(1);
+    } else if (popupInfo.mode === "completed_notification") {
+      // 何もしない（閉じるだけ）
     }
     setPendingPayload(null);
   };
@@ -336,6 +373,21 @@ export function WaitingScreenProvider({ children }) {
       window.removeEventListener('offline', handleOffline);
     };
   }, []);
+
+  // アプリケーション初期化（ログアウト/リセット）
+  const resetApp = () => {
+    localStorage.removeItem("waiting_id");
+    localStorage.removeItem("store_id");
+    localStorage.removeItem("v_token");
+    setWaitingId(null);
+    setStep(1);
+    setPartySize('');
+    setSelectedNationality('その他');
+    setContact('');
+    setNotes('');
+    setPopupVisible(false);
+    setPopupInfo({ message: '', mode: '' });
+  };
 
   // Providerかchildに伝達する値
   const value = {
@@ -395,6 +447,7 @@ export function WaitingScreenProvider({ children }) {
       }
       setStep(1);
     },
+    resetApp, // Expose resetApp
   };
 
   return (

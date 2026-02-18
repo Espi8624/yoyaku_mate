@@ -1,11 +1,8 @@
 /* src/containers/waiting-screen/notified-screen/NotifiedScreen.css */
-.notified-screen {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-  background: var(--color-background, #F5F7FA);
-  padding: 20px;
+/* .notified-screen is replaced by .waiting-section */
+.notified-section {
+  text-align: center;
+  /* Additional specific styles if needed, but waiting-section handles the card */
 }
 
 .notified-content {

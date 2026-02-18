@@ -1,4 +1,88 @@
 {
+    "waiting_screen_nationality": {
+        "welcome": "ยินดีต้อนรับ!",
+        "origin": "คุณมาจากประเทศอะไร?",
+        "confirm": "→"
+    },
+    "waiting_screen_input": {
+        "input_label": "กรุณากรอกข้อมูลด้านล่างเพื่อลงทะเบียนคิว",
+        "name_label": "ขอทราบชื่อสำหรับเรียกคิว",
+        "party_size_label": "จำนวนผู้เข้าใช้บริการ (ท่าน)",
+        "contact_label": "เบอร์โทรศัพท์สำหรับติดต่อกรณีฉุกเฉิน",
+        "note_label": "มีข้อกำหนดพิเศษที่ต้องการแจ้งทางร้านหรือไม่?",
+        "confirm": "ถัดไป"
+    },
+    "waiting_screen_menu": {
+        "title": "เลือกเมนู",
+        "skip": "ข้าม",
+        "confirm": "ถัดไป",
+        "no_menus": "ขออภัย ขณะนี้ยังไม่มีเมนูให้เลือก",
+        "view_details": "ดูรายละเอียด",
+        "close_details": "ปิดรายละเอียด",
+        "select_at_least_one": "กรุณาเลือกอย่างน้อย 1 เมนู",
+        "one_menu_per_person_error": "กรุณาเลือกจำนวนเมนูให้เท่ากับจำนวนคน",
+        "back": "ย้อนกลับ"
+    },
+    "waiting_screen_preview": {
+        "preview_label": "เราจะดำเนินการลงทะเบียนคิวตามข้อมูลที่คุณกรอก",
+        "name_label": "ชื่อ",
+        "party_size_label": "จำนวนคน",
+        "contact_label": "ข้อมูลติดต่อ",
+        "note_label": "หมายเหตุ",
+        "back": "แก้ไข",
+        "confirm": "ยืนยันการลงทะเบียน",
+        "popup": {
+            "close": "ปิด",
+            "back": "ย้อนกลับ",
+            "confirm": "ตกลง"
+        }
+    },
+    "waiting_screen": {
+        "label_1": "ลงทะเบียนสำเร็จแล้ว!",
+        "label_2": "กรุณารอสักครู่ ทางร้านจะเรียกคุณเมื่อถึงคิว",
+        "waiting_number_label": "หมายเลขคิว",
+        "name_label": "ชื่อ",
+        "party_size_label": "จำนวนคน",
+        "note_label": "หมายเหตุ",
+        "estimated_wait_time_label": "เวลารอโดยประมาณ",
+        "current_waiting_label": "จำนวนคิวที่รออยู่",
+        "group_label": "กลุ่ม",
+        "menu_label": "ดูเมนูระหว่างรอดีไหม?",
+        "menu_overview_label": "ดูเมนู",
+        "menu_close_label": "ปิดเม뉴",
+        "category_overview_labe": "ดูหมวดหมู่",
+        "registration_time_label": "เวลาที่ลงทะเบียน",
+        "pre_order": "สั่งอาหารล่วงหน้า",
+        "cancel_reservation": "ยกเลิกการจอง",
+        "cancel_popup": {
+            "message": "คุณต้องการยกเลิกการจองใช่หรือไม่?",
+            "close": "ปิด",
+            "confirm": "ยืนยันการยกเลิก"
+        },
+        "call_popup": {
+            "message_1": "ขอบคุณที่รอ!",
+            "message_2": "กรุณามาที่ร้าน",
+            "confirm": "ตกลง"
+        },
+        "completed_screen": {
+            "title": "ขอบคุณที่ใช้บริการ!",
+            "message": "พนักงานจะพาไปที่โต๊ะค่ะ"
+        }
+    },
+    "cancelled_screen": {
+        "user": {
+            "title": "ยกเลิกแล้ว",
+            "body": "ขอบคุณที่ใช้บริการ หากต้องการจองใหม่ กรุณาสแกน QR Code อีกครั้ง"
+        },
+        "store": {
+            "title": "ยกเลิกแล้ว",
+            "body": "ขออภัยอย่างสูง การจองของคุณถูกยกเลิกเนื่องจากเหตุขัดข้องของทางร้าน กรุณาติดต่อพนักงาน"
+        },
+        "absence": {
+            "title": "ยกเลิกแล้ว",
+            "body": "การจองของคุณถูกยกเลิกเนื่องจากไม่มาแสดงตัวเมื่อถึงคิว หากต้องการรอใหม่อีกครั้ง กรุณาสแกน QR Code"
+        }
+    },
     "chat_bot": {
         "greeting": "สวัสดี! หากคุณมีคำถามเกี่ยวกับคำสั่งซื้อหรือร้านค้า โปรดแจ้งให้เราทราบ",
         "ui": {

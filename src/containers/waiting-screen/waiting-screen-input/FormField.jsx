@@ -2,8 +2,8 @@ import React from "react";
 
 function FormField({ id, label, example, value, onChange, type = "text", required = false }) {
   return (
-    <>
-      <label htmlFor={id} className="preview-item-label">
+    <div className="input-field-group">
+      <label htmlFor={id} className="input-field-label">
         {label}
       </label>
       <div className="input-example">{example}</div>
@@ -14,9 +14,9 @@ function FormField({ id, label, example, value, onChange, type = "text", require
         value={value}
         onChange={onChange}
         required={required}
-        className="preview-item-value"
+        className="input-field-value"
       />
-    </>
+    </div>
   );
 }
 

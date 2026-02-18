@@ -1,5 +1,7 @@
 import React from "react";
+import "../waiting-screen/WaitingScreen.css";
 import "../ErrorScreen.css";
+import ChatbotButton from "../../chat-bot/ChatbotButton";
 import { useWaitingScreen } from "../WaitingScreenContext";
 import useTranslation from "../../../hook/useTranslation";
 
@@ -23,10 +25,26 @@ const CancelledScreen = ({ reason }) => {
         },
     };
 
+    // ★ completed (入店完了) の場合は waiting_screen のテキストを使用
+    if (reason === 'completed') {
+        const completedInfo = t.waiting_screen?.completed_screen || {
+            title: "ご来店ありがとうございます！",
+            message: "スタッフがご案内いたします。"
+        };
+        return (
+            <div className="waiting-section success-section">
+                <ChatbotButton />
+                <h2>{completedInfo.title}</h2>
+                <p>{completedInfo.message}</p>
+            </div>
+        );
+    }
+
     const info = content[reason] || content.user;
 
     return (
         <div className="waiting-section success-section">
+            <ChatbotButton />
             <h2>{info.title}</h2>
             <p>{info.body}</p>
         </div>

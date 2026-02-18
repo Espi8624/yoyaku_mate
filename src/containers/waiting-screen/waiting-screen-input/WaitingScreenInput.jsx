@@ -2,7 +2,9 @@ import React from "react";
 
 import { useWaitingScreen } from "../WaitingScreenContext";
 import FormField from "./FormField";
+import "../waiting-screen/WaitingScreen.css";
 import "./WaitingScreenInput.css";
+import ChatbotButton from "../../chat-bot/ChatbotButton";
 import useTranslation from "../../../hook/useTranslation";
 
 function WaitingScreenInput() {
@@ -23,12 +25,6 @@ function WaitingScreenInput() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!notes || notes.trim() === "") {
-      setNotes("なし");
-    }
-    if (!contact || contact.trim() === "") {
-      setContact("なし");
-    }
 
     if (enableMenuSelection) {
       setStep(5); // メニュー選択画面へ遷移
@@ -46,8 +42,9 @@ function WaitingScreenInput() {
 
   return (
     <div className="waiting-section">
-      <div className="preview-label">{waitingScreenInput.input_label}</div>
-      <form className="preview-form" onSubmit={handleSubmit}>
+      <ChatbotButton />
+      <div className="input-title">{waitingScreenInput.input_label}</div>
+      <form className="input-form" onSubmit={handleSubmit}>
 
         <FormField
           id="party_size"
@@ -76,7 +73,7 @@ function WaitingScreenInput() {
           onChange={(e) => setNotes(e.target.value)}
         />
 
-        <div className="waiting-form-actions">
+        <div className="waiting-form-actions fixed-action-footer">
           <button type="submit" className="confirmation-btn">
             {waitingScreenInput.confirm}
           </button>

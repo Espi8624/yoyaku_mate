@@ -20,7 +20,7 @@
         "view_details": "View Details",
         "close_details": "Close Details",
         "select_at_least_one": "Please select at least one menu item",
-        "one_menu_per_person_error": "Please order at least one menu item per person",
+        "one_menu_per_person_error": "Please select the same number of menu items as the number of people",
         "back": "Back"
     },
     "waiting_screen_preview": {
@@ -51,12 +51,25 @@
         "menu_overview_label": "View Menu",
         "menu_close_label": "Close Menu",
         "category_overview_labe": "View Category",
+        "registration_time_label": "Registration Time",
+        "pre_order": "Pre-order",
         "cancel_reservation": "Cancel Reservation",
         "cancel_popup": {
             "message": "Are you sure you want to cancel your reservation?",
             "close": "Close",
             "confirm": "Confirm"
-        }
+        },
+        "call_popup": {
+            "message_1": "Thank you for waiting!",
+            "message_2": "Please come to the store.",
+            "confirm": "Confirm"
+        },
+        "completed_screen": {
+            "title": "Thank you for visiting!",
+            "message": "Step right this way, our staff will guide you."
+        },
+        "reset_confirm_text": "If you would like to reset, please press the button below.",
+        "reset_btn": "Reset"
     },
     "cancelled_screen": {
         "user": {

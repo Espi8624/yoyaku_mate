@@ -1,7 +1,7 @@
 .chatbot-button {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
+    position: absolute;
+    top: 10px;
+    right: 10px;
     width: 60px;
     height: 60px;
     background-color: #2C2C2C;

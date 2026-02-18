@@ -12,7 +12,7 @@ function App() {
 
         {/* メインページ */}
         <Route path='/' element={
-          <h1>Yoyaku Mate</h1>
+          <h1>Rusui</h1>
         } />
 
         {/* 待ち画面:SPAフロー */}

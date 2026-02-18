@@ -1,8 +1,9 @@
-// src/containers/waiting-screen/waiting-screen-notified/NotifiedScreen.jsx
 import React, { useEffect, useRef } from "react";
 import { useWaitingScreen } from "../WaitingScreenContext";
 import { getWaitingDetails } from "../../../api/waitingService";
 import useTranslation from "../../../hook/useTranslation";
+import ChatbotButton from "../../chat-bot/ChatbotButton";
+import "../waiting-screen/WaitingScreen.css";
 import "./NotifiedScreen.css";
 
 function NotifiedScreen() {
@@ -57,7 +58,8 @@ function NotifiedScreen() {
   }, [storeId, waitingId, setStep]);
 
   return (
-    <div className="notified-screen">
+    <div className="waiting-section notified-section">
+      <ChatbotButton />
       <div className="notified-content">
         <div className="notified-icon">✓</div>
         <h1 className="notified-title">{notifiedText.title}</h1>

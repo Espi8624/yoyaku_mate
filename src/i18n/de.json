@@ -1,4 +1,88 @@
 {
+    "waiting_screen_nationality": {
+        "welcome": "Willkommen!",
+        "origin": "Aus welchem Land kommen Sie zu uns?",
+        "confirm": "→"
+    },
+    "waiting_screen_input": {
+        "input_label": "Bitte füllen Sie die folgenden Informationen aus, um sich für die Warteliste anzumelden.",
+        "name_label": "Wie dürfen wir Sie nennen?",
+        "party_size_label": "Mit wie vielen Personen sind Sie hier?",
+        "contact_label": "Wir kontaktieren Sie unter dieser Nummer, falls es Rückfragen gibt.",
+        "note_label": "Gibt es etwas, das das Restaurant vorab wissen sollte?",
+        "confirm": "Weiter"
+    },
+    "waiting_screen_menu": {
+        "title": "Menüauswahl",
+        "skip": "Überspringen",
+        "confirm": "Weiter",
+        "no_menus": "Zurzeit sind keine Menüs verfügbar",
+        "view_details": "Details anzeigen",
+        "close_details": "Details schließen",
+        "select_at_least_one": "Bitte wählen Sie mindestens ein Menü aus",
+        "one_menu_per_person_error": "Bitte wählen Sie die gleiche Anzahl an Menüs wie Personen",
+        "back": "Zurück"
+    },
+    "waiting_screen_preview": {
+        "preview_label": "Wir melden Sie basierend auf Ihren Angaben für die Warteliste an!",
+        "name_label": "Name",
+        "party_size_label": "Anzahl der Personen",
+        "contact_label": "Kontakt",
+        "note_label": "Anmerkung",
+        "back": "Bearbeiten",
+        "confirm": "Verbindlich anmelden",
+        "popup": {
+            "close": "Schließen",
+            "back": "Zurück",
+            "confirm": "Bestätigen"
+        }
+    },
+    "waiting_screen": {
+        "label_1": "Anmeldung erfolgreich abgeschlossen!",
+        "label_2": "Bitte warten Sie einen Moment, wir rufen Sie gleich auf.",
+        "waiting_number_label": "Wartenummer",
+        "name_label": "Name",
+        "party_size_label": "Anzahl der Personen",
+        "note_label": "Anmerkung",
+        "estimated_wait_time_label": "Voraussichtliche Wartezeit",
+        "current_waiting_label": "Kunden in der Warteschlange",
+        "group_label": "Gruppe(n)",
+        "menu_label": "Möchten Sie während der Wartezeit schon einen Blick in das Menü werfen?",
+        "menu_overview_label": "Menü ansehen",
+        "menu_close_label": "Menü schließen",
+        "category_overview_labe": "Kategorien anzeigen",
+        "registration_time_label": "Registrierungszeit",
+        "pre_order": "Vorbestellung",
+        "cancel_reservation": "Reservierung stornieren",
+        "cancel_popup": {
+            "message": "Möchten Sie Ihre Reservierung wirklich stornieren?",
+            "close": "Schließen",
+            "confirm": "Ja, stornieren"
+        },
+        "call_popup": {
+            "message_1": "Vielen Dank für Ihre Geduld!",
+            "message_2": "Bitte kommen Sie zum Geschäft.",
+            "confirm": "Bestätigen"
+        },
+        "completed_screen": {
+            "title": "Vielen Dank für Ihren Besuch!",
+            "message": "Unser Personal wird Sie begleiten."
+        }
+    },
+    "cancelled_screen": {
+        "user": {
+            "title": "Storniert",
+            "body": "Vielen Dank für Ihren Besuch. Um sich erneut anzumelden, scannen Sie bitte den QR-Code noch einmal."
+        },
+        "store": {
+            "title": "Storniert",
+            "body": "Es tut uns sehr leid. Ihre Reservierung wurde aufgrund von Umständen im Restaurant storniert. Bitte wenden Sie sich an das Personal."
+        },
+        "absence": {
+            "title": "Storniert",
+            "body": "Sie wurden aufgerufen, waren aber leider nicht anwesend. Ihre Reservierung wurde daher storniert. Bitte scannen Sie den QR-Code erneut, um sich wieder anzumelden."
+        }
+    },
     "chat_bot": {
         "greeting": "Hallo! Bitte lassen Sie es mich wissen, wenn Sie Fragen zu Ihrer Bestellung oder dem Geschäft haben.",
         "ui": {
@@ -6,7 +90,7 @@
             "placeholder": "Nachricht eingeben..."
         },
         "errors": {
-            "429": "Entschuldigung, wir haben gerade viel Verkehr. Bitte versuchen Sie es später noch einmal.",
+            "429": "Entschuldigung, wir haben gerade viel Betrieb. Bitte versuchen Sie es später noch einmal.",
             "general": "Ein Fehler ist aufgetreten. Bitte versuchen Sie es später noch einmal."
         }
     }

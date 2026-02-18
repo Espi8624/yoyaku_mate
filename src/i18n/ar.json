@@ -1,8 +1,92 @@
 {
+    "waiting_screen_nationality": {
+        "welcome": "أهلاً بك!",
+        "origin": "من أي بلد تزورنا؟",
+        "confirm": "←"
+    },
+    "waiting_screen_input": {
+        "input_label": "يرجى إدخال المعلومات أدناه لمساعدتك في عملية الانتظار.",
+        "name_label": "ما الاسم الذي نطلقه عليك؟",
+        "party_size_label": "كم عدد الأشخاص؟",
+        "contact_label": "سنتواصل معك عبر هذا الرقم في حال حدوث أي طارئ.",
+        "note_label": "هل هناك أي شيء تريد إبلاغ المتجر به مسبقاً؟",
+        "confirm": "التالي"
+    },
+    "waiting_screen_menu": {
+        "title": "اختيار القائمة",
+        "skip": "تخطي",
+        "confirm": "التالي",
+        "no_menus": "لا توجد قوائم متاحة حالياً",
+        "view_details": "عرض التفاصيل",
+        "close_details": "إغلاق التفاصيل",
+        "select_at_least_one": "يرجى اختيار صنف واحد على الأقل",
+        "one_menu_per_person_error": "يرجى اختيار نفس عدد القوائم كعدد الأشخاص",
+        "back": "رجوع"
+    },
+    "waiting_screen_preview": {
+        "preview_label": "سنقوم بتسجيلك في قائمة الانتظار بناءً على المعلومات المدخلة!",
+        "name_label": "الاسم",
+        "party_size_label": "عدد الأشخاص",
+        "contact_label": "رقم التواصل",
+        "note_label": "ملاحظات",
+        "back": "تعديل",
+        "confirm": "تأكيد الحجز",
+        "popup": {
+            "close": "إغلاق",
+            "back": "رجوع",
+            "confirm": "تأكيد"
+        }
+    },
+    "waiting_screen": {
+        "label_1": "تم التسجيل بنجاح!",
+        "label_2": "يرجى الانتظار قليلاً، سنقوم بمناداتك قريباً.",
+        "waiting_number_label": "رقم الانتظار",
+        "name_label": "الاسم",
+        "party_size_label": "عدد الأشخاص",
+        "note_label": "ملاحظات",
+        "estimated_wait_time_label": "وقت الانتظار المتوقع",
+        "current_waiting_label": "العملاء في قائمة الانتظار حالياً",
+        "group_label": "مجموعة",
+        "menu_label": "ما رأيك في تصفح القائمة أثناء الانتظار؟",
+        "menu_overview_label": "عرض القائمة",
+        "menu_close_label": "إغلاق القائمة",
+        "category_overview_labe": "عرض الفئات",
+        "registration_time_label": "وقت التسجيل",
+        "pre_order": "طلب مسبق",
+        "cancel_reservation": "إلغاء الحجز",
+        "cancel_popup": {
+            "message": "هل تريد إلغاء الحجز؟",
+            "close": "إغلاق",
+            "confirm": "تأكيد"
+        },
+        "call_popup": {
+            "message_1": "شكراً لانتظارك!",
+            "message_2": "يرجى التفضل بالدخول إلى المتجر.",
+            "confirm": "تأكيد"
+        },
+        "completed_screen": {
+            "title": "شكراً لزيارتكم!",
+            "message": "سيقوم الموظفون بإرشادكم."
+        }
+    },
+    "cancelled_screen": {
+        "user": {
+            "title": "تم الإلغاء",
+            "body": "شكراً لاستخدامك خدمتنا. إذا كنت ترغب في الاستخدام مرة أخرى، يرجى مسح رمز QR مجدداً."
+        },
+        "store": {
+            "title": "تم الإلغاء",
+            "body": "نعتذر بشدة. تم إلغاء الحجز بسبب ظروف المتجر. يرجى مراجعة الموظفين."
+        },
+        "absence": {
+            "title": "تم الإلغاء",
+            "body": "تم إلغاء الحجز لعدم تواجدك عند المناداة. يرجى مسح رمز QR مجدداً إذا كنت ترغب في الانتظار مرة أخرى."
+        }
+    },
     "chat_bot": {
         "greeting": "مرحبًا! يرجى إعلامي إذا كان لديك أي أسئلة حول طلبك أو المتجر.",
         "ui": {
-            "title": "مساعد الذكاء الاصطناعي",
+            "title": "مساعد الذكاء الاصط나عي",
             "placeholder": "اكتب رسالة..."
         },
         "errors": {
