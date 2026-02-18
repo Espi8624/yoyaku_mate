@@ -19,6 +19,7 @@
 }
 
 .preview-label {
+  margin-top: 12px;
   margin-bottom: 18px;
   font-size: 1.18em;
   font-weight: bold;
@@ -29,32 +30,41 @@
 .preview-form {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 8px;
   width: 100%;
   box-sizing: border-box;
 }
 
-.preview-item-label {
+/* 확인 화면 전용 스타일 - 대기 화면과 유사하게 */
+.confirmation-field-label {
   width: 100%;
   display: block;
-  font-size: 1.08em;
-  font-weight: 500;
-  color: #222;
-  margin-bottom: 8px;
+  font-size: 0.85em;
+  /* 라벨을 작게 */
+  font-weight: normal;
+  color: #888;
+  /* 회색 */
+  margin-bottom: 4px;
   letter-spacing: 0.01em;
   box-sizing: border-box;
+  opacity: 0.9;
 }
 
-.preview-item-value {
+.confirmation-field-value {
   width: 100%;
-  padding: 10px 8px;
+  padding: 0;
   border: none;
-  border-radius: 6px;
-  font-size: 1em;
-  background: white;
-  margin-bottom: 6px;
-  color: #333;
+  border-radius: 0;
+  font-size: 1.5em;
+  /* 값을 크게 */
+  font-weight: 700;
+  /* 굵게 */
+  background: transparent;
+  margin-bottom: 24px;
+  color: #222;
+  /* 검은색 */
   box-sizing: border-box;
+  line-height: 1.2;
 }
 
 .preview-menu-list {

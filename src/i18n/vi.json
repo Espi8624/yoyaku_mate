@@ -1,4 +1,88 @@
 {
+    "waiting_screen_nationality": {
+        "welcome": "Xin chào quý khách!",
+        "origin": "Bạn đến từ quốc gia nào?",
+        "confirm": "→"
+    },
+    "waiting_screen_input": {
+        "input_label": "Vui lòng điền thông tin dưới đây để đăng ký danh sách chờ!",
+        "name_label": "Tên của bạn (để chúng tôi gọi món)",
+        "party_size_label": "Số lượng khách (người)",
+        "contact_label": "Số điện thoại liên lạc (khi cần thiết)",
+        "note_label": "Bạn có yêu cầu đặc biệt nào cho cửa hàng không?",
+        "confirm": "Tiếp theo"
+    },
+    "waiting_screen_menu": {
+        "title": "Chọn thực đơn",
+        "skip": "Bỏ qua",
+        "confirm": "Tiếp theo",
+        "no_menus": "Hiện tại không có thực đơn nào khả dụng",
+        "view_details": "Xem chi tiết",
+        "close_details": "Đóng chi tiết",
+        "select_at_least_one": "Vui lòng chọn ít nhất một món",
+        "one_menu_per_person_error": "Vui lòng chọn số lượng món ăn bằng với số người",
+        "back": "Quay lại"
+    },
+    "waiting_screen_preview": {
+        "preview_label": "Chúng tôi sẽ đăng ký danh sách chờ dựa trên thông tin bạn đã cung cấp!",
+        "name_label": "Tên",
+        "party_size_label": "Số lượng người",
+        "contact_label": "Liên lạc",
+        "note_label": "Ghi chú",
+        "back": "Chỉnh sửa",
+        "confirm": "Xác nhận đăng ký",
+        "popup": {
+            "close": "Đóng",
+            "back": "Quay lại",
+            "confirm": "Xác nhận"
+        }
+    },
+    "waiting_screen": {
+        "label_1": "Đã đăng ký thành công!",
+        "label_2": "Vui lòng đợi một chút, chúng tôi sẽ gọi bạn sớm.",
+        "waiting_number_label": "Số thứ tự",
+        "name_label": "Tên",
+        "party_size_label": "Số lượng người",
+        "note_label": "Ghi chú",
+        "estimated_wait_time_label": "Thời gian chờ dự kiến",
+        "current_waiting_label": "Số nhóm đang chờ",
+        "group_label": "Nhóm",
+        "menu_label": "Bạn có muốn xem thực đơn trong khi chờ không?",
+        "menu_overview_label": "Xem thực đơn",
+        "menu_close_label": "Đóng thực đơn",
+        "category_overview_labe": "Xem danh mục",
+        "registration_time_label": "Thời gian đăng ký",
+        "pre_order": "Đặt món trước",
+        "cancel_reservation": "Hủy đăng ký",
+        "cancel_popup": {
+            "message": "Bạn có chắc chắn muốn hủy đăng ký không?",
+            "close": "Đóng",
+            "confirm": "Xác nhận hủy"
+        },
+        "call_popup": {
+            "message_1": "Cảm ơn bạn đã chờ đợi!",
+            "message_2": "Vui lòng đến cửa hàng.",
+            "confirm": "Xác nhận"
+        },
+        "completed_screen": {
+            "title": "Cảm ơn quý khách!",
+            "message": "Nhân viên sẽ hướng dẫn quý khách."
+        }
+    },
+    "cancelled_screen": {
+        "user": {
+            "title": "Đã hủy",
+            "body": "Cảm ơn bạn đã ghé thăm. Nếu muốn đăng ký lại, vui lòng quét mã QR một lần nữa."
+        },
+        "store": {
+            "title": "Đã hủy",
+            "body": "Chúng tôi rất tiếc. Đăng ký của bạn đã bị hủy do tình hình tại cửa hàng. Vui lòng liên hệ nhân viên."
+        },
+        "absence": {
+            "title": "Đã hủy",
+            "body": "Đăng ký đã bị hủy do bạn không có mặt khi được gọi. Vui lòng quét mã QR để đăng ký lại."
+        }
+    },
     "chat_bot": {
         "greeting": "Xin chào! Nếu bạn có câu hỏi nào về đơn hàng hoặc cửa hàng, vui lòng cho tôi biết.",
         "ui": {

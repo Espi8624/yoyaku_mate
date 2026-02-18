@@ -1,7 +1,9 @@
 import React, { useState, useMemo } from "react";
 import "./WaitingScreen.css";
 
-function MenuDisplay({ menuList, texts }) {
+import { getTranslatedText } from "../../../utils/i18nHelper";
+
+function MenuDisplay({ menuList, texts, selectedLanguageCode }) {
   // メニュー全体の表示/非表示を管理
   const [showMenu, setShowMenu] = useState(false);
   // 選択中のカテゴリを管理
@@ -80,30 +82,45 @@ function MenuDisplay({ menuList, texts }) {
 
           {/* アイテムリスト (2カラム) */}
           <div className="menu-items-list">
-            {displayedItems.map((item, itemIdx) => (
-              <div
-                className="menu-item"
-                key={itemIdx}
-                onClick={() => setExpandedItem(item)}
-              >
-                <div className="menu-item-image">
-                  {item.menu_image_url ? (
-                    <img src={item.menu_image_url} alt={item.title} />
-                  ) : (
-                    <div className="menu-item-image-placeholder">
-                      <svg width="48" height="48" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M21.9 21.9l-8.49-8.49-9.82-9.82L2.1 2.1.69 3.51 3 5.83V19c0 1.1.9 2 2 2h13.17l2.31 2.31 1.42-1.41zM5 18l3.5-4.5 2.5 3.01L12.17 15l3 3H5zm16 .17L5.83 3H19c1.1 0 2 .9 2 2v13.17z" />
-                      </svg>
-                    </div>
-                  )}
+            {displayedItems.map((item, itemIdx) => {
+              const displayTitle = getTranslatedText(item.title, item.title_translations, selectedLanguageCode);
+              const displayDescription = getTranslatedText(item.description, item.description_translations, selectedLanguageCode);
+
+              return (
+                <div
+                  className="menu-item"
+                  key={itemIdx}
+                  onClick={() => setExpandedItem(item)}
+                >
+                  <div className="menu-item-image">
+                    {item.menu_image_url ? (
+                      <img src={item.menu_image_url} alt={displayTitle} />
+                    ) : (
+                      <div className="menu-item-image-placeholder">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="currentColor">
+                          <path d="M21.9 21.9l-8.49-8.49-9.82-9.82L2.1 2.1.69 3.51 3 5.83V19c0 1.1.9 2 2 2h13.17l2.31 2.31 1.42-1.41zM5 18l3.5-4.5 2.5 3.01L12.17 15l3 3H5zm16 .17L5.83 3H19c1.1 0 2 .9 2 2v13.17z" />
+                        </svg>
+                      </div>
+                    )}
+                  </div>
+                  <div className="menu-item-details">
+                    {(() => {
+                      const titleParts = displayTitle.split(" / ");
+                      const mainTitle = titleParts[0];
+                      const pronunciation = titleParts.length > 1 ? titleParts[1] : null;
+                      return (
+                        <div className="menu-item-title-container">
+                          <div className="menu-item-title">{mainTitle}</div>
+                          {pronunciation && <div className="menu-item-pronunciation">{pronunciation}</div>}
+                        </div>
+                      );
+                    })()}
+                    {displayDescription && <span className="menu-item-description">{displayDescription}</span>}
+                    <span className="menu-item-price">¥{Number(item.price).toLocaleString()}</span>
+                  </div>
                 </div>
-                <div className="menu-item-details">
-                  <span className="menu-item-title">{item.title}</span>
-                  {item.description && <span className="menu-item-description">{item.description}</span>}
-                  <span className="menu-item-price">{Number(item.price).toLocaleString()}円</span>
-                </div>
-              </div>
-            ))}
+              )
+            })}
           </div>
         </div>
       )}
@@ -120,7 +137,7 @@ function MenuDisplay({ menuList, texts }) {
 
             <div className="menu-detail-image-container">
               {expandedItem.menu_image_url ? (
-                <img src={expandedItem.menu_image_url} alt={expandedItem.title} />
+                <img src={expandedItem.menu_image_url} alt={getTranslatedText(expandedItem.title, expandedItem.title_translations, selectedLanguageCode)} />
               ) : (
                 <div className="menu-item-image-placeholder" style={{ flexDirection: 'column', gap: '8px' }}>
                   <svg width="64" height="64" viewBox="0 0 24 24" fill="#999">
@@ -132,10 +149,21 @@ function MenuDisplay({ menuList, texts }) {
             </div>
 
             <div className="menu-detail-content">
-              <div className="menu-detail-title">{expandedItem.title}</div>
-              <div className="menu-detail-price">{Number(expandedItem.price).toLocaleString()}円</div>
-              {expandedItem.description && (
-                <div className="menu-detail-description">{expandedItem.description}</div>
+              {(() => {
+                const titleText = getTranslatedText(expandedItem.title, expandedItem.title_translations, selectedLanguageCode);
+                const titleParts = titleText.split(" / ");
+                const mainTitle = titleParts[0];
+                const pronunciation = titleParts.length > 1 ? titleParts[1] : null;
+                return (
+                  <div className="menu-detail-title-container">
+                    <div className="menu-detail-title">{mainTitle}</div>
+                    {pronunciation && <div className="menu-detail-pronunciation">{pronunciation}</div>}
+                  </div>
+                );
+              })()}
+              <div className="menu-detail-price">¥{Number(expandedItem.price).toLocaleString()}</div>
+              {getTranslatedText(expandedItem.description, expandedItem.description_translations, selectedLanguageCode) && (
+                <div className="menu-detail-description">{getTranslatedText(expandedItem.description, expandedItem.description_translations, selectedLanguageCode)}</div>
               )}
             </div>
           </div>
