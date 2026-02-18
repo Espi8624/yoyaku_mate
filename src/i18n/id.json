@@ -20,7 +20,7 @@
         "view_details": "Lihat Detail",
         "close_details": "Tutup Detail",
         "select_at_least_one": "Silakan pilih setidaknya satu menu",
-        "one_menu_per_person_error": "Mohon pesan menu sesuai jumlah orang",
+        "one_menu_per_person_error": "Harap pilih jumlah menu yang sama dengan jumlah orang",
         "back": "Kembali"
     },
     "waiting_screen_preview": {
@@ -51,11 +51,22 @@
         "menu_overview_label": "Lihat Menu",
         "menu_close_label": "Tutup Menu",
         "category_overview_labe": "Lihat Kategori",
+        "registration_time_label": "Waktu Pendaftaran",
+        "pre_order": "Pesan Terlebih Dahulu",
         "cancel_reservation": "Batalkan Reservasi",
         "cancel_popup": {
             "message": "Apakah Anda yakin ingin membatalkan reservasi?",
             "close": "Tutup",
             "confirm": "Ya, Batalkan"
+        },
+        "call_popup": {
+            "message_1": "Terima kasih telah menunggu!",
+            "message_2": "Silakan datang ke toko.",
+            "confirm": "Konfirmasi"
+        },
+        "completed_screen": {
+            "title": "Terima kasih atas kunjungan Anda!",
+            "message": "Staf kami akan memandu Anda."
         }
     },
     "cancelled_screen": {

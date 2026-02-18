@@ -206,7 +206,7 @@ function Board() {
             </main>
 
             <footer className="board-footer">
-                <p>Powered by Yoyaku Mate</p>
+                <p>Powered by ルスイ</p>
             </footer>
         </div>
     );

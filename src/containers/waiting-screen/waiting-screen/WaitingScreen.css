@@ -33,14 +33,41 @@
 }
 
 .waiting-section {
+  width: 100%;
   max-width: 420px;
-  margin: 3px auto 32px;
+  margin: 0 auto;
+  min-height: 100vh;
+  position: relative;
   background: var(--color-card-background);
-  border-radius: 12px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
-  padding: 36px 16px 28px 16px;
-  border: 1px solid var(--color-border);
+  border-radius: 0;
+  box-shadow: none;
+  padding: 84px 16px 120px 16px;
+  /* Bottom padding for fixed footer */
+  border: none;
   box-sizing: border-box;
+}
+
+.fixed-action-footer {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 420px;
+  padding: 20px 16px 30px 16px;
+  /* Safe area padding */
+  background: linear-gradient(to top, #ffffff 80%, rgba(255, 255, 255, 0));
+  /* Fade out background */
+  z-index: 100;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+}
+
+.fixed-action-footer .confirmation-btn {
+  width: 100%;
+  margin: 0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .waiting-label-2 {
@@ -397,14 +424,42 @@ textarea {
   border-radius: 8px;
 }
 
-.preview-item-value {
-  background: var(--color-card-background);
-  color: inherit;
-  border: 2px solid var(--color-accent-primary);
-  border-radius: 8px;
-  padding: 8px 12px;
+/* プレビュー項目のラベル (Party Size, Notes etc.) */
+.preview-item-label {
+  font-size: 0.75em;
+  /* 0.9em -> 0.75em (より小さく) */
+  color: var(--color-text-secondary);
+  font-weight: normal;
   margin-bottom: 8px;
+  /* Group layout handles spacing now */
+  display: block;
+  opacity: 0.8;
+  /* 少し薄くしてデータを目立たせる */
+}
+
+.preview-item-value {
+  background: transparent;
+  color: inherit;
+  border: none;
+  border-radius: 0;
+  padding: 0;
+  margin-top: 0;
+  margin-bottom: 8px;
+  /* Handled by .preview-info-group */
   box-sizing: border-box;
+  font-size: 1.3em;
+  /* 2em -> 2.4em (더 크게) */
+  font-weight: 800;
+  line-height: 1.1;
+  /* 줄 간격을 조금 좁힘 */
+}
+
+/* New Group Container */
+.preview-info-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 8px;
+  /* Clear separation between groups */
 }
 
 /* ポップアップのオーバーレイ */
@@ -469,12 +524,14 @@ textarea {
 
 .waiting-number-label {
   text-align: center;
-  font-size: 1.5em;
-  margin-top: 36px;
-  margin-bottom: 12px;
+  font-size: 1.1em;
+  /* 1.5em -> 1.1em (小さく) */
+  margin-top: 8px;
+  margin-bottom: 8px;
   font-weight: bold;
-  letter-spacing: 0.12em;
-  color: var(--color-text-primary);
+  letter-spacing: 0.1em;
+  color: var(--color-text-secondary);
+  /* 色も少し抑えめに */
   border: none;
   background: none;
 }
@@ -483,14 +540,18 @@ textarea {
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 4.5em;
-  font-weight: bold;
+  font-size: 6em;
+  /* 4.5em -> 6em (大きく) */
+  font-weight: 800;
+  /* 太く */
   color: var(--color-accent-primary);
-  margin-bottom: 40px;
+  margin-bottom: 0;
+  /* Handled by group */
   border: none;
   background: none;
-  letter-spacing: 0.22em;
+  letter-spacing: 0;
   width: 100%;
+  line-height: 1;
 }
 
 .store-name-header {
@@ -573,4 +634,14 @@ textarea {
   font-weight: bold;
   font-size: 14px;
   color: var(--color-text-primary);
+}
+
+.header-back-button {
+  position: absolute;
+  top: 20px;
+  left: 10px;
+  z-index: 10;
+  margin: 0 !important;
+  /* Override potential margins */
+  background: transparent;
 }

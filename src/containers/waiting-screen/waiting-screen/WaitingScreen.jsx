@@ -3,7 +3,9 @@ import { useWaitingScreen } from "../WaitingScreenContext";
 import useTranslation from "../../../hook/useTranslation";
 import { getMenuList, getWaitingDetails, getStoreInfo } from "../../../api/waitingService";
 import MenuDisplay from "./MenuDisplay";
+import CongestionPopup from "../waiting-screen-preview/CongestionPopup"; // Import Popup
 import { getTranslatedText } from "../../../utils/i18nHelper";
+import ChatbotButton from "../../chat-bot/ChatbotButton";
 import "./WaitingScreen.css";
 
 function WaitingScreen() {
@@ -41,6 +43,9 @@ function WaitingScreen() {
   const [menuList, setMenuList] = useState([]);
   const [storeName, setStoreName] = useState('');
   const [showCancelPopup, setShowCancelPopup] = useState(false);
+  // ★ 呼び出し通知モーダル用
+  const [showNotificationModal, setShowNotificationModal] = useState(false);
+  const chimeIntervalRef = useRef(null);
 
   // ポーリング用のref
   const pollingRef = useRef(null);
@@ -87,7 +92,7 @@ function WaitingScreen() {
       const safeDetails = details || {};
 
       // ★ 取得したデータのwaiting_idが一致しない場合はエラー
-      if (safeDetails.waiting_id && safeDetails.waiting_id !== waitingId) {
+      if (safeDetails.waiting_id && String(safeDetails.waiting_id) !== String(waitingId)) {
         console.error("[loadAllData] waiting_idの不一致を検出:", {
           expected: waitingId,
           actual: safeDetails.waiting_id
@@ -115,73 +120,80 @@ function WaitingScreen() {
         return;
       }
 
-      // ★ notifiedステータスをチェックしてstep 4に遷移
+      // ★ completedステータス (入店完了)
+      if (safeDetails.status === "completed") {
+        // ユーザーが「入店完了」の状態を確認できるように、画面遷移を行わず、
+        // 完了状態であることを内部的に保持するか、単に詳細を更新する。
+        // ここで setCancellationReason を呼ぶと CancelledScreen (完了画面) に遷移してしまうため、
+        // 呼ばないように変更。
+        // if (!context.cancellationReason) {
+        //   context.setCancellationReason && context.setCancellationReason('completed');
+        // }
+        // return;
+
+        // そのまま下の setWaitingDetails へ進む
+      }
+
+      // ★ notifiedステータスをチェックしてstep 4に遷移せずにモーダルを表示
       if (safeDetails.status === "notified") {
-        // ポーリングを停止
-        if (pollingRef.current) {
-          clearInterval(pollingRef.current);
-        }
+        if (pollingRef.current) clearInterval(pollingRef.current);
 
-        // --- 通知ロジック (バイブレーション + 音) ---
-        try {
-          // 1. バイブレーション (Androidのみ)
-          if (navigator.vibrate) {
-            console.log("Attempting vibration...");
-            // バイブレーションパターン: 1秒オン, 0.5秒オフ, 1秒オン, 0.5秒オフ, 3秒オン
-            navigator.vibrate([1000, 500, 1000, 500, 3000]);
-          }
+        // 既にモーダルが出ている場合は再実行しない
+        if (!showNotificationModal) {
+          setShowNotificationModal(true);
 
-          // 2. 音声通知 (Web Audio API - シンプルなチャイム音)
-          const AudioContext = window.AudioContext || window.webkitAudioContext;
-          if (AudioContext) {
-            console.log("Attempting sound notification...");
+          // 1. バイブレーション (Loopしない: 初回のみ)
+          try {
+            if (navigator.vibrate) navigator.vibrate([1000, 500, 1000, 500, 3000]);
+          } catch (e) { }
 
-            // Unlock済みのContextがあればそれを使う。なければ新規作成(ブロックされる可能性あり)
-            let ctx = audioCtxRef.current;
-            if (!ctx) {
-              ctx = new AudioContext();
-            }
+          // 2. 音声通知 (Loop再生)
+          const playLoopChime = () => {
+            try {
+              const AudioContext = window.AudioContext || window.webkitAudioContext;
+              if (!AudioContext) return;
 
-            // ContextがSuspendedなら再開を試みる (ユーザーアクションがないと失敗する)
-            if (ctx.state === 'suspended') {
-              ctx.resume().catch(e => console.error("Auto-resume failed:", e));
-            }
+              let ctx = audioCtxRef.current;
+              if (!ctx) ctx = new AudioContext();
 
-            const playChime = (startTime) => {
-              const osc = ctx.createOscillator();
-              const gain = ctx.createGain();
+              if (ctx.state === 'suspended') {
+                ctx.resume().catch(e => console.error("Auto-resume failed:", e));
+              }
 
-              osc.connect(gain);
-              gain.connect(ctx.destination);
+              const playOneChime = (startTime) => {
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.connect(gain);
+                gain.connect(ctx.destination);
 
-              // シンプルな「ピン」という音 (エンベロープ付きサイン波)
-              osc.type = 'sine';
-              osc.frequency.setValueAtTime(880, startTime); // A5
-              osc.frequency.exponentialRampToValueAtTime(440, startTime + 0.6); // A4へ下がる
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(880, startTime);
+                osc.frequency.exponentialRampToValueAtTime(440, startTime + 0.6);
 
-              gain.gain.setValueAtTime(0.3, startTime);
-              gain.gain.exponentialRampToValueAtTime(0.001, startTime + 0.6);
+                gain.gain.setValueAtTime(0.3, startTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, startTime + 0.6);
 
-              osc.start(startTime);
-              osc.stop(startTime + 0.6);
-            };
+                osc.start(startTime);
+                osc.stop(startTime + 0.6);
+              };
 
-            // 「ピンポン」のような効果のために2回再生
-            const now = ctx.currentTime;
-            playChime(now);
-            playChime(now + 0.8);
+              const now = ctx.currentTime;
+              playOneChime(now);
+              playOneChime(now + 0.8);
+            } catch (e) { console.error("Chime failed", e); }
+          };
 
-          }
-        } catch (e) {
-          console.error("Notification failed:", e);
-        }
-        // ----------------------------------------------
+          playLoopChime();
 
-        // step 4 (NotifiedScreen)に遷移
-        if (setStep) {
-          setStep(4);
+          if (chimeIntervalRef.current) clearInterval(chimeIntervalRef.current);
+          chimeIntervalRef.current = setInterval(playLoopChime, 3000);
         }
         return;
+      }
+
+      if (safeDetails.status === "waiting" && showNotificationModal) {
+        setShowNotificationModal(false);
+        if (chimeIntervalRef.current) clearInterval(chimeIntervalRef.current);
       }
 
       setWaitingDetails(safeDetails);
@@ -223,7 +235,7 @@ function WaitingScreen() {
       if (isMounted) {
         loadAllData();
       }
-    }, 5000);
+    }, 3000);
 
     return () => {
       isMounted = false;
@@ -307,6 +319,7 @@ function WaitingScreen() {
 
   return (
     <div className="waiting-section">
+      <ChatbotButton />
       {/* 店名を表示 */}
       {storeName && (
         <div className="store-name-header">
@@ -323,30 +336,44 @@ function WaitingScreen() {
       ) : (
         <>
           <form className="preview-form">
-            <div className="waiting-number-label">{waitingScreenTexts.waiting_number_label}</div>
-            <div className="waiting-number-value">
-              {waitingDetails.queue_number || '-'}
-            </div>
-            <label className="preview-item-label">{waitingScreenTexts.party_size_label}</label>
-            <div className="preview-item-value">{waitingDetails.party_size || '-'}</div>
-            <label className="preview-item-label">{waitingScreenTexts.note_label}</label>
-            <div className="preview-item-value">{waitingDetails.notes || '-'}</div>
-            <label className="preview-item-label">{waitingScreenTexts.current_waiting_label}</label>
-            <div className="preview-item-value">{waitingDetails.waiting_count - 1 || 0}{waitingScreenTexts.group_label}</div>
-
-            {/* 登録時間を表示 */}
-            <label className="preview-item-label">
-              {waitingScreenTexts.registration_time_label}
-            </label>
-            <div className="preview-item-value">
-              {waitingDetails.registration_time ? (() => {
-                const date = new Date(waitingDetails.registration_time);
-                return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
-              })() : '-'}
+            <div className="preview-info-group">
+              <div className="waiting-number-label">{waitingScreenTexts.waiting_number_label}</div>
+              <div className="waiting-number-value">
+                {waitingDetails.queue_number || '-'}
+              </div>
             </div>
 
-            <label className="preview-item-label">{waitingScreenTexts.estimated_wait_time_label}</label>
-            <div className="preview-item-value">{waitingDetails.estimated_waiting_time || "-"}</div>
+            <div className="preview-info-group">
+              <label className="preview-item-label">{waitingScreenTexts.party_size_label}</label>
+              <div className="preview-item-value">{waitingDetails.party_size || '-'}</div>
+            </div>
+
+            <div className="preview-info-group">
+              <label className="preview-item-label">{waitingScreenTexts.note_label}</label>
+              <div className="preview-item-value">{waitingDetails.notes || '-'}</div>
+            </div>
+
+            <div className="preview-info-group">
+              <label className="preview-item-label">{waitingScreenTexts.current_waiting_label}</label>
+              <div className="preview-item-value">{Math.max(0, waitingDetails.waiting_count - 1)}{waitingScreenTexts.group_label}</div>
+            </div>
+
+            <div className="preview-info-group">
+              <label className="preview-item-label">
+                {waitingScreenTexts.registration_time_label}
+              </label>
+              <div className="preview-item-value">
+                {waitingDetails.registration_time ? (() => {
+                  const date = new Date(waitingDetails.registration_time);
+                  return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
+                })() : '-'}
+              </div>
+            </div>
+
+            <div className="preview-info-group">
+              <label className="preview-item-label">{waitingScreenTexts.estimated_wait_time_label}</label>
+              <div className="preview-item-value">{waitingDetails.estimated_waiting_time || "-"}</div>
+            </div>
           </form>
 
           {/* Display selected menu items if any */}
@@ -407,7 +434,10 @@ function WaitingScreen() {
                 <div className="congestion-popup-actions">
                   <button
                     className="confirmation-btn"
-                    onClick={handleCancel}
+                    onClick={async () => {
+                      setShowCancelPopup(false);
+                      await handleCancel();
+                    }}
                     type="button"
                   >
                     {waitingScreenTexts.cancel_popup.confirm}
@@ -417,9 +447,48 @@ function WaitingScreen() {
             </div>
           )}
 
+          {/* ★ 呼び出し通知モーダル (Loop Sound Control) */}
+          {showNotificationModal && (
+            <div className="congestion-popup-overlay">
+              <div className="congestion-popup-modal" style={{ textAlign: 'center', padding: '30px' }}>
+                <div className="congestion-popup-message" style={{ fontSize: '1.2em', fontWeight: 'bold', marginBottom: '20px' }}>
+                  {/* 多国語対応: call_popup キーを使用 */}
+                  {waitingScreenTexts.call_popup?.message_1}<br />
+                  {waitingScreenTexts.call_popup?.message_2}
+                </div>
+                <div className="congestion-popup-actions" style={{ justifyContent: 'center' }}>
+                  <button
+                    className="confirmation-btn"
+                    onClick={() => {
+                      if (chimeIntervalRef.current) clearInterval(chimeIntervalRef.current);
+                      setShowNotificationModal(false);
+                      // モーダルを閉じたら NotifiedScreen (Step 4) へ遷移する場合もあるが、
+                      // 要件「画面移動しない」に従い、そのままにするか、
+                      // もしくは「確認」＝「来店確認」としてStep4へ飛ばすか。
+                      // 今回の要件は「画面移動せずモ달」なので、閉じたらそのまま今の画面にいる、が正しいと判断。
+                      // ただし、バックグラウンドでPollingが止まっているので、
+                      // リロードしないと次のステータス(completed)に行けないかも。
+                      // なので、閉じたらStep 4に遷移するのが自然だが...
+                      // ユーザー要望: "호출 스테이터스일때 원래 화면 이동이었잖아. 근데 화면 이동 하지않고..."
+                      // 画面移動せずにモ달だけ閉じる。
+                    }}
+                    type="button"
+                    style={{ minWidth: '150px' }}
+                  >
+                    {waitingScreenTexts.call_popup?.confirm}
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
 
         </>
       )}
+
+      {/* 混雑/完了通知ポップアップ (WaitinScreenContextで管理) */}
+      {context.isPopupVisible && <CongestionPopup />}
+
     </div>
   );
 }

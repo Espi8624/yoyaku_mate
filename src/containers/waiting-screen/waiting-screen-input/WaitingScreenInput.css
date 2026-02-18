@@ -4,7 +4,7 @@
   }
 
   form {
-    padding: 20px;
+    padding: 16px;
     max-width: 100%;
   }
 
@@ -39,7 +39,7 @@
 }
 
 .input-title {
-  font-size: 1.3em;
+  font-size: 1.1em;
   font-weight: 600;
   color: #2C2C2C;
   text-align: left;
@@ -80,8 +80,8 @@
 
 input,
 textarea,
-input.preview-item-value,
-textarea.preview-item-value {
+input.input-field-value,
+textarea.input-field-value {
   border: 2px solid #2C2C2C !important;
   background: #fff !important;
   color: inherit;
@@ -89,8 +89,8 @@ textarea.preview-item-value {
   transition: border-color 0.2s;
 }
 
-input.preview-item-value:focus,
-textarea.preview-item-value:focus {
+input.input-field-value:focus,
+textarea.input-field-value:focus {
   border-color: #2C2C2C !important;
   outline: none;
 }
@@ -133,4 +133,36 @@ textarea.preview-item-value:focus {
   justify-content: center;
   gap: 12px;
   margin-top: 24px;
+}
+
+/* 입력 화면 전용 스타일 */
+.input-field-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  /* 필드 내부 요소들 사이의 간격 (label, example, input) */
+}
+
+.input-field-label {
+  width: 100%;
+  display: block;
+  font-size: 1.0em;
+  /* 질문을 크게 */
+  font-weight: 500;
+  color: #222;
+  margin-bottom: 0;
+  /* gap으로 처리 */
+  letter-spacing: 0.01em;
+  box-sizing: border-box;
+}
+
+.input-field-value {
+  width: 100%;
+  padding: 12px 10px;
+  border: 2px solid #2C2C2C;
+  border-radius: 8px;
+  font-size: 1.05em;
+  background: #fff;
+  color: #333;
+  box-sizing: border-box;
 }

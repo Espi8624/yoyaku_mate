@@ -20,7 +20,7 @@
         "view_details": "Xem chi tiết",
         "close_details": "Đóng chi tiết",
         "select_at_least_one": "Vui lòng chọn ít nhất một món",
-        "one_menu_per_person_error": "Vui lòng đặt món theo số lượng người",
+        "one_menu_per_person_error": "Vui lòng chọn số lượng món ăn bằng với số người",
         "back": "Quay lại"
     },
     "waiting_screen_preview": {
@@ -51,11 +51,22 @@
         "menu_overview_label": "Xem thực đơn",
         "menu_close_label": "Đóng thực đơn",
         "category_overview_labe": "Xem danh mục",
+        "registration_time_label": "Thời gian đăng ký",
+        "pre_order": "Đặt món trước",
         "cancel_reservation": "Hủy đăng ký",
         "cancel_popup": {
             "message": "Bạn có chắc chắn muốn hủy đăng ký không?",
             "close": "Đóng",
             "confirm": "Xác nhận hủy"
+        },
+        "call_popup": {
+            "message_1": "Cảm ơn bạn đã chờ đợi!",
+            "message_2": "Vui lòng đến cửa hàng.",
+            "confirm": "Xác nhận"
+        },
+        "completed_screen": {
+            "title": "Cảm ơn quý khách!",
+            "message": "Nhân viên sẽ hướng dẫn quý khách."
         }
     },
     "cancelled_screen": {
