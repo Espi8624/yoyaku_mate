@@ -41,7 +41,7 @@ function WaitingScreen() {
   const [error, setError] = useState(null);
   const [waitingDetails, setWaitingDetails] = useState({});
   const [menuList, setMenuList] = useState([]);
-  const [storeName, setStoreName] = useState('');
+  const [storeInfo, setStoreInfo] = useState(null);
   const [showCancelPopup, setShowCancelPopup] = useState(false);
   // ★ 呼び出し通知モーダル用
   const [showNotificationModal, setShowNotificationModal] = useState(false);
@@ -56,9 +56,8 @@ function WaitingScreen() {
 
     const fetchStoreInfo = async () => {
       try {
-        const storeInfo = await getStoreInfo(storeId);
-        console.log("[fetchStoreInfo] storeInfo:", storeInfo);
-        setStoreName(storeInfo?.data?.store_name || '');
+        const info = await getStoreInfo(storeId);
+        setStoreInfo(info || null);
       } catch (err) {
         console.error("店舗情報の取得に失敗:", err);
       }
@@ -74,7 +73,7 @@ function WaitingScreen() {
       return;
     }
 
-    console.log("[loadAllData] リクエストパラメータ:", { storeId, waitingId });
+
 
     try {
       const [details, menu] = await Promise.all([
@@ -82,12 +81,7 @@ function WaitingScreen() {
         getMenuList(storeId)
       ]);
 
-      console.log("[loadAllData] APIレスポンス details:", details);
-      console.log("[loadAllData] waiting_id一致確認:", {
-        localStorage: waitingId,
-        response: details?.waiting_id,
-        match: waitingId === details?.waiting_id
-      });
+
 
       const safeDetails = details || {};
 
@@ -220,7 +214,7 @@ function WaitingScreen() {
         setError("データの読み込みに失敗しました。");
       }
     } finally {
-      // setIsLoading(false); // Removed
+      // Cleanup if needed
     }
   }, [storeId, waitingId, setStep, context]);
 
@@ -321,9 +315,9 @@ function WaitingScreen() {
     <div className="waiting-section">
       <ChatbotButton />
       {/* 店名を表示 */}
-      {storeName && (
+      {storeInfo && storeInfo.store_name && (
         <div className="store-name-header">
-          <h2>{storeName}</h2>
+          <h2>{storeInfo.store_name}</h2>
         </div>
       )}
 
@@ -412,7 +406,14 @@ function WaitingScreen() {
             </div>
           )}
 
-          <MenuDisplay menuList={menuList} texts={waitingScreenTexts} selectedLanguageCode={selectedLanguageCode} />
+
+
+          {/* Google Maps Integration */}
+          {storeInfo && storeInfo.address && (
+            <WaitingPlaceMap storeInfo={storeInfo} texts={waitingScreenTexts} />
+          )}
+
+          <MenuDisplay menuList={menuList} texts={waitingScreenTexts} />
 
           <button className="confirmation-btn cancel-btn" onClick={() => setShowCancelPopup(true)}>
             {waitingScreenTexts.cancel_reservation}
