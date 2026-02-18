@@ -35,13 +35,27 @@ function FlowController() {
             if (setStoreId) setStoreId(storedStoreId);
             if (setWaitingId) setWaitingId(storedWaitingId);
             if (setStep) setStep(4);
-          } else if (details.status === 'waiting') {
-            // waiting の場合はstep 3に復元
+            if (setStep) setStep(3);
+          } else if (details.status === 'completed') {
+            // completedの場合はローカルストレージを保持し、完了画面を表示
             if (setStoreId) setStoreId(storedStoreId);
             if (setWaitingId) setWaitingId(storedWaitingId);
-            if (step !== 3 && setStep) setStep(3);
+            // CancelledScreenを表示するためにreasonを設定したいが、
+            // FlowController内ではContextの関数を直接呼べない(useEffect内)。
+            // しかし、isCancelledがfalseのままだとWaitingScreenが表示される。
+            // WaitingScreen側でstatus checkしてreasonを設定するロジックがあるため、
+            // ここではstep 3に設定しておけば、WaitingScreenがマウントされ、
+            // 即座にcompletedを検知してCancelledScreenに切り替わるはず。
+            if (setStep) setStep(3);
+          } else if (details.status === 'waiting') {
+            // waitingの場合はローカルストレージを保持し、待機画面を表示
+            if (setStoreId) setStoreId(storedStoreId);
+            if (setWaitingId) setWaitingId(storedWaitingId);
+            if (setStep) setStep(3);
           } else {
-            // それ以外（completed, cancelled, no_showなど）はローカルストレージをクリア
+            // それ以外（cancelled, no_showなど）はローカルストレージをクリア
+            // ただし、cancelledの場合もユーザーが確認するまでは保持すべきかもしれないが、
+            // 現状の仕様ではクリアしてトップへ戻るようになっている。
             console.log(`[FlowController] ステータスが${details.status}のため、ローカルストレージをクリアします`);
             localStorage.removeItem("store_id");
             localStorage.removeItem("waiting_id");
@@ -139,7 +153,6 @@ function WaitingScreenFlow() {
   return (
     <WaitingScreenProvider>
       <FlowController />
-      <ChatbotButton />
       <ChatWindow />
     </WaitingScreenProvider>
   );

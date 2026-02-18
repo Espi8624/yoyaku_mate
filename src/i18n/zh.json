@@ -20,7 +20,7 @@
         "view_details": "查看詳情",
         "close_details": "關閉詳情",
         "select_at_least_one": "請至少選擇一項餐點",
-        "one_menu_per_person_error": "請依照人數點購相應數量的餐點",
+        "one_menu_per_person_error": "请选择与人数相同数量的菜单",
         "back": "返回"
     },
     "waiting_screen_preview": {
@@ -51,11 +51,22 @@
         "menu_overview_label": "查看菜單",
         "menu_close_label": "關閉菜單",
         "category_overview_labe": "查看分類",
+        "registration_time_label": "登記時間",
+        "pre_order": "預訂餐點",
         "cancel_reservation": "取消預約",
         "cancel_popup": {
             "message": "確定要取消您的預約嗎？",
             "close": "關閉",
             "confirm": "確認取消"
+        },
+        "call_popup": {
+            "message_1": "感謝您的久候！",
+            "message_2": "請前往店內。",
+            "confirm": "確認"
+        },
+        "completed_screen": {
+            "title": "感謝您的光臨！",
+            "message": "工作人員將為您帶位。"
         }
     },
     "cancelled_screen": {

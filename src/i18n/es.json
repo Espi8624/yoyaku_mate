@@ -20,7 +20,7 @@
         "view_details": "Ver detalles",
         "close_details": "Cerrar detalles",
         "select_at_least_one": "Por favor, seleccione al menos un artículo",
-        "one_menu_per_person_error": "Por favor, pida al menos un plato por persona",
+        "one_menu_per_person_error": "Por favor, seleccione el mismo número de menús que de personas",
         "back": "Volver"
     },
     "waiting_screen_preview": {
@@ -51,11 +51,22 @@
         "menu_overview_label": "Ver menú",
         "menu_close_label": "Cerrar menú",
         "category_overview_labe": "Ver categorías",
+        "registration_time_label": "Hora de registro",
+        "pre_order": "Pre-pedido",
         "cancel_reservation": "Cancelar reserva",
         "cancel_popup": {
             "message": "¿Está seguro de que desea cancelar su reserva?",
             "close": "Cerrar",
             "confirm": "Sí, cancelar"
+        },
+        "call_popup": {
+            "message_1": "¡Gracias por su espera!",
+            "message_2": "Por favor, acérquese al establecimiento.",
+            "confirm": "Confirmar"
+        },
+        "completed_screen": {
+            "title": "¡Gracias por su visita!",
+            "message": "El personal le guiará."
         }
     },
     "cancelled_screen": {

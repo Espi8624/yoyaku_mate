@@ -5,6 +5,8 @@ import { getTranslatedText } from "../../../utils/i18nHelper";
 import { getMenuList } from "../../../api/waitingService";
 import CommonPopup from "../../../components/CommonPopup";
 import BackButton from "../../../components/BackButton";
+import ChatbotButton from "../../chat-bot/ChatbotButton";
+import "../waiting-screen/WaitingScreen.css";
 import "./WaitingScreenMenu.css";
 
 function WaitingScreenMenu() {
@@ -43,7 +45,7 @@ function WaitingScreenMenu() {
         }
 
         // 2. One menu per person check
-        if (requireOneMenuPerPerson && totalQuantity < Number(partySize)) {
+        if (requireOneMenuPerPerson && totalQuantity !== Number(partySize)) {
             setPopupMessage(menuText.one_menu_per_person_error || "お一人様につき少なくとも1つのメニューを注文してください");
             setShowErrorPopup(true);
             return;
@@ -135,8 +137,9 @@ function WaitingScreenMenu() {
 
     return (
         <div className="waiting-section">
+            <ChatbotButton />
             <div className="menu-header-row" style={{ display: 'flex', alignItems: 'center', marginBottom: '18px' }}>
-                <BackButton onClick={() => setStep(1)} />
+                <BackButton onClick={() => setStep(1)} className="header-back-button" />
                 <div className="preview-label" style={{ marginBottom: 0 }}>{menuText.title}</div>
             </div>
 
@@ -220,7 +223,8 @@ function WaitingScreenMenu() {
                 </div>
             )}
 
-            <div className="menu-actions">
+            {/* Fixed Footer Actions */}
+            <div className="menu-actions fixed-action-footer">
                 <button type="button" className="confirmation-btn" onClick={handleNext}>
                     {menuText.confirm}
                 </button>

@@ -20,7 +20,7 @@
         "view_details": "ดูรายละเอียด",
         "close_details": "ปิดรายละเอียด",
         "select_at_least_one": "กรุณาเลือกอย่างน้อย 1 เมนู",
-        "one_menu_per_person_error": "กรุณาสั่งเมนูให้ครบตามจำนวนคน",
+        "one_menu_per_person_error": "กรุณาเลือกจำนวนเมนูให้เท่ากับจำนวนคน",
         "back": "ย้อนกลับ"
     },
     "waiting_screen_preview": {
@@ -51,11 +51,22 @@
         "menu_overview_label": "ดูเมนู",
         "menu_close_label": "ปิดเม뉴",
         "category_overview_labe": "ดูหมวดหมู่",
+        "registration_time_label": "เวลาที่ลงทะเบียน",
+        "pre_order": "สั่งอาหารล่วงหน้า",
         "cancel_reservation": "ยกเลิกการจอง",
         "cancel_popup": {
             "message": "คุณต้องการยกเลิกการจองใช่หรือไม่?",
             "close": "ปิด",
             "confirm": "ยืนยันการยกเลิก"
+        },
+        "call_popup": {
+            "message_1": "ขอบคุณที่รอ!",
+            "message_2": "กรุณามาที่ร้าน",
+            "confirm": "ตกลง"
+        },
+        "completed_screen": {
+            "title": "ขอบคุณที่ใช้บริการ!",
+            "message": "พนักงานจะพาไปที่โต๊ะค่ะ"
         }
     },
     "cancelled_screen": {

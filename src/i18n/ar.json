@@ -20,7 +20,7 @@
         "view_details": "عرض التفاصيل",
         "close_details": "إغلاق التفاصيل",
         "select_at_least_one": "يرجى اختيار صنف واحد على الأقل",
-        "one_menu_per_person_error": "يرجى طلب أصناف بعدد الأشخاص",
+        "one_menu_per_person_error": "يرجى اختيار نفس عدد القوائم كعدد الأشخاص",
         "back": "رجوع"
     },
     "waiting_screen_preview": {
@@ -51,11 +51,22 @@
         "menu_overview_label": "عرض القائمة",
         "menu_close_label": "إغلاق القائمة",
         "category_overview_labe": "عرض الفئات",
+        "registration_time_label": "وقت التسجيل",
+        "pre_order": "طلب مسبق",
         "cancel_reservation": "إلغاء الحجز",
         "cancel_popup": {
             "message": "هل تريد إلغاء الحجز؟",
             "close": "إغلاق",
             "confirm": "تأكيد"
+        },
+        "call_popup": {
+            "message_1": "شكراً لانتظارك!",
+            "message_2": "يرجى التفضل بالدخول إلى المتجر.",
+            "confirm": "تأكيد"
+        },
+        "completed_screen": {
+            "title": "شكراً لزيارتكم!",
+            "message": "سيقوم الموظفون بإرشادكم."
         }
     },
     "cancelled_screen": {

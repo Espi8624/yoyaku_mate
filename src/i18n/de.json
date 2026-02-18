@@ -20,7 +20,7 @@
         "view_details": "Details anzeigen",
         "close_details": "Details schließen",
         "select_at_least_one": "Bitte wählen Sie mindestens ein Menü aus",
-        "one_menu_per_person_error": "Bitte bestellen Sie mindestens ein Menü pro Person",
+        "one_menu_per_person_error": "Bitte wählen Sie die gleiche Anzahl an Menüs wie Personen",
         "back": "Zurück"
     },
     "waiting_screen_preview": {
@@ -51,11 +51,22 @@
         "menu_overview_label": "Menü ansehen",
         "menu_close_label": "Menü schließen",
         "category_overview_labe": "Kategorien anzeigen",
+        "registration_time_label": "Registrierungszeit",
+        "pre_order": "Vorbestellung",
         "cancel_reservation": "Reservierung stornieren",
         "cancel_popup": {
             "message": "Möchten Sie Ihre Reservierung wirklich stornieren?",
             "close": "Schließen",
             "confirm": "Ja, stornieren"
+        },
+        "call_popup": {
+            "message_1": "Vielen Dank für Ihre Geduld!",
+            "message_2": "Bitte kommen Sie zum Geschäft.",
+            "confirm": "Bestätigen"
+        },
+        "completed_screen": {
+            "title": "Vielen Dank für Ihren Besuch!",
+            "message": "Unser Personal wird Sie begleiten."
         }
     },
     "cancelled_screen": {

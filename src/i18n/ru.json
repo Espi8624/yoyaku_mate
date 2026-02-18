@@ -20,7 +20,7 @@
         "view_details": "Подробнее",
         "close_details": "Закрыть",
         "select_at_least_one": "Пожалуйста, выберите хотя бы одно блюдо",
-        "one_menu_per_person_error": "Пожалуйста, закажите по одному блюду на каждого гостя",
+        "one_menu_per_person_error": "Пожалуйста, выберите столько же меню, сколько и людей",
         "back": "Назад"
     },
     "waiting_screen_preview": {
@@ -51,11 +51,22 @@
         "menu_overview_label": "Посмотреть меню",
         "menu_close_label": "Закрыть меню",
         "category_overview_labe": "Посмотреть категории",
+        "registration_time_label": "Время регистрации",
+        "pre_order": "Предварительный заказ",
         "cancel_reservation": "Отменить бронь",
         "cancel_popup": {
             "message": "Вы уверены, что хотите отменить бронь?",
             "close": "Закрыть",
             "confirm": "Да, отменить"
+        },
+        "call_popup": {
+            "message_1": "Спасибо за ожидание!",
+            "message_2": "Пожалуйста, пройдите в магазин.",
+            "confirm": "ОК"
+        },
+        "completed_screen": {
+            "title": "Спасибо за визит!",
+            "message": "Персонал проводит вас."
         }
     },
     "cancelled_screen": {
