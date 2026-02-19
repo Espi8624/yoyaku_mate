@@ -16,7 +16,6 @@ function WaitingScreenInput() {
     enableMenuSelection,
     setStep,
     selectedLanguageCode,
-    isOffline,
   } = useWaitingScreen();
 
   // 多国語処理

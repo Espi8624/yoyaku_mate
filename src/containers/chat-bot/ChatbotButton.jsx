@@ -3,7 +3,7 @@ import { useWaitingScreen } from '../waiting-screen/WaitingScreenContext';
 import './ChatbotButton.css';
 
 const ChatbotButton = () => {
-    const { storeId, toggleChat, isChatOpen } = useWaitingScreen();
+    const { storeId, toggleChat } = useWaitingScreen();
 
     // storeIdがない場合（不正アクセスなど）は表示しない
     if (!storeId) {
