@@ -2,7 +2,7 @@ import React, { createContext, useState, useContext, useMemo, useEffect } from '
 import { useLocation } from 'react-router-dom';
 import nationalitiesData from '../../data/nationalities.json';
 import useTranslation from '../../hook/useTranslation';
-import { getWaitingStatus, submitWaiting as apiSubmitWaiting, cancelWaiting, getQRToken } from '../../api/waitingService';
+import { getWaitingStatus, submitWaiting as apiSubmitWaiting, cancelWaiting, getQRToken, getWaitingDetails } from '../../api/waitingService';
 import './NetworkErrorPopup.css';  // CSSファイル名を変更
 
 // NetworkErrorPopupをインラインコンポーネントとして定義
