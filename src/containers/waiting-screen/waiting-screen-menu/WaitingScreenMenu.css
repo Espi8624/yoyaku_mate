@@ -1,3 +1,12 @@
+/* Shared styles or missing from WaitingScreen.css */
+.preview-label {
+    margin-bottom: 18px;
+    font-size: 1.15em;
+    font-weight: bold;
+    color: #2C2C2C;
+    text-align: center;
+}
+
 .menu-selection-container {
     display: flex;
     flex-direction: column;
