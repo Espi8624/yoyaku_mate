@@ -1,4 +1,4 @@
-/* MapWindow - 전체 오버레이 컨테이너 */
+/* MapWindow */
 .map-window-container {
     position: fixed;
     top: 0;
@@ -12,7 +12,7 @@
     overflow: hidden;
 }
 
-/* MapWindow - 헤더 */
+/* MapWindow - header */
 .map-window-header {
     height: 57px;
     padding: 0 16px;
@@ -26,14 +26,14 @@
     box-sizing: border-box;
 }
 
-/* MapWindow - 타이틀 */
+/* MapWindow - title */
 .map-window-title {
     margin: 0;
     font-size: 18px;
     font-weight: bold;
 }
 
-/* MapWindow - 닫기 버튼 */
+/* MapWindow - close button */
 .map-window-close-btn {
     background: none;
     border: none;
@@ -43,13 +43,13 @@
     color: #666;
 }
 
-/* MapWindow - 지도 콘텐츠 영역 */
+/* MapWindow - content */
 .map-window-content {
     overflow: hidden;
     flex: 1;
 }
 
-/* MapWindow - 로딩 */
+/* MapWindow - loading */
 .map-window-loading {
     display: flex;
     justify-content: center;

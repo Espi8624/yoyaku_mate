@@ -132,10 +132,8 @@ textarea {
   /* Handled by .preview-info-group */
   box-sizing: border-box;
   font-size: 1.3em;
-  /* 2em -> 2.4em (더 크게) */
   font-weight: 800;
   line-height: 1.1;
-  /* 줄 간격을 조금 좁힘 */
 }
 
 /* New Group Container */
