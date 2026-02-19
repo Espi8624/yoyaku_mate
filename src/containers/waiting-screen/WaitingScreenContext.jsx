@@ -240,45 +240,45 @@ export function WaitingScreenProvider({ children }) {
   };
 
   const handleSubmitWaiting = async () => {
-    const { waitingPartySum, estimatedWaitingCount, maxWaitingCount } = await getWaitingStatus(storeId);
-    const currentWaitingCount = waitingPartySum + Number(partySize);
+    try {
+      const { waitingPartySum, estimatedWaitingCount, maxWaitingCount } = await getWaitingStatus(storeId);
+      const currentWaitingCount = waitingPartySum + Number(partySize);
 
-    // Client側でのID生成を廃止 (Server側で生成)
-    // const newWaitingId = generateWaitingId(); 
-    // setWaitingId(newWaitingId);
+      // Payloadからwaiting_idを除外
+      const payload = {
+        store_id: storeId,
+        party_size: Number(partySize),
+        nationality: selectedNationality,
+        contact: contact.trim() === "" ? "なし" : contact,
+        notes: notes.trim() === "" ? "なし" : notes,
+        status: "waiting",
+        menu_items: selectedMenus.map(m => ({
+          menu_id: m.menuId,
+          name: m.name,
+          quantity: m.quantity
+        }))
+      };
 
-    // Payloadからwaiting_idを除外
-    const payload = {
-      store_id: storeId,
-      // waiting_id: newWaitingId, // Removed
-      party_size: Number(partySize),
-      nationality: selectedNationality,
-      contact: contact.trim() === "" ? "なし" : contact,
-      notes: notes.trim() === "" ? "なし" : notes,
-      status: "waiting",
-      menu_items: selectedMenus.map(m => ({
-        menu_id: m.menuId,
-        name: m.name,
-        quantity: m.quantity
-      }))
-    };
+      if (maxWaitingCount !== null && Number(partySize) > maxWaitingCount) {
+        setPopupInfo({ message: "大変申し訳ございません。\n当店の最大収容人数を超えているため、予約できません。", mode: "max" });
+        setPopupVisible(true);
+        return;
+      }
 
-    if (maxWaitingCount !== null && Number(partySize) > maxWaitingCount) {
-      setPopupInfo({ message: "大変申し訳ございません。\n当店の最大収容人数を超えているため、予約できません。", mode: "max" });
-      setPopupVisible(true);
-      return;
+      if (estimatedWaitingCount !== null && currentWaitingCount >= estimatedWaitingCount) {
+        setPendingPayload(payload);
+        setPopupInfo({ message: "現在大変混雑しており、ご案内までにお時間をいただく可能性がございます。\n予めご了承お願いします。", mode: "congestion" });
+        setPopupVisible(true);
+        return;
+      }
+
+      // 初回登録時はまだwaitingIdがないため、localStorageへの保存は _performSubmit 内で行う
+
+      await _performSubmit(payload);
+    } catch (error) {
+      console.error("待機状況確認エラー:", error);
+      alert("通信エラーが発生しました。もう一度お試しください。");
     }
-
-    if (estimatedWaitingCount !== null && currentWaitingCount >= estimatedWaitingCount) {
-      setPendingPayload(payload);
-      setPopupInfo({ message: "現在大変混雑しており、ご案内までにお時間をいただく可能性がございます。\n予めご了承お願いします。", mode: "congestion" });
-      setPopupVisible(true);
-      return;
-    }
-
-    // 初回登録時はまだwaitingIdがないため、localStorageへの保存は _performSubmit 内で行う
-
-    await _performSubmit(payload);
   };
 
   const handleCancel = async () => {
