@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE_URL = process.env.REACT_APP_API_URL || "http://localhost:8080/api";
+const API_BASE_URL = process.env.REACT_APP_API_URL || (process.env.NODE_ENV === 'production' ? "https://rusui-dev.fly.dev/api" : "http://localhost:8080/api");
 
 /**
  * 現在待機状況と、店舗の待機制作を呼び出す
