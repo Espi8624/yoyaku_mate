@@ -40,7 +40,6 @@ const MapWindow = () => {
                 </button>
             </div>
 
-            {/* Map Content - explicit height so percentage heights inside work */}
             <div className="map-window-content" style={{ height: contentHeight }}>
                 {storeInfo ? (
                     <WaitingPlaceMap
