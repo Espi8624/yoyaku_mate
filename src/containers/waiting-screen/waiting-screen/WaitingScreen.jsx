@@ -217,7 +217,7 @@ function WaitingScreen() {
     } finally {
       // Cleanup if needed
     }
-  }, [storeId, waitingId, setStep, context, selectedLanguageCode, showNotificationModal]);
+  }, [storeId, waitingId, context, selectedLanguageCode, showNotificationModal]);
 
   useEffect(() => {
     if (!restored) return;
