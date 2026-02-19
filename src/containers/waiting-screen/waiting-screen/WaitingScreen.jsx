@@ -32,7 +32,6 @@ function WaitingScreen() {
     waitingId,
     selectedLanguageCode,
     handleCancel,
-    setStep, // 追加
   } = context;
 
   const t = useTranslation(selectedLanguageCode);
