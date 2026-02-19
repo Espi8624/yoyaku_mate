@@ -6,6 +6,7 @@ import MenuDisplay from "./MenuDisplay";
 import CongestionPopup from "../waiting-screen-preview/CongestionPopup"; // Import Popup
 import { getTranslatedText } from "../../../utils/i18nHelper";
 import ChatbotButton from "../../chat-bot/ChatbotButton";
+import MapButton from '../map/MapButton'; // Modified
 import "./WaitingScreen.css";
 
 function WaitingScreen() {
@@ -314,6 +315,7 @@ function WaitingScreen() {
   return (
     <div className="waiting-section">
       <ChatbotButton />
+      <MapButton />
       {/* 店名を表示 */}
       {storeInfo && storeInfo.store_name && (
         <div className="store-name-header">
@@ -409,9 +411,7 @@ function WaitingScreen() {
 
 
           {/* Google Maps Integration */}
-          {storeInfo && storeInfo.address && (
-            <WaitingPlaceMap storeInfo={storeInfo} texts={waitingScreenTexts} />
-          )}
+          {/* WaitingPlaceMap component removed as per instruction */}
 
           <MenuDisplay menuList={menuList} texts={waitingScreenTexts} />
 

@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { GoogleMap, useJsApiLoader, Marker, InfoWindow } from '@react-google-maps/api';
 import CommonPopup from '../../../components/CommonPopup';
 import "./WaitingScreen.css";
+import "./WaitingPlaceMap.css";
 
 const containerStyle = {
     width: '100%',
@@ -17,7 +18,7 @@ const defaultCenter = {
 
 const libraries = ['places'];
 
-function WaitingPlaceMap({ storeInfo, texts }) {
+function WaitingPlaceMap({ storeInfo, texts, isFullScreen = false }) {
     const { isLoaded } = useJsApiLoader({
         id: 'google-map-script',
         googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
@@ -31,8 +32,14 @@ function WaitingPlaceMap({ storeInfo, texts }) {
     const [storeLocation, setStoreLocation] = useState(null);
     const [pendingUrl, setPendingUrl] = useState(null);
 
-    // Accordion state
-    const [isOpen, setIsOpen] = useState(false);
+    // Accordion state (Only used when NOT full screen, though we will likely only use full screen now)
+    const [isOpen, setIsOpen] = useState(isFullScreen);
+
+    useEffect(() => {
+        if (isFullScreen) {
+            setIsOpen(true);
+        }
+    }, [isFullScreen]);
 
     const onLoad = useCallback(function callback(map) {
         setMap(map);
@@ -151,240 +158,180 @@ function WaitingPlaceMap({ storeInfo, texts }) {
         return null; // Or a loading spinner if preferred, but null prevents layout shift until loaded
     }
 
+    // Map container style - GoogleMap fills 100% of its wrapper div
+    const finalContainerStyle = isFullScreen ? {
+        width: '100%',
+        height: '100%',
+        borderRadius: '0',
+    } : containerStyle;
+
     return (
-        <div className="menu-container"> {/* Reusing menu styling */}
-            {/* Header */}
-            <div
-                className="menu-category-header"
-                onClick={() => setIsOpen(prev => !prev)}
-            >
-                <span className="menu-category-icon">
-                    {isOpen ? (
-                        <svg width="24" height="24" viewBox="0 0 12 12" fill="currentColor">
-                            <path d="M2 4 L6 8 L10 4 Z" />
-                        </svg>
-                    ) : (
-                        <svg width="24" height="24" viewBox="0 0 12 12" fill="currentColor">
-                            <path d="M4 2 L8 6 L4 10 Z" />
-                        </svg>
-                    )}
-                </span>
-                <span className="menu-category-name">
-                    {/* Default text or from texts prop if available */}
-                    {isOpen ? "地図を閉じる" : "周辺の待機スポットを見る"}
-                </span>
-            </div>
+        <div
+            className={isFullScreen ? "map-full-screen-container" : "menu-container"}
+        >
+            {/* Header - Only show if NOT full screen (Full screen has its own modal header usually) */}
+            {!isFullScreen && (
+                <div
+                    className="menu-category-header"
+                    onClick={() => setIsOpen(prev => !prev)}
+                >
+                    <span className="menu-category-icon">
+                        {isOpen ? (
+                            <svg width="24" height="24" viewBox="0 0 12 12" fill="currentColor">
+                                <path d="M2 4 L6 8 L10 4 Z" />
+                            </svg>
+                        ) : (
+                            <svg width="24" height="24" viewBox="0 0 12 12" fill="currentColor">
+                                <path d="M4 2 L8 6 L4 10 Z" />
+                            </svg>
+                        )}
+                    </span>
+                    <span className="menu-category-name">
+                        {isOpen ? "地図を閉じる" : "周辺の待機スポットを見る"}
+                    </span>
+                </div>
+            )}
 
-            {/* Content (Map) */}
+            {/* Content (Map + List) */}
             {isOpen && (
-                <div className="menu-content" style={{ padding: '0 0 16px 0' }}>
-                    <GoogleMap
-                        mapContainerStyle={containerStyle}
-                        center={center}
-                        zoom={16}
-                        onLoad={onLoad}
-                        onUnmount={onUnmount}
-                        options={{
-                            streetViewControl: false,
-                            mapTypeControl: false,
-                        }}
-                    >
-                        {/* Store Marker (Blue) */}
-                        {storeLocation && (
-                            <Marker
-                                position={storeLocation}
-                                title={storeInfo.store_name || "店舗"}
-                                icon={{
-                                    url: "http://maps.google.com/mapfiles/ms/icons/blue-dot.png"
-                                }}
-                            />
-                        )}
+                <div
+                    className={isFullScreen ? "map-content-full" : "menu-content"}
+                    style={isFullScreen ? { flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden', minHeight: 0 } : { padding: '0 0 16px 0' }}
+                >
+                    {/* Map takes 50% of the content area */}
+                    <div style={isFullScreen ? { height: '50%', position: 'relative', flexShrink: 0, overflow: 'hidden' } : { position: 'relative' }}>
+                        <GoogleMap
+                            mapContainerStyle={finalContainerStyle}
+                            center={center}
+                            zoom={16}
+                            onLoad={onLoad}
+                            onUnmount={onUnmount}
+                            options={{
+                                streetViewControl: false,
+                                mapTypeControl: false,
+                                zoomControl: true, // Enable zoom control for better UX in full screen
+                                fullscreenControl: false, // Disable default fullscreen control as we are already in modal
+                                clickableIcons: false, // Disable default Google POI InfoWindow
+                            }}
+                        >
+                            {/* Store Marker (Blue) */}
+                            {storeLocation && (
+                                <Marker
+                                    position={storeLocation}
+                                    title={storeInfo.store_name || "店舗"}
+                                    icon={{
+                                        url: "http://maps.google.com/mapfiles/ms/icons/blue-dot.png"
+                                    }}
+                                />
+                            )}
 
-                        {/* Nearby Places Markers (Red) */}
-                        {nearbyPlaces.map((place) => (
-                            <Marker
-                                key={place.place_id}
-                                position={place.geometry.location}
-                                onClick={() => {
-                                    setSelectedPlace(place);
-                                    // Move center slightly North so the marker is lower and InfoWindow is visible
-                                    // zoom 16: approx 0.002 degrees is good for mobile view
-                                    const lat = typeof place.geometry.location.lat === 'function'
-                                        ? place.geometry.location.lat()
-                                        : place.geometry.location.lat;
-                                    const lng = typeof place.geometry.location.lng === 'function'
-                                        ? place.geometry.location.lng()
-                                        : place.geometry.location.lng;
-
-                                    if (map) {
-                                        map.panTo({ lat: lat + 0.0025, lng: lng });
-                                    }
-                                }}
-                                icon={{
-                                    url: place.icon, // Use Google's category icons or default red dot
-                                    scaledSize: new window.google.maps.Size(25, 25)
-                                }}
-                            />
-                        ))}
-
-                        {/* Info Window for Selected Place */}
-                        {selectedPlace && (
-                            <InfoWindow
-                                position={selectedPlace.geometry.location}
-                                onCloseClick={() => {
-                                    setSelectedPlace(null);
-                                }}
-                                options={{
-                                    disableAutoPan: true,
-                                    pixelOffset: new window.google.maps.Size(0, -30)
-                                }}
-                            >
-                                <div style={{ width: '260px', padding: '0', position: 'relative' }}>
-                                    <button
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            setSelectedPlace(null);
-                                        }}
-                                        style={{
-                                            position: 'absolute',
-                                            top: '-4px', // Pull up slightly
-                                            right: '-4px', // Pull right slightly
-                                            background: 'transparent',
-                                            border: 'none',
-                                            fontSize: '28px', // Larger size
-                                            fontWeight: 'bold',
-                                            color: '#999',
-                                            cursor: 'pointer',
-                                            padding: '8px', // Larger touch target
-                                            lineHeight: '1',
-                                            zIndex: 10
-                                        }}
-                                    >
-                                        ×
-                                    </button>
-
-                                    <div style={{ padding: '2px 8px 8px 8px' }}>
-                                        {/* Name - Single line with ellipsis */}
-                                        <h4 style={{
-                                            margin: '0 0 2px 0',
-                                            fontSize: '14px',
-                                            fontWeight: 'bold',
-                                            color: '#333',
-                                            lineHeight: '1.3',
-                                            whiteSpace: 'nowrap',
-                                            overflow: 'hidden',
-                                            textOverflow: 'ellipsis',
-                                            display: 'block',
-                                            maxWidth: '100%',
-                                            paddingRight: '36px' // increased for larger close button
-                                        }}>
-                                            {selectedPlace.name}
-                                        </h4>
-
-                                        {/* Rating & Time - Second line */}
-                                        <div style={{ display: 'flex', alignItems: 'center', marginBottom: '6px', gap: '6px' }}>
-                                            {/* Rating */}
-                                            <div style={{ display: 'flex', alignItems: 'center', whiteSpace: 'nowrap' }}>
-                                                <span style={{ color: '#fbbc04', fontSize: '11px', marginRight: '2px' }}>★</span>
-                                                <span style={{ fontWeight: 'bold', fontSize: '11px', color: '#333' }}>
-                                                    {selectedPlace.rating || '-'}
-                                                </span>
-                                                <span style={{ fontSize: '10px', color: '#999', marginLeft: '2px' }}>
-                                                    ({selectedPlace.user_ratings_total || 0})
-                                                </span>
-                                            </div>
-
-                                            {/* Walking Time */}
-                                            {selectedPlace.walking_time && (
-                                                <span style={{
-                                                    fontSize: '10px',
-                                                    color: '#0066cc',
-                                                    backgroundColor: '#e6f0ff',
-                                                    padding: '1px 5px',
-                                                    borderRadius: '10px',
-                                                    fontWeight: '600',
-                                                    whiteSpace: 'nowrap'
-                                                }}>
-                                                    徒歩{selectedPlace.walking_time}分
-                                                </span>
-                                            )}
-                                        </div>
-
-                                        {/* Image - Fixed Height */}
-                                        <div style={{
-                                            width: '100%',
-                                            height: '110px',
-                                            backgroundColor: '#eee', // Placeholder bg
-                                            borderRadius: '4px',
-                                            overflow: 'hidden',
-                                            marginBottom: '6px'
-                                        }}>
-                                            {selectedPlace.photoUrl ? (
-                                                <img
-                                                    src={selectedPlace.photoUrl}
-                                                    alt={selectedPlace.name}
-                                                    style={{
-                                                        width: '100%',
-                                                        height: '100%',
-                                                        objectFit: 'cover'
-                                                    }}
-                                                />
-                                            ) : (
-                                                <div style={{
-                                                    width: '100%',
-                                                    height: '100%',
-                                                    display: 'flex',
-                                                    alignItems: 'center',
-                                                    justifyContent: 'center',
-                                                    color: '#999',
-                                                    fontSize: '11px'
-                                                }}>
-                                                    No Image
-                                                </div>
-                                            )}
-                                        </div>
-                                        {/* Google Maps Button */}
-                                        <button
-                                            onClick={(e) => {
-                                                e.stopPropagation(); // Prevent map click
-                                                const place = selectedPlace;
-                                                const url = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(place.name)}&query_place_id=${place.place_id}`;
-                                                setPendingUrl(url);
-                                            }}
-                                            style={{
-                                                display: 'block',
-                                                width: '100%',
-                                                padding: '4px 0',
-                                                backgroundColor: '#fff',
-                                                color: '#0066cc',
-                                                border: '1px solid #0066cc',
-                                                borderRadius: '4px',
-                                                fontSize: '11px',
-                                                fontWeight: 'bold',
-                                                cursor: 'pointer',
-                                                textAlign: 'center'
-                                            }}
-                                        >
-                                            Google Mapで見る
-                                        </button>
-                                    </div>
-                                </div>
-                            </InfoWindow>
-                        )}
-                    </GoogleMap>
-
-                    {/* List of nearby places (Bonus UX) */}
-                    {nearbyPlaces.length > 0 && (
-                        <div className="menu-items-list" style={{ marginTop: '16px', padding: '0 16px', display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                            <div className="preview-label" style={{ fontSize: '0.9em', marginBottom: '8px' }}>おすすめスポット一覧</div>
-                            {nearbyPlaces.slice(0, 3).map((place) => (
-                                <div
+                            {/* Nearby Places Markers (Red) */}
+                            {nearbyPlaces.map((place) => (
+                                <Marker
                                     key={place.place_id}
-                                    className="menu-item"
-                                    style={{ marginBottom: '12px', cursor: 'pointer', border: '1px solid #eee', boxShadow: '0 2px 8px rgba(0,0,0,0.05)' }}
+                                    position={place.geometry.location}
                                     onClick={() => {
                                         setSelectedPlace(place);
-                                        // Same offset logic as marker click
+                                        const lat = typeof place.geometry.location.lat === 'function'
+                                            ? place.geometry.location.lat()
+                                            : place.geometry.location.lat;
+                                        const lng = typeof place.geometry.location.lng === 'function'
+                                            ? place.geometry.location.lng()
+                                            : place.geometry.location.lng;
+
+                                        if (map) {
+                                            map.panTo({ lat: lat + 0.0025, lng: lng });
+                                        }
+                                    }}
+                                    icon={{
+                                        url: place.icon,
+                                        scaledSize: new window.google.maps.Size(25, 25)
+                                    }}
+                                />
+                            ))}
+
+                            {/* Info Window for Selected Place */}
+                            {selectedPlace && (
+                                <InfoWindow
+                                    position={selectedPlace.geometry.location}
+                                    onCloseClick={() => {
+                                        setSelectedPlace(null);
+                                    }}
+                                    options={{
+                                        disableAutoPan: false,
+                                        pixelOffset: new window.google.maps.Size(0, -40)
+                                    }}
+                                >
+                                    <div className="infowindow-container">
+                                        <div className="infowindow-content">
+                                            {/* Title and rating row */}
+                                            <div>
+                                                <h4 className="infowindow-title">
+                                                    {selectedPlace.name}
+                                                </h4>
+                                                <div className="infowindow-meta">
+                                                    <div className="infowindow-rating">
+                                                        <span className="infowindow-star">★</span>
+                                                        <span className="infowindow-rating-value">
+                                                            {selectedPlace.rating || '-'}
+                                                        </span>
+                                                        <span className="infowindow-rating-count">
+                                                            ({selectedPlace.user_ratings_total || 0})
+                                                        </span>
+                                                    </div>
+                                                    {selectedPlace.walking_time && (
+                                                        <span className="infowindow-walking-badge">
+                                                            徒歩{selectedPlace.walking_time}分
+                                                        </span>
+                                                    )}
+                                                </div>
+                                            </div>
+
+                                            {/* Image */}
+                                            <div className="infowindow-image">
+                                                {selectedPlace.photoUrl ? (
+                                                    <img
+                                                        src={selectedPlace.photoUrl}
+                                                        alt={selectedPlace.name}
+                                                    />
+                                                ) : (
+                                                    <div className="infowindow-no-image">
+                                                        No Image
+                                                    </div>
+                                                )}
+                                            </div>
+
+                                            {/* Button */}
+                                            <button
+                                                className="infowindow-open-btn"
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    const place = selectedPlace;
+                                                    const url = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(place.name)}&query_place_id=${place.place_id}`;
+                                                    setPendingUrl(url);
+                                                }}
+                                            >
+                                                Google Mapで見る
+                                            </button>
+                                        </div>
+                                    </div>
+                                </InfoWindow>
+                            )}
+                        </GoogleMap>
+                    </div>
+
+                    {/* List of nearby places - takes the other 50% */}
+                    {nearbyPlaces.length > 0 && (
+                        <div className={isFullScreen ? 'nearby-places-list-fullscreen' : 'nearby-places-list'}
+                            style={isFullScreen ? {} : { marginTop: '16px', padding: '0 16px', display: 'flex', flexDirection: 'column', gap: '8px' }}
+                        >
+                            <div className="preview-label nearby-places-title">おすすめスポット一覧</div>
+                            {nearbyPlaces.map((place) => (
+                                <div
+                                    key={place.place_id}
+                                    className="nearby-place-item"
+                                    onClick={() => {
+                                        setSelectedPlace(place);
                                         const lat = typeof place.geometry.location.lat === 'function'
                                             ? place.geometry.location.lat()
                                             : place.geometry.location.lat;
@@ -394,45 +341,33 @@ function WaitingPlaceMap({ storeInfo, texts }) {
                                         if (map) {
                                             map.panTo({ lat: lat + 0.0025, lng: lng });
                                         }
-
-                                        // Scroll to map for better UX
-                                        const mapElement = document.querySelector('.menu-container');
-                                        if (mapElement) {
-                                            mapElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                                        if (!isFullScreen) {
+                                            const mapElement = document.querySelector('.menu-container');
+                                            if (mapElement) {
+                                                mapElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                                            }
                                         }
                                     }}
                                 >
-                                    <div className="menu-item-details" style={{ width: '100%', padding: '16px' }}>
-                                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '6px' }}>
-                                            <span style={{ fontWeight: 'bold', fontSize: '15px', color: '#333', lineHeight: '1.4', flex: 1 }}>
+                                    <div className="nearby-place-body">
+                                        <div className="nearby-place-header">
+                                            <span className="nearby-place-name">
                                                 {place.name}
                                             </span>
                                             {place.walking_time && (
-                                                <span style={{
-                                                    fontSize: '11px',
-                                                    color: '#0066cc',
-                                                    backgroundColor: '#e6f0ff',
-                                                    padding: '4px 8px',
-                                                    borderRadius: '12px',
-                                                    whiteSpace: 'nowrap',
-                                                    marginLeft: '8px',
-                                                    fontWeight: '600',
-                                                    height: 'fit-content'
-                                                }}>
+                                                <span className="nearby-place-walking-badge">
                                                     徒歩{place.walking_time}分
                                                 </span>
                                             )}
                                         </div>
-
-                                        <div style={{ fontSize: '12px', color: '#666', marginBottom: '8px', lineHeight: '1.4' }}>
+                                        <div className="nearby-place-address">
                                             {place.vicinity}
                                         </div>
-
-                                        <div style={{ display: 'flex', alignItems: 'center', fontSize: '13px' }}>
-                                            <span style={{ color: '#fbbc04', marginRight: '4px' }}>★</span>
-                                            <span style={{ fontWeight: 'bold', color: '#333' }}>{place.rating || '-'}</span>
+                                        <div className="nearby-place-rating-row">
+                                            <span className="nearby-place-star">★</span>
+                                            <span className="nearby-place-rating-value">{place.rating || '-'}</span>
                                             {place.user_ratings_total > 0 && (
-                                                <span style={{ color: '#999', fontSize: '11px', marginLeft: '4px' }}>
+                                                <span className="nearby-place-rating-count">
                                                     ({place.user_ratings_total})
                                                 </span>
                                             )}
@@ -449,7 +384,7 @@ function WaitingPlaceMap({ storeInfo, texts }) {
             <CommonPopup
                 isOpen={!!pendingUrl}
                 onClose={() => setPendingUrl(null)}
-                message={texts?.google_map_popup?.message || "Google Mapを開きますか？"} // Fallback text just in case
+                message={texts?.google_map_popup?.message || "Google Mapを開きますか？"}
                 actions={
                     <button
                         className="confirmation-btn"

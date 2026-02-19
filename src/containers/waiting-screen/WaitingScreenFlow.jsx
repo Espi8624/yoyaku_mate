@@ -4,19 +4,18 @@ import { WaitingScreenProvider, useWaitingScreen } from "./WaitingScreenContext"
 import WaitingScreenInput from "./waiting-screen-input/WaitingScreenInput";
 import WaitingScreenMenu from "./waiting-screen-menu/WaitingScreenMenu";
 import WaitingScreenPreview from "./waiting-screen-preview/WaitingScreenPreview";
+// WaitingScreenFlow renders WaitingScreen, which renders content.
 import WaitingScreen from "./waiting-screen/WaitingScreen";
 import NotifiedScreen from "./waiting-screen-notified/NotifiedScreen";
 import CancelledScreen from "./waiting-screen-cancelled/CancelledScreen";
+import MapWindow from './map/MapWindow';
 import { getWaitingDetails } from "../../api/waitingService";
 import './ErrorScreen.css';
 // Chatbot components
-import ChatbotButton from "../chat-bot/ChatbotButton";
 import ChatWindow from "../chat-bot/ChatWindow";
 
-
-
 function FlowController() {
-  const { step, setStep, storeId, setStoreId, waitingId, setWaitingId, isCancelled } = useWaitingScreen();
+  const { step, setStep, storeId, setStoreId, setWaitingId, isCancelled, cancellationReason } = useWaitingScreen();
 
   // ローカルストレージから復元し、ステータスを確認してから復元するか判断
   useEffect(() => {
@@ -35,7 +34,6 @@ function FlowController() {
             if (setStoreId) setStoreId(storedStoreId);
             if (setWaitingId) setWaitingId(storedWaitingId);
             if (setStep) setStep(4);
-            if (setStep) setStep(3);
           } else if (details.status === 'completed') {
             // completedの場合はローカルストレージを保持し、完了画面を表示
             if (setStoreId) setStoreId(storedStoreId);
@@ -113,8 +111,6 @@ function FlowController() {
   }, []);
 
   // isCancelledがtrueの場合、取消完了画面を最優先で表示
-  const { cancellationReason } = useWaitingScreen(); // Retrieve cancellationReason from context
-
   if (isCancelled || cancellationReason) {
     return <CancelledScreen reason={cancellationReason || 'user'} />;
   }
@@ -147,13 +143,15 @@ function FlowController() {
   return <div>Loading...</div>;
 }
 
-
-
 function WaitingScreenFlow() {
+  const content = <FlowController />;
   return (
     <WaitingScreenProvider>
-      <FlowController />
-      <ChatWindow />
+      <div className="waiting-screen-container">
+        {content}
+        <ChatWindow />
+        <MapWindow />
+      </div>
     </WaitingScreenProvider>
   );
 }

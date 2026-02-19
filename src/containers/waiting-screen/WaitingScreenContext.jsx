@@ -157,6 +157,9 @@ export function WaitingScreenProvider({ children }) {
   const [isChatOpen, setIsChatOpen] = useState(false);
   const toggleChat = () => setIsChatOpen(prev => !prev);
 
+  // Map state
+  const [isMapOpen, setIsMapOpen] = useState(false);
+
   // 現在のページ判定 (step 1,2: registration, step 3: status)
   const currentPage = step < 3 ? 'registration' : 'status';
 
@@ -436,6 +439,8 @@ export function WaitingScreenProvider({ children }) {
     closePopupOnly,
     isChatOpen,
     toggleChat,
+    isMapOpen, // Added
+    toggleMap: () => setIsMapOpen(prev => !prev), // Added
     currentPage, // Added currentPage
     goBackToInputStep: (inputInfo) => {
       if (inputInfo) {
