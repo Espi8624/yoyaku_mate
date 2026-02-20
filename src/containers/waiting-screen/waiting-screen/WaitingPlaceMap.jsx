@@ -198,8 +198,8 @@ function WaitingPlaceMap({ storeInfo, texts, isFullScreen = false }) {
                     className={isFullScreen ? "map-content-full" : "menu-content"}
                     style={isFullScreen ? { flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden', minHeight: 0 } : { padding: '0 0 16px 0' }}
                 >
-                    {/* Map takes 50% of the content area */}
-                    <div style={isFullScreen ? { height: '50%', position: 'relative', flexShrink: 0, overflow: 'hidden' } : { position: 'relative' }}>
+                    {/* Map takes 60% of the content area */}
+                    <div style={isFullScreen ? { height: '60%', position: 'relative', flexShrink: 0, overflow: 'hidden' } : { position: 'relative' }}>
                         <GoogleMap
                             mapContainerStyle={finalContainerStyle}
                             center={center}
