@@ -38,6 +38,16 @@ const ChatWindow = () => {
         scrollToBottom();
     }, [messages, isChatOpen]);
 
+    // Body scroll lock - 챗봇 열릴 때 배경 스크롤 방지
+    useEffect(() => {
+        if (isChatOpen) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = '';
+        }
+        return () => { document.body.style.overflow = ''; };
+    }, [isChatOpen]);
+
 
 
     const callGemini = async (userMessage) => {
