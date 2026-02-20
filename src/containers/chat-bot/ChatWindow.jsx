@@ -6,7 +6,8 @@ import { generateSystemPrompt } from './SystemPrompt';
 import useTranslation from '../../hook/useTranslation';
 import './ChatWindow.css';
 
-const AI_CHAT_ENDPOINT = `${process.env.REACT_APP_API_URL}/public/ai-chat`;
+const API_BASE = process.env.REACT_APP_API_URL || '/api';
+const AI_CHAT_ENDPOINT = `${API_BASE}/public/ai-chat`;
 
 const ChatWindow = () => {
     const { isChatOpen, toggleChat, storeId, selectedNationality, selectedLanguageCode, currentPage } = useWaitingScreen();
