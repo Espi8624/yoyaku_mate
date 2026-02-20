@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useWaitingScreen } from '../waiting-screen/WaitingScreenContext';
 import { getStoreAIContext } from '../../api/waitingService';
-// import { GEMINI_API_KEY } from '../../config'; // config.js might be missing in production
+// Gemini API は Go バックエンドのプロキシ経由で呼び出します (APIキーはサーバーサイド管理)
 import { generateSystemPrompt } from './SystemPrompt';
 import useTranslation from '../../hook/useTranslation';
 import './ChatWindow.css';
 
-const GEMINI_API_KEY = process.env.REACT_APP_GEMINI_API_KEY;
+const AI_CHAT_ENDPOINT = `${process.env.REACT_APP_API_URL}/public/ai-chat`;
 
 const ChatWindow = () => {
     const { isChatOpen, toggleChat, storeId, selectedNationality, selectedLanguageCode, currentPage } = useWaitingScreen();
@@ -40,11 +40,6 @@ const ChatWindow = () => {
 
 
     const callGemini = async (userMessage) => {
-        if (!GEMINI_API_KEY || GEMINI_API_KEY === "YOUR_API_KEY_HERE") {
-            // If env var is missing in production, this error will show.
-            return "API Keyが設定されていません。環境変数 REACT_APP_GEMINI_API_KEY を確認してください。";
-        }
-
         try {
             // 1. リアルタイム店舗コンテキストを取得
             let liveContext = {};
@@ -52,33 +47,30 @@ const ChatWindow = () => {
                 liveContext = await getStoreAIContext(storeId);
             } catch (e) {
                 console.error("Failed to fetch live context", e);
-                // フォールバックまたは空のコンテキスト
             }
 
             // 2. 動的プロンプトを構築 (SystemPrompt.jsから生成)
             const systemPrompt = generateSystemPrompt(liveContext, selectedNationality, selectedLanguageCode, currentPage);
 
-            const response = await fetch(
-                `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_API_KEY}`,
-                {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        contents: [
-                            {
-                                role: "user",
-                                parts: [{ text: systemPrompt + "\n\nお客様: " + userMessage }]
-                            }
-                        ]
-                    })
-                });
+            // 3. Go バックエンド経由で Gemini API を呼び出す (APIキーはサーバーサイドで管理)
+            const response = await fetch(AI_CHAT_ENDPOINT, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ userMessage, systemPrompt }),
+            });
+
             if (response.status === 429) {
                 return chatBotText.errors?.['429'] || "Busy.";
             }
+            if (!response.ok) {
+                console.error("AI Chat API error:", response.status);
+                return chatBotText.errors?.general || "Error.";
+            }
+
             const data = await response.json();
-            return data.candidates?.[0]?.content?.parts?.[0]?.text || "すみません、うまく聞き取れませんでした。";
+            return data.reply || "すみません、うまく聞き取れませんでした。";
         } catch (error) {
-            console.error("Gemini API Error:", error);
+            console.error("AI Chat Error:", error);
             return chatBotText.errors?.general || "Error.";
         }
     };
