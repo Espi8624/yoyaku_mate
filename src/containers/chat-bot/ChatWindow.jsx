@@ -69,7 +69,7 @@ const ChatWindow = () => {
             }
 
             const data = await response.json();
-            return data.reply || "すみません、うまく聞き取れませんでした。";
+            return data.data?.reply || "すみません、うまく聞き取れませんでした。";
         } catch (error) {
             console.error("AI Chat Error:", error);
             return chatBotText.errors?.general || "Error.";
