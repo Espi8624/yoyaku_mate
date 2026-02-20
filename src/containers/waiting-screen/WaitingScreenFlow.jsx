@@ -30,10 +30,10 @@ function FlowController() {
 
           // completed, cancelledの場合はローカルストレージをクリア
           if (details.status === 'notified') {
-            // notifiedの場合はstep 4に復元
+            // notifiedの場合はstep 3に復元 (WaitingScreenが起動後にモーダルを表示する)
             if (setStoreId) setStoreId(storedStoreId);
             if (setWaitingId) setWaitingId(storedWaitingId);
-            if (setStep) setStep(4);
+            if (setStep) setStep(3);
           } else if (details.status === 'completed') {
             // completedの場合はローカルストレージを保持し、完了画面を表示
             if (setStoreId) setStoreId(storedStoreId);
