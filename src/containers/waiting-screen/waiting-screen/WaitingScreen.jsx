@@ -1,18 +1,31 @@
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useWaitingScreen } from "../WaitingScreenContext";
 import useTranslation from "../../../hook/useTranslation";
-import { getMenuList, getWaitingDetails, getStoreInfo } from "../../../api/waitingService";
+import { getStoreInfo } from "../../../api/waitingService";
 import MenuDisplay from "./MenuDisplay";
-import CongestionPopup from "../waiting-screen-preview/CongestionPopup"; // Import Popup
+import CongestionPopup from "../waiting-screen-preview/CongestionPopup";
 import { getTranslatedText } from "../../../utils/i18nHelper";
 import ChatbotButton from "../../chat-bot/ChatbotButton";
-import MapButton from '../map/MapButton'; // Modified
+import MapButton from '../map/MapButton';
+import useWaitingStatus from "./useWaitingStatus";
 import "./WaitingScreen.css";
+
+/**
+ * 通知状態を表す列挙値
+ * - 'idle'     : まだ呼び出されていない (初期状態)
+ * - 'showing'  : 呼び出しモーダルを表示中 (チャイム鳴動中)
+ * - 'accepted' : ユーザーが「確認」を押した後 (モーダルを再表示しない)
+ */
+const NOTIFICATION_STATE = {
+  IDLE: 'idle',
+  SHOWING: 'showing',
+  ACCEPTED: 'accepted',
+};
 
 function WaitingScreen() {
   const context = useWaitingScreen();
 
-  // ローカルストレージからstoreId, waitingIdを復元
+  // ローカルストレージからstoreId, waitingIdを復元し、復元完了を通知するフラグ
   const [restored, setRestored] = useState(false);
 
   useEffect(() => {
@@ -37,231 +50,136 @@ function WaitingScreen() {
   const t = useTranslation(selectedLanguageCode);
   const waitingScreenTexts = t.waiting_screen;
 
-  // ステータス管理
-  const [error, setError] = useState(null);
-  const [waitingDetails, setWaitingDetails] = useState({});
-  const [menuList, setMenuList] = useState([]);
+  // 店舗情報 (初回のみ取得)
   const [storeInfo, setStoreInfo] = useState(null);
-  const [showCancelPopup, setShowCancelPopup] = useState(false);
-  // ★ 呼び出し通知モーダル用
-  const [showNotificationModal, setShowNotificationModal] = useState(false);
-  const chimeIntervalRef = useRef(null);
-
-  // ポーリング用のref
-  const pollingRef = useRef(null);
-
-  // 店舗情報を初回のみ取得
   useEffect(() => {
     if (!storeId || !restored) return;
-
-    const fetchStoreInfo = async () => {
-      try {
-        const info = await getStoreInfo(storeId);
-        setStoreInfo(info || null);
-      } catch (err) {
-        console.error("店舗情報の取得に失敗:", err);
-      }
-    };
-
-    fetchStoreInfo();
+    getStoreInfo(storeId)
+      .then(info => setStoreInfo(info || null))
+      .catch(err => console.error("店舗情報の取得に失敗:", err));
   }, [storeId, restored]);
 
-  // データ取得関数（待機情報とメニューのみ）
-  const loadAllData = useCallback(async () => {
-    if (!storeId || !waitingId) {
-      setError("店舗情報または待機番号がありません。");
-      return;
-    }
+  // -------------------------------------------------------
+  // ★ カスタムフックでポーリング (責務分離)
+  // restored=true になってからポーリングを開始する
+  // -------------------------------------------------------
+  const { details: waitingDetails, menuList, status, error } = useWaitingStatus(
+    storeId,
+    waitingId,
+    restored  // 復元完了後にポーリング開始
+  );
 
+  // -------------------------------------------------------
+  // ★ 通知状態管理 (enum パターン)
+  // status が 'notified' に変わったタイミングで once だけ通知を起動する
+  // -------------------------------------------------------
+  const [notificationState, setNotificationState] = useState(NOTIFICATION_STATE.IDLE);
+  const chimeIntervalRef = useRef(null);
 
-
-    try {
-      const [details, menu] = await Promise.all([
-        getWaitingDetails(storeId, waitingId),
-        getMenuList(storeId)
-      ]);
-
-
-
-      const safeDetails = details || {};
-
-      // ★ 取得したデータのwaiting_idが一致しない場合はエラー
-      if (safeDetails.waiting_id && String(safeDetails.waiting_id) !== String(waitingId)) {
-        console.error("[loadAllData] waiting_idの不一致を検出:", {
-          expected: waitingId,
-          actual: safeDetails.waiting_id
-        });
-        // ローカルストレージをクリアして再登録を促す
-        localStorage.removeItem("waiting_id");
-        localStorage.removeItem("store_id");
-        localStorage.removeItem("v_token");
-        setError("待機情報が見つかりません。再度登録してください。");
-        return;
-      }
-
-      // ★ ステータスチェック (Cancelled / Absence / Notified)
-      if (safeDetails.status === "cancelled") {
-        if (!context.cancellationReason) {
-          context.setCancellationReason && context.setCancellationReason('store');
-        }
-        return;
-      }
-
-      if (safeDetails.status === "absence") { // Changed from no_show to absence
-        if (!context.cancellationReason) {
-          context.setCancellationReason && context.setCancellationReason('absence');
-        }
-        return;
-      }
-
-      // ★ completedステータス (入店完了)
-      if (safeDetails.status === "completed") {
-        // ユーザーが「入店完了」の状態を確認できるように、画面遷移を行わず、
-        // 完了状態であることを内部的に保持するか、単に詳細を更新する。
-        // ここで setCancellationReason を呼ぶと CancelledScreen (完了画面) に遷移してしまうため、
-        // 呼ばないように変更。
-        // if (!context.cancellationReason) {
-        //   context.setCancellationReason && context.setCancellationReason('completed');
-        // }
-        // return;
-
-        // そのまま下の setWaitingDetails へ進む
-      }
-
-      // ★ notifiedステータスをチェックしてstep 4に遷移せずにモーダルを表示
-      if (safeDetails.status === "notified") {
-        if (pollingRef.current) clearInterval(pollingRef.current);
-
-        // 既にモーダルが出ている場合は再実行しない
-        if (!showNotificationModal) {
-          setShowNotificationModal(true);
-
-          // 1. バイブレーション (Loopしない: 初回のみ)
-          try {
-            if (navigator.vibrate) navigator.vibrate([1000, 500, 1000, 500, 3000]);
-          } catch (e) { }
-
-          // 2. 音声通知 (Loop再生)
-          const playLoopChime = () => {
-            try {
-              const AudioContext = window.AudioContext || window.webkitAudioContext;
-              if (!AudioContext) return;
-
-              let ctx = audioCtxRef.current;
-              if (!ctx) ctx = new AudioContext();
-
-              if (ctx.state === 'suspended') {
-                ctx.resume().catch(e => console.error("Auto-resume failed:", e));
-              }
-
-              const playOneChime = (startTime) => {
-                const osc = ctx.createOscillator();
-                const gain = ctx.createGain();
-                osc.connect(gain);
-                gain.connect(ctx.destination);
-
-                osc.type = 'sine';
-                osc.frequency.setValueAtTime(880, startTime);
-                osc.frequency.exponentialRampToValueAtTime(440, startTime + 0.6);
-
-                gain.gain.setValueAtTime(0.3, startTime);
-                gain.gain.exponentialRampToValueAtTime(0.001, startTime + 0.6);
-
-                osc.start(startTime);
-                osc.stop(startTime + 0.6);
-              };
-
-              const now = ctx.currentTime;
-              playOneChime(now);
-              playOneChime(now + 0.8);
-            } catch (e) { console.error("Chime failed", e); }
-          };
-
-          playLoopChime();
-
-          if (chimeIntervalRef.current) clearInterval(chimeIntervalRef.current);
-          chimeIntervalRef.current = setInterval(playLoopChime, 3000);
-        }
-        return;
-      }
-
-      if (safeDetails.status === "waiting" && showNotificationModal) {
-        setShowNotificationModal(false);
-        if (chimeIntervalRef.current) clearInterval(chimeIntervalRef.current);
-      }
-
-      setWaitingDetails(safeDetails);
-      if (menu && menu.length > 0) {
-        console.log("[Debug] Menu Item 0:", menu[0]);
-        console.log("[Debug] Title Translations:", menu[0].title_translations);
-        console.log("[Debug] Selected Language:", selectedLanguageCode);
-      }
-      setMenuList(menu || []);
-      setError(null);
-    } catch (err) {
-      console.error("[loadAllData] エラー:", err);
-      if (err?.response?.status === 404 || err?.response?.status === 410) {
-        // データが見つからない場合(404)は、店舗削除とみなす
-        if (!context.cancellationReason) {
-          context.setCancellationReason && context.setCancellationReason('store');
-        }
-        // ローカルストレージクリアはContext側かここで行うが、CancelledScreen表示のために状態保持が望ましい
-        localStorage.removeItem("waiting_id");
-        localStorage.removeItem("store_id");
-        localStorage.removeItem("v_token");
-
-      } else {
-        setError("データの読み込みに失敗しました。");
-      }
-    } finally {
-      // Cleanup if needed
-    }
-  }, [storeId, waitingId, context, selectedLanguageCode, showNotificationModal]);
-
-  useEffect(() => {
-    if (!restored) return;
-    let isMounted = true;
-    setError(null);
-
-    loadAllData();
-
-    pollingRef.current = setInterval(() => {
-      if (isMounted) {
-        loadAllData();
-      }
-    }, 3000);
-
-    return () => {
-      isMounted = false;
-      if (pollingRef.current) {
-        clearInterval(pollingRef.current);
-      }
-    };
-  }, [loadAllData, restored]);
-
-  // ★ Audio Context (Unlock logic)
+  // Audio Unlock ref (ユーザーのタップでAudioContextを初期化・再開する)
   const audioCtxRef = useRef(null);
 
+  // status 変化を監視して通知を制御
   useEffect(() => {
-    // ユーザーインタラクションでAudioContextを再開/初期化する関数
+    if (status === 'notified' && notificationState === NOTIFICATION_STATE.IDLE) {
+      // --- 初めて notified を検知: モーダルを表示し通知を開始 ---
+      setNotificationState(NOTIFICATION_STATE.SHOWING);
+
+      // 1. バイブレーション (Android のみ, 初回のみ)
+      try {
+        if (navigator.vibrate) navigator.vibrate([1000, 500, 1000, 500, 3000]);
+      } catch (e) { /* バイブレーション非対応端末は無視 */ }
+
+      // 2. チャイム音をループ再生する関数
+      const playLoopChime = () => {
+        try {
+          const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+          if (!AudioContextClass) return;
+
+          // Audio Unlock 済みの Context を優先使用
+          let ctx = audioCtxRef.current;
+          if (!ctx) ctx = new AudioContextClass();
+
+          // ブラウザの自動再生ポリシーで Suspended になっている場合は再開を試みる
+          if (ctx.state === 'suspended') {
+            ctx.resume().catch(e => console.warn("AudioContext resume失敗:", e));
+          }
+
+          // 「ピン」を2回鳴らして「ピンポン」のような音を作る
+          const playOneChime = (startTime) => {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(880, startTime);        // A5
+            osc.frequency.exponentialRampToValueAtTime(440, startTime + 0.6); // A4へ下降
+
+            gain.gain.setValueAtTime(0.3, startTime);
+            gain.gain.exponentialRampToValueAtTime(0.001, startTime + 0.6);
+
+            osc.start(startTime);
+            osc.stop(startTime + 0.6);
+          };
+
+          const now = ctx.currentTime;
+          playOneChime(now);
+          playOneChime(now + 0.8);
+        } catch (e) {
+          console.error("チャイム再生エラー:", e);
+        }
+      };
+
+      // 初回再生し、以降3秒ごとに繰り返す
+      playLoopChime();
+      if (chimeIntervalRef.current) clearInterval(chimeIntervalRef.current);
+      chimeIntervalRef.current = setInterval(playLoopChime, 3000);
+
+    } else if (status === 'cancelled' && context.cancellationReason === null) {
+      // キャンセルステータスの対応 (Context 経由で CancelledScreen へ)
+      context.setCancellationReason && context.setCancellationReason('store');
+    } else if (status === 'absence' && context.cancellationReason === null) {
+      // 無断キャンセルステータスの対応
+      context.setCancellationReason && context.setCancellationReason('absence');
+    }
+  }, [status, notificationState, context]);
+
+  // 404エラー時は CancelledScreen に遷移
+  useEffect(() => {
+    if (error === '__NOT_FOUND__') {
+      context.setCancellationReason && context.setCancellationReason('store');
+    }
+  }, [error, context]);
+
+  // コンポーネントのアンマウント時にチャイムを停止
+  useEffect(() => {
+    return () => {
+      if (chimeIntervalRef.current) clearInterval(chimeIntervalRef.current);
+    };
+  }, []);
+
+  // -------------------------------------------------------
+  // ★ Audio Context Unlock (ユーザーの最初のタップで初期化)
+  // -------------------------------------------------------
+  useEffect(() => {
     const unlockAudio = () => {
       if (!audioCtxRef.current) {
-        const AudioContext = window.AudioContext || window.webkitAudioContext;
-        if (AudioContext) {
-          audioCtxRef.current = new AudioContext();
+        const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+        if (AudioContextClass) {
+          audioCtxRef.current = new AudioContextClass();
         }
       }
       if (audioCtxRef.current && audioCtxRef.current.state === 'suspended') {
         audioCtxRef.current.resume().then(() => {
-          console.log("AudioContext resumed");
+          console.log("AudioContext: ユーザー操作により再開しました");
         });
       }
-      // イベントリスナーを削除 (一度だけでOK)
+      // 一度アンロックしたらリスナーを削除
       document.removeEventListener('click', unlockAudio);
       document.removeEventListener('touchstart', unlockAudio);
     };
 
-    // 画面のどこかをタップしたらUnlock
     document.addEventListener('click', unlockAudio);
     document.addEventListener('touchstart', unlockAudio);
 
@@ -270,11 +188,14 @@ function WaitingScreen() {
       document.removeEventListener('touchstart', unlockAudio);
       if (audioCtxRef.current) {
         audioCtxRef.current.close();
+        audioCtxRef.current = null;
       }
     };
   }, []);
 
-  // ★ Wake Lock (画面常時ON) 機能
+  // -------------------------------------------------------
+  // ★ Screen Wake Lock (画面を常時ON に保つ)
+  // -------------------------------------------------------
   useEffect(() => {
     let wakeLock = null;
 
@@ -282,17 +203,16 @@ function WaitingScreen() {
       try {
         if ('wakeLock' in navigator) {
           wakeLock = await navigator.wakeLock.request('screen');
-          console.log('Wake Lock is active');
+          console.log('Wake Lock: 有効化しました');
         }
       } catch (err) {
-        console.error(`Wake Lock failed: ${err.name}, ${err.message}`);
+        console.error(`Wake Lock 取得失敗: ${err.name}, ${err.message}`);
       }
     };
 
-    // コンポーネントマウント時にリクエスト
     requestWakeLock();
 
-    // 画面表示状態が変わった時の再取得ロジック
+    // タブが非表示になった後に可視状態へ戻ったときに再取得する
     const handleVisibilityChange = async () => {
       if (wakeLock !== null && document.visibilityState === 'visible') {
         await requestWakeLock();
@@ -305,16 +225,29 @@ function WaitingScreen() {
       document.removeEventListener('visibilitychange', handleVisibilityChange);
       if (wakeLock !== null) {
         wakeLock.release()
-          .then(() => console.log('Wake Lock released'))
-          .catch(err => console.error('Wake Lock release failed:', err));
+          .then(() => console.log('Wake Lock: 解放しました'))
+          .catch(err => console.error('Wake Lock 解放エラー:', err));
       }
     };
   }, []);
+
+  // UI 用の派生値
+  const [showCancelPopup, setShowCancelPopup] = useState(false);
+  const isNotificationShowing = notificationState === NOTIFICATION_STATE.SHOWING;
+
+  // -------------------------------------------------------
+  // 確認ボタン押下時: チャイムを止め、通知状態を「確認済み」にする
+  // -------------------------------------------------------
+  const handleNotificationConfirm = () => {
+    if (chimeIntervalRef.current) clearInterval(chimeIntervalRef.current);
+    setNotificationState(NOTIFICATION_STATE.ACCEPTED);
+  };
 
   return (
     <div className="waiting-section">
       <ChatbotButton />
       <MapButton />
+
       {/* 店名を表示 */}
       {storeInfo && storeInfo.store_name && (
         <div className="store-name-header">
@@ -326,7 +259,8 @@ function WaitingScreen() {
       {waitingScreenTexts.label_2 && (
         <div className="waiting-label-2">{waitingScreenTexts.label_2}</div>
       )}
-      {error ? (
+
+      {error && error !== '__NOT_FOUND__' ? (
         <div className="waiting-section">{error}</div>
       ) : (
         <>
@@ -371,17 +305,15 @@ function WaitingScreen() {
             </div>
           </form>
 
-          {/* Display selected menu items if any */}
+          {/* 事前注文済みメニューの表示 */}
           {waitingDetails.menu_items && waitingDetails.menu_items.length > 0 && (
             <div className="menu-container" style={{ marginBottom: '24px' }}>
               <div className="preview-label" style={{ fontSize: '1.1em', marginBottom: '12px' }}>{waitingScreenTexts.pre_order}</div>
               <div className="preview-menu-list">
                 {waitingDetails.menu_items.map((item, index) => {
-                  // Find the full menu object to get the image URL and translations
                   const fullMenu = menuList.find(m => m.menu_id === item.menu_id);
                   const imageUrl = fullMenu ? fullMenu.menu_image_url : null;
 
-                  // 翻訳テキスト取得
                   let displayName = item.name;
                   if (fullMenu && fullMenu.title_translations) {
                     displayName = getTranslatedText(item.name, fullMenu.title_translations, selectedLanguageCode);
@@ -407,18 +339,13 @@ function WaitingScreen() {
             </div>
           )}
 
-
-
-          {/* Google Maps Integration */}
-          {/* WaitingPlaceMap component removed as per instruction */}
-
           <MenuDisplay menuList={menuList} texts={waitingScreenTexts} />
 
           <button className="confirmation-btn cancel-btn" onClick={() => setShowCancelPopup(true)}>
             {waitingScreenTexts.cancel_reservation}
           </button>
 
-          {/* 取り消しポップアップ */}
+          {/* キャンセル確認ポップアップ */}
           {showCancelPopup && (
             <div className="congestion-popup-overlay">
               <div className="congestion-popup-modal cancel-modal">
@@ -447,31 +374,20 @@ function WaitingScreen() {
             </div>
           )}
 
-          {/* ★ 呼び出し通知モーダル (Loop Sound Control) */}
-          {showNotificationModal && (
+          {/* ★ 呼び出し通知モーダル
+              notificationState === 'showing' の間だけ表示される。
+              「確認」ボタンを押すと 'accepted' に遷移し、以降は再表示されない。 */}
+          {isNotificationShowing && (
             <div className="congestion-popup-overlay">
               <div className="congestion-popup-modal" style={{ textAlign: 'center', padding: '30px' }}>
                 <div className="congestion-popup-message" style={{ fontSize: '1.2em', fontWeight: 'bold', marginBottom: '20px' }}>
-                  {/* 多国語対応: call_popup キーを使用 */}
                   {waitingScreenTexts.call_popup?.message_1}<br />
                   {waitingScreenTexts.call_popup?.message_2}
                 </div>
                 <div className="congestion-popup-actions" style={{ justifyContent: 'center' }}>
                   <button
                     className="confirmation-btn"
-                    onClick={() => {
-                      if (chimeIntervalRef.current) clearInterval(chimeIntervalRef.current);
-                      setShowNotificationModal(false);
-                      // モーダルを閉じたら NotifiedScreen (Step 4) へ遷移する場合もあるが、
-                      // 要件「画面移動しない」に従い、そのままにするか、
-                      // もしくは「確認」＝「来店確認」としてStep4へ飛ばすか。
-                      // 今回の要件は「画面移動せずモ달」なので、閉じたらそのまま今の画面にいる、が正しいと判断。
-                      // ただし、バックグラウンドでPollingが止まっているので、
-                      // リロードしないと次のステータス(completed)に行けないかも。
-                      // なので、閉じたらStep 4に遷移するのが自然だが...
-                      // ユーザー要望: "호출 스테이터스일때 원래 화면 이동이었잖아. 근데 화면 이동 하지않고..."
-                      // 画面移動せずにモ달だけ閉じる。
-                    }}
+                    onClick={handleNotificationConfirm}
                     type="button"
                     style={{ minWidth: '150px' }}
                   >
@@ -481,14 +397,11 @@ function WaitingScreen() {
               </div>
             </div>
           )}
-
-
         </>
       )}
 
-      {/* 混雑/完了通知ポップアップ (WaitinScreenContextで管理) */}
+      {/* 混雑/完了通知ポップアップ (WaitingScreenContext で一元管理) */}
       {context.isPopupVisible && <CongestionPopup />}
-
     </div>
   );
 }
