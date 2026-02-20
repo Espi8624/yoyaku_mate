@@ -21,6 +21,16 @@ const MapWindow = () => {
         }
     }, [isMapOpen, storeId, storeInfo]);
 
+    // Body scroll lock
+    useEffect(() => {
+        if (isMapOpen) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = '';
+        }
+        return () => { document.body.style.overflow = ''; };
+    }, [isMapOpen]);
+
     if (!isMapOpen) return null;
 
     const contentHeight = `calc(100vh - ${HEADER_HEIGHT}px)`;
