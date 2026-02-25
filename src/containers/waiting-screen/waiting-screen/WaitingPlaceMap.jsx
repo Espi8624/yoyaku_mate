@@ -19,6 +19,15 @@ const defaultCenter = {
 
 const libraries = ['places'];
 
+const CATEGORIES = [
+    { id: 'all', label: 'すべて', types: ['cafe', 'park', 'shopping_mall', 'library', 'convenience_store'] },
+    { id: 'cafe', label: 'カフェ', types: ['cafe'] },
+    { id: 'park', label: '公園', types: ['park'] },
+    { id: 'convenience_store', label: 'コンビニ', types: ['convenience_store'] },
+    { id: 'shopping_mall', label: 'ショッピングモール', types: ['shopping_mall'] },
+    { id: 'library', label: '図書館', types: ['library'] }
+];
+
 function WaitingPlaceMap({ storeInfo, texts, isFullScreen = false }) {
     const { isLoaded } = useJsApiLoader({
         id: 'google-map-script',
@@ -35,15 +44,6 @@ function WaitingPlaceMap({ storeInfo, texts, isFullScreen = false }) {
 
     const [isOpen, setIsOpen] = useState(isFullScreen);
     const [activeCategory, setActiveCategory] = useState('all');
-
-    const CATEGORIES = [
-        { id: 'all', label: 'すべて', types: ['cafe', 'park', 'shopping_mall', 'library', 'convenience_store'] },
-        { id: 'cafe', label: 'カフェ', types: ['cafe'] },
-        { id: 'park', label: '公園', types: ['park'] },
-        { id: 'convenience_store', label: 'コンビニ', types: ['convenience_store'] },
-        { id: 'shopping_mall', label: 'ショッピングモール', types: ['shopping_mall'] },
-        { id: 'library', label: '図書館', types: ['library'] }
-    ];
 
     useEffect(() => {
         if (isFullScreen) {
