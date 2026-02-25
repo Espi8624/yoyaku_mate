@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { GoogleMap, useJsApiLoader, Marker, InfoWindow } from '@react-google-maps/api';
 import CommonPopup from '../../../components/CommonPopup';
+import RecommendedPlacesList from './RecommendedPlacesList';
 import "./WaitingScreen.css";
 import "./WaitingPlaceMap.css";
 
@@ -32,8 +33,17 @@ function WaitingPlaceMap({ storeInfo, texts, isFullScreen = false }) {
     const [storeLocation, setStoreLocation] = useState(null);
     const [pendingUrl, setPendingUrl] = useState(null);
 
-    // Accordion state (Only used when NOT full screen, though we will likely only use full screen now)
     const [isOpen, setIsOpen] = useState(isFullScreen);
+    const [activeCategory, setActiveCategory] = useState('all');
+
+    const CATEGORIES = [
+        { id: 'all', label: 'すべて', types: ['cafe', 'park', 'shopping_mall', 'library', 'convenience_store'] },
+        { id: 'cafe', label: 'カフェ', types: ['cafe'] },
+        { id: 'park', label: '公園', types: ['park'] },
+        { id: 'convenience_store', label: 'コンビニ', types: ['convenience_store'] },
+        { id: 'shopping_mall', label: 'ショッピングモール', types: ['shopping_mall'] },
+        { id: 'library', label: '図書館', types: ['library'] }
+    ];
 
     useEffect(() => {
         if (isFullScreen) {
@@ -81,7 +91,7 @@ function WaitingPlaceMap({ storeInfo, texts, isFullScreen = false }) {
                             center: storeLocation,
                             radius: 500, // meters
                         },
-                        includedPrimaryTypes: ['cafe', 'park', 'shopping_mall', 'library'],
+                        includedPrimaryTypes: CATEGORIES.find(c => c.id === activeCategory)?.types || CATEGORIES[0].types,
                         maxResultCount: 20,
                         rankPreference: SearchNearbyRankPreference.POPULARITY,
                         language: 'ja',
@@ -152,7 +162,29 @@ function WaitingPlaceMap({ storeInfo, texts, isFullScreen = false }) {
         };
 
         fetchPlaces();
-    }, [map, storeLocation]);
+    }, [map, storeLocation, activeCategory]);
+
+    // Extract the list item click logic into a handler to pass to the new component
+    const handlePlaceClick = useCallback((place) => {
+        setSelectedPlace(place);
+        const lat = typeof place.geometry.location.lat === 'function'
+            ? place.geometry.location.lat()
+            : place.geometry.location.lat;
+        const lng = typeof place.geometry.location.lng === 'function'
+            ? place.geometry.location.lng()
+            : place.geometry.location.lng;
+
+        if (map) {
+            map.panTo({ lat: lat + 0.0025, lng: lng });
+        }
+
+        if (!isFullScreen) {
+            const mapElement = document.querySelector('.menu-container');
+            if (mapElement) {
+                mapElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
+    }, [map, isFullScreen]);
 
     if (!isLoaded) {
         return null; // Or a loading spinner if preferred, but null prevents layout shift until loaded
@@ -206,6 +238,7 @@ function WaitingPlaceMap({ storeInfo, texts, isFullScreen = false }) {
                             zoom={16}
                             onLoad={onLoad}
                             onUnmount={onUnmount}
+                            onClick={() => setSelectedPlace(null)}
                             options={{
                                 streetViewControl: false,
                                 mapTypeControl: false,
@@ -263,12 +296,26 @@ function WaitingPlaceMap({ storeInfo, texts, isFullScreen = false }) {
                                     }}
                                 >
                                     <div className="infowindow-container">
+                                        <div className="infowindow-header">
+                                            <h4 className="infowindow-title">
+                                                {selectedPlace.name}
+                                            </h4>
+                                            <button
+                                                className="infowindow-close-btn"
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    setSelectedPlace(null);
+                                                }}
+                                            >
+                                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                                                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                                                </svg>
+                                            </button>
+                                        </div>
                                         <div className="infowindow-content">
-                                            {/* Title and rating row */}
+                                            {/* Rating and Meta row */}
                                             <div>
-                                                <h4 className="infowindow-title">
-                                                    {selectedPlace.name}
-                                                </h4>
                                                 <div className="infowindow-meta">
                                                     <div className="infowindow-rating">
                                                         <span className="infowindow-star">★</span>
@@ -321,62 +368,14 @@ function WaitingPlaceMap({ storeInfo, texts, isFullScreen = false }) {
                     </div>
 
                     {/* List of nearby places - takes the other 50% */}
-                    {nearbyPlaces.length > 0 && (
-                        <div className={isFullScreen ? 'nearby-places-list-fullscreen' : 'nearby-places-list'}
-                            style={isFullScreen ? {} : { marginTop: '16px', padding: '0 16px', display: 'flex', flexDirection: 'column', gap: '8px' }}
-                        >
-                            <div className="preview-label nearby-places-title">おすすめスポット一覧</div>
-                            {nearbyPlaces.map((place) => (
-                                <div
-                                    key={place.place_id}
-                                    className="nearby-place-item"
-                                    onClick={() => {
-                                        setSelectedPlace(place);
-                                        const lat = typeof place.geometry.location.lat === 'function'
-                                            ? place.geometry.location.lat()
-                                            : place.geometry.location.lat;
-                                        const lng = typeof place.geometry.location.lng === 'function'
-                                            ? place.geometry.location.lng()
-                                            : place.geometry.location.lng;
-                                        if (map) {
-                                            map.panTo({ lat: lat + 0.0025, lng: lng });
-                                        }
-                                        if (!isFullScreen) {
-                                            const mapElement = document.querySelector('.menu-container');
-                                            if (mapElement) {
-                                                mapElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                                            }
-                                        }
-                                    }}
-                                >
-                                    <div className="nearby-place-body">
-                                        <div className="nearby-place-header">
-                                            <span className="nearby-place-name">
-                                                {place.name}
-                                            </span>
-                                            {place.walking_time && (
-                                                <span className="nearby-place-walking-badge">
-                                                    徒歩{place.walking_time}分
-                                                </span>
-                                            )}
-                                        </div>
-                                        <div className="nearby-place-address">
-                                            {place.vicinity}
-                                        </div>
-                                        <div className="nearby-place-rating-row">
-                                            <span className="nearby-place-star">★</span>
-                                            <span className="nearby-place-rating-value">{place.rating || '-'}</span>
-                                            {place.user_ratings_total > 0 && (
-                                                <span className="nearby-place-rating-count">
-                                                    ({place.user_ratings_total})
-                                                </span>
-                                            )}
-                                        </div>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    )}
+                    <RecommendedPlacesList
+                        nearbyPlaces={nearbyPlaces}
+                        activeCategory={activeCategory}
+                        setActiveCategory={setActiveCategory}
+                        CATEGORIES={CATEGORIES}
+                        onPlaceClick={handlePlaceClick}
+                        isFullScreen={isFullScreen}
+                    />
                 </div>
             )}
 
