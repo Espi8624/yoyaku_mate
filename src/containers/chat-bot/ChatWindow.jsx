@@ -6,7 +6,9 @@ import { generateSystemPrompt } from './SystemPrompt';
 import useTranslation from '../../hook/useTranslation';
 import './ChatWindow.css';
 
-const API_BASE = process.env.REACT_APP_API_URL || '/api';
+const API_BASE = process.env.NODE_ENV === 'production'
+    ? '/api'
+    : (process.env.REACT_APP_API_URL || "http://localhost:8080/api");
 const AI_CHAT_ENDPOINT = `${API_BASE}/public/ai-chat`;
 
 const ChatWindow = () => {
