@@ -253,7 +253,7 @@ function WaitingPlaceMap({ storeInfo, texts, isFullScreen = false }) {
                                     position={storeLocation}
                                     title={storeInfo.store_name || "店舗"}
                                     icon={{
-                                        url: "http://maps.google.com/mapfiles/ms/icons/blue-dot.png"
+                                        url: "https://maps.google.com/mapfiles/ms/icons/blue-dot.png"
                                     }}
                                 />
                             )}
