@@ -178,7 +178,7 @@ function WaitingPlaceMap({ storeInfo, texts, isFullScreen = false, selectedLangu
         };
 
         fetchPlaces();
-    }, [map, storeLocation, activeCategory]);
+    }, [map, storeLocation, activeCategory, localizedCategories, selectedLanguageCode]);
 
     // Extract the list item click logic into a handler to pass to the new component
     const handlePlaceClick = useCallback((place) => {
