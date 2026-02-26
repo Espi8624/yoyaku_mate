@@ -43,7 +43,7 @@ const CATEGORIES = [
 
 function WaitingPlaceMap({ storeInfo, texts, isFullScreen = false, selectedLanguageCode }) {
     const t = useTranslation(selectedLanguageCode);
-    const mapText = t.waiting_place_map || {};
+    const mapText = useMemo(() => t.waiting_place_map || {}, [t]);
 
     const localizedCategories = useMemo(() => CATEGORIES.map(cat => ({
         ...cat,
