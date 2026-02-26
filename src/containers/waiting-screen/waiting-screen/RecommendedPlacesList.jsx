@@ -7,7 +7,8 @@ function RecommendedPlacesList({
     CATEGORIES,
     onPlaceClick,
     isFullScreen,
-    mapText
+    mapText,
+    isFetchingPlaces
 }) {
     return (
         <div className={isFullScreen ? 'nearby-places-list-fullscreen' : 'nearby-places-list'}
@@ -28,7 +29,11 @@ function RecommendedPlacesList({
                 </div>
             </div>
 
-            {nearbyPlaces.length > 0 ? (
+            {isFetchingPlaces ? (
+                <div className="nearby-places-empty">
+                    {mapText?.loading || "Loading..."}
+                </div>
+            ) : nearbyPlaces.length > 0 ? (
                 nearbyPlaces.map((place) => (
                     <div
                         key={place.place_id}

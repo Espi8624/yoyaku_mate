@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { GoogleMap, useJsApiLoader, Marker, InfoWindow } from '@react-google-maps/api';
 import CommonPopup from '../../../components/CommonPopup';
 import RecommendedPlacesList from './RecommendedPlacesList';
@@ -51,6 +51,8 @@ function WaitingPlaceMap({ storeInfo, texts, isFullScreen = false, selectedLangu
 
     const [isOpen, setIsOpen] = useState(isFullScreen);
     const [activeCategory, setActiveCategory] = useState('cafe');
+    const [isFetchingPlaces, setIsFetchingPlaces] = useState(false);
+    const placesCache = useRef({});
 
     useEffect(() => {
         if (isFullScreen) {
@@ -88,6 +90,14 @@ function WaitingPlaceMap({ storeInfo, texts, isFullScreen = false, selectedLangu
     useEffect(() => {
         const fetchPlaces = async () => {
             if (map && storeLocation) {
+                if (placesCache.current[activeCategory]) {
+                    setNearbyPlaces(placesCache.current[activeCategory]);
+                    return;
+                }
+
+                setIsFetchingPlaces(true);
+                setNearbyPlaces([]); // Clear list while loading
+
                 try {
                     // Use modern importLibrary
                     const { Place, SearchNearbyRankPreference } = await window.google.maps.importLibrary("places");
@@ -166,6 +176,7 @@ function WaitingPlaceMap({ storeInfo, texts, isFullScreen = false, selectedLangu
                         return distA - distB;
                     });
 
+                    placesCache.current[activeCategory] = mappedPlaces;
                     setNearbyPlaces(mappedPlaces);
 
                 } catch (error) {
@@ -173,6 +184,8 @@ function WaitingPlaceMap({ storeInfo, texts, isFullScreen = false, selectedLangu
                     if (error.message && error.message.includes("is not enabled")) {
                         console.warn("Please enable 'Places API (New)' in Google Cloud Console.");
                     }
+                } finally {
+                    setIsFetchingPlaces(false);
                 }
             }
         };
@@ -400,6 +413,7 @@ function WaitingPlaceMap({ storeInfo, texts, isFullScreen = false, selectedLangu
                         onPlaceClick={handlePlaceClick}
                         isFullScreen={isFullScreen}
                         mapText={mapText}
+                        isFetchingPlaces={isFetchingPlaces}
                     />
                 </div>
             )}
