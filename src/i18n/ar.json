@@ -108,5 +108,9 @@
         "category_library": "مكتبة",
         "no_image": "لا توجد صورة",
         "view_on_map": "عرض على خرائط جوجل"
+    },
+    "google_map_popup": {
+        "message": "Do you want to open Google Maps?",
+        "confirm": "Open"
     }
 }

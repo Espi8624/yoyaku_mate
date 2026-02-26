@@ -108,5 +108,9 @@
         "category_library": "图书馆",
         "no_image": "暂无图片",
         "view_on_map": "在 Google Maps 上查看"
+    },
+    "google_map_popup": {
+        "message": "Do you want to open Google Maps?",
+        "confirm": "Open"
     }
 }

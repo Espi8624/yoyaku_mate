@@ -110,5 +110,9 @@
         "category_library": "도서관",
         "no_image": "이미지 없음",
         "view_on_map": "Google Map에서 보기"
+    },
+    "google_map_popup": {
+        "message": "Google Map을 여시겠습니까?",
+        "confirm": "열기"
     }
 }

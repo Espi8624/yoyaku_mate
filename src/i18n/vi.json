@@ -108,5 +108,9 @@
         "category_library": "Thư viện",
         "no_image": "Không có hình ảnh",
         "view_on_map": "Xem trên Google Maps"
+    },
+    "google_map_popup": {
+        "message": "Bạn có muốn mở Google Maps không?",
+        "confirm": "Mở"
     }
 }

@@ -112,5 +112,9 @@
         "category_library": "図書館",
         "no_image": "画像なし",
         "view_on_map": "Google Mapで見る"
+    },
+    "google_map_popup": {
+        "message": "Google Mapを開きますか？",
+        "confirm": "開く"
     }
 }
