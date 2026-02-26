@@ -87,11 +87,17 @@
     background: var(--color-card-background, #fff);
     border-radius: 8px;
     overflow: hidden;
+    padding: 16px;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0.05);
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+    text-align: left;
 }
 
 .nearby-place-body {
     width: 100%;
-    padding: 16px;
 }
 
 .nearby-place-header {
