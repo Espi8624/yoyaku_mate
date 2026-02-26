@@ -2,12 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { useWaitingScreen } from '../WaitingScreenContext';
 import WaitingPlaceMap from '../waiting-screen/WaitingPlaceMap';
 import { getStoreInfo } from '../../../api/waitingService';
+import useTranslation from '../../../hook/useTranslation';
 import './MapWindow.css';
 
 const HEADER_HEIGHT = 57; // px - header height
 
 const MapWindow = () => {
-    const { isMapOpen, toggleMap, storeId, texts } = useWaitingScreen();
+    const { isMapOpen, toggleMap, storeId, texts, selectedLanguageCode } = useWaitingScreen();
+    const t = useTranslation(selectedLanguageCode);
     const [storeInfo, setStoreInfo] = useState(null);
 
     // Fetch store info when map opens
@@ -40,7 +42,7 @@ const MapWindow = () => {
             {/* Header */}
             <div className="map-window-header">
                 <h2 className="map-window-title">
-                    周辺マップ
+                    {t?.waiting_place_map?.title || "周辺マップ"}
                 </h2>
                 <button
                     onClick={toggleMap}
@@ -56,6 +58,7 @@ const MapWindow = () => {
                         storeInfo={storeInfo}
                         texts={texts}
                         isFullScreen={true}
+                        selectedLanguageCode={selectedLanguageCode}
                     />
                 ) : (
                     <div className="map-window-loading">

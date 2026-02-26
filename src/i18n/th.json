@@ -93,5 +93,20 @@
             "429": "ขออภัย ขณะนี้มีการใช้งานหนาแน่น กรุณาลองใหม่ในภายหลัง",
             "general": "เกิดข้อผิดพลาด กรุณาลองใหม่ในภายหลัง"
         }
+    },
+    "waiting_place_map": {
+        "title": "แผนที่บริเวณใกล้เคียง",
+        "list_title": "สถานที่แนะนำ",
+        "not_found": "ไม่พบ",
+        "walking": "เดิน ",
+        "minutes": " นาที",
+        "category_all": "ทั้งหมด",
+        "category_cafe": "คาเฟ่",
+        "category_park": "สวนสาธารณะ",
+        "category_convenience": "ร้านสะดวกซื้อ",
+        "category_shopping": "ห้างสรรพสินค้า",
+        "category_library": "ห้องสมุด",
+        "no_image": "ไม่มีรูปภาพ",
+        "view_on_map": "ดูบน Google Maps"
     }
 }

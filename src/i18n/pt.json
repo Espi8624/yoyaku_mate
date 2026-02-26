@@ -93,5 +93,20 @@
             "429": "Desculpe, o tráfego está alto no momento. Por favor, tente novamente mais tarde.",
             "general": "Ocorreu um erro. Por favor, tente novamente mais tarde."
         }
+    },
+    "waiting_place_map": {
+        "title": "Mapa dos Arredores",
+        "list_title": "Locais Recomendados",
+        "not_found": "não encontrado.",
+        "walking": "Caminhar ",
+        "minutes": " min",
+        "category_all": "Tudo",
+        "category_cafe": "Café",
+        "category_park": "Parque",
+        "category_convenience": "Loja de Conveniência",
+        "category_shopping": "Shopping",
+        "category_library": "Biblioteca",
+        "no_image": "Sem imagem",
+        "view_on_map": "Ver no Google Maps"
     }
 }

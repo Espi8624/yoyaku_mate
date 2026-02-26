@@ -93,5 +93,20 @@
             "429": "Lo sentimos, hay mucho tráfico en este momento. Por favor, inténtelo de nuevo más tarde.",
             "general": "Ha ocurrido un error. Por favor, inténtelo de nuevo más tarde."
         }
+    },
+    "waiting_place_map": {
+        "title": "Mapa Cercano",
+        "list_title": "Lugares Recomendados",
+        "not_found": "no encontrado.",
+        "walking": "Caminar ",
+        "minutes": " min",
+        "category_all": "Todo",
+        "category_cafe": "Cafetería",
+        "category_park": "Parque",
+        "category_convenience": "Tienda de Conveniencia",
+        "category_shopping": "Centro Comercial",
+        "category_library": "Biblioteca",
+        "no_image": "Sin imagen",
+        "view_on_map": "Ver en Google Maps"
     }
 }

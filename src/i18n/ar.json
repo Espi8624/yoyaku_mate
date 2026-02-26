@@ -93,5 +93,20 @@
             "429": "عذراً، نواجه حركة مرور عالية. الرجاء المحاولة مرة أخرى لاحقاً.",
             "general": "حدث خطأ. الرجاء المحاولة مرة أخرى لاحقاً."
         }
+    },
+    "waiting_place_map": {
+        "title": "خريطة الجوار",
+        "list_title": "الأماكن الموصى بها",
+        "not_found": "غير موجود.",
+        "walking": "مشي ",
+        "minutes": " دقيقة",
+        "category_all": "الكل",
+        "category_cafe": "مقهى",
+        "category_park": "حديقة",
+        "category_convenience": "متجر صغير",
+        "category_shopping": "مركز تسوق",
+        "category_library": "مكتبة",
+        "no_image": "لا توجد صورة",
+        "view_on_map": "عرض على خرائط جوجل"
     }
 }

@@ -95,5 +95,20 @@
             "429": "Sorry, we are experiencing high traffic. Please try again later.",
             "general": "An error occurred. Please try again later."
         }
+    },
+    "waiting_place_map": {
+        "title": "Nearby Map",
+        "list_title": "Recommended Spots",
+        "not_found": "not found.",
+        "walking": "Walk ",
+        "minutes": " min",
+        "category_all": "All",
+        "category_cafe": "Cafe",
+        "category_park": "Park",
+        "category_convenience": "Convenience Store",
+        "category_shopping": "Shopping Mall",
+        "category_library": "Library",
+        "no_image": "No Image",
+        "view_on_map": "View on Google Maps"
     }
 }

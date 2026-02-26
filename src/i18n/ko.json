@@ -95,5 +95,20 @@
             "429": "죄송합니다. 현재 접속량이 많아 응답할 수 없습니다. 잠시 후 다시 시도해주세요.",
             "general": "오류가 발생했습니다. 잠시 후 다시 시도해주세요."
         }
+    },
+    "waiting_place_map": {
+        "title": "주변 지도",
+        "list_title": "추천 스팟 목록",
+        "not_found": "을(를) 찾을 수 없습니다.",
+        "walking": "도보 ",
+        "minutes": "분",
+        "category_all": "전체",
+        "category_cafe": "카페",
+        "category_park": "공원",
+        "category_convenience": "편의점",
+        "category_shopping": "쇼핑몰",
+        "category_library": "도서관",
+        "no_image": "이미지 없음",
+        "view_on_map": "Google Map에서 보기"
     }
 }

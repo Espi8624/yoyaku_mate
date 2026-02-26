@@ -6,14 +6,15 @@ function RecommendedPlacesList({
     setActiveCategory,
     CATEGORIES,
     onPlaceClick,
-    isFullScreen
+    isFullScreen,
+    mapText
 }) {
     return (
         <div className={isFullScreen ? 'nearby-places-list-fullscreen' : 'nearby-places-list'}
             style={isFullScreen ? {} : { marginTop: '16px', padding: '0 16px', display: 'flex', flexDirection: 'column', gap: '8px' }}
         >
             <div className="nearby-places-title-container">
-                <div className="preview-label nearby-places-title">おすすめスポット一覧</div>
+                <div className="preview-label nearby-places-title">{mapText?.list_title || "おすすめスポット一覧"}</div>
                 <div className="nearby-places-tabs">
                     {CATEGORIES.map(cat => (
                         <button
@@ -39,14 +40,18 @@ function RecommendedPlacesList({
                                 <span className="nearby-place-name">
                                     {place.name}
                                 </span>
-                                {place.walking_time && (
-                                    <span className="nearby-place-walking-badge">
-                                        徒歩{place.walking_time}分
-                                    </span>
-                                )}
-                            </div>
-                            <div className="nearby-place-address">
-                                {place.vicinity}
+                                <div className="nearby-place-badges-container" style={{ display: 'flex', gap: '4px' }}>
+                                    {place.distance && (
+                                        <span className="nearby-place-walking-badge">
+                                            {place.distance}m
+                                        </span>
+                                    )}
+                                    {place.walking_time && (
+                                        <span className="nearby-place-walking-badge">
+                                            {mapText?.walking || "徒歩"}{place.walking_time}{mapText?.minutes || "分"}
+                                        </span>
+                                    )}
+                                </div>
                             </div>
                             <div className="nearby-place-rating-row">
                                 <span className="nearby-place-star">★</span>
@@ -62,7 +67,7 @@ function RecommendedPlacesList({
                 ))
             ) : (
                 <div className="nearby-places-empty">
-                    {CATEGORIES.find(c => c.id === activeCategory)?.label}は見つかりませんでした。
+                    {CATEGORIES.find(c => c.id === activeCategory)?.label}{mapText?.not_found || "は見つかりませんでした。"}
                 </div>
             )}
         </div>

@@ -93,5 +93,20 @@
             "429": "抱歉，目前訪問量較大，暫時無法回應。請稍後再試。",
             "general": "發生錯誤，請稍後再試。"
         }
+    },
+    "waiting_place_map": {
+        "title": "周边地图",
+        "list_title": "推荐地点列表",
+        "not_found": "未找到。",
+        "walking": "步行 ",
+        "minutes": "分钟",
+        "category_all": "全部",
+        "category_cafe": "咖啡馆",
+        "category_park": "公园",
+        "category_convenience": "便利店",
+        "category_shopping": "购物中心",
+        "category_library": "图书馆",
+        "no_image": "暂无图片",
+        "view_on_map": "在 Google Maps 上查看"
     }
 }
