@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useEffect, useCallback, useRef, useMemo } from 'react';
 import { GoogleMap, useJsApiLoader, Marker, InfoWindow } from '@react-google-maps/api';
 import CommonPopup from '../../../components/CommonPopup';
 import RecommendedPlacesList from './RecommendedPlacesList';
@@ -19,6 +19,20 @@ const defaultCenter = {
 
 const libraries = ['places'];
 
+// Pure utility: Haversine formula to calculate distance in meters between two coordinates
+function calculateDistanceMeters(lat1, lng1, lat2, lng2) {
+    const R = 6371e3;
+    const φ1 = lat1 * Math.PI / 180;
+    const φ2 = lat2 * Math.PI / 180;
+    const Δφ = (lat2 - lat1) * Math.PI / 180;
+    const Δλ = (lng2 - lng1) * Math.PI / 180;
+    const a = Math.sin(Δφ / 2) * Math.sin(Δφ / 2) +
+        Math.cos(φ1) * Math.cos(φ2) *
+        Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    return R * c;
+}
+
 const CATEGORIES = [
     { id: 'cafe', label: 'カフェ', types: ['cafe'] },
     { id: 'park', label: '公園', types: ['park'] },
@@ -31,10 +45,10 @@ function WaitingPlaceMap({ storeInfo, texts, isFullScreen = false, selectedLangu
     const t = useTranslation(selectedLanguageCode);
     const mapText = t.waiting_place_map || {};
 
-    const localizedCategories = CATEGORIES.map(cat => ({
+    const localizedCategories = useMemo(() => CATEGORIES.map(cat => ({
         ...cat,
         label: mapText[`category_${cat.id}`] || cat.id
-    }));
+    })), [mapText]);
 
     const { isLoaded } = useJsApiLoader({
         id: 'google-map-script',
@@ -53,12 +67,27 @@ function WaitingPlaceMap({ storeInfo, texts, isFullScreen = false, selectedLangu
     const [activeCategory, setActiveCategory] = useState('cafe');
     const [isFetchingPlaces, setIsFetchingPlaces] = useState(false);
     const placesCache = useRef({});
+    const placesLibrary = useRef(null); // Cache the imported Places library
+    const fetchRequestId = useRef(0); // Race condition guard
 
     useEffect(() => {
         if (isFullScreen) {
             setIsOpen(true);
         }
     }, [isFullScreen]);
+
+    // Load the Places library once when the map is ready
+    useEffect(() => {
+        if (!isLoaded || placesLibrary.current) return;
+        window.google.maps.importLibrary("places").then(lib => {
+            placesLibrary.current = lib;
+        });
+    }, [isLoaded]);
+
+    // Invalidate cache when language changes so results are re-fetched in correct language
+    useEffect(() => {
+        placesCache.current = {};
+    }, [selectedLanguageCode]);
 
     const onLoad = useCallback(function callback(map) {
         setMap(map);
@@ -98,11 +127,15 @@ function WaitingPlaceMap({ storeInfo, texts, isFullScreen = false, selectedLangu
                 setIsFetchingPlaces(true);
                 setNearbyPlaces([]); // Clear list while loading
 
-                try {
-                    // Use modern importLibrary
-                    const { Place, SearchNearbyRankPreference } = await window.google.maps.importLibrary("places");
+                // Race condition guard: if a new fetch was triggered, abandon this one
+                const currentRequestId = ++fetchRequestId.current;
 
-                    const activeCategoryTypes = localizedCategories.find(c => c.id === activeCategory)?.types;
+                try {
+                    // Use the pre-loaded library, or fall back to importing it
+                    const { Place, SearchNearbyRankPreference } = placesLibrary.current
+                        || await window.google.maps.importLibrary("places");
+
+                    const activeCategoryTypes = CATEGORIES.find(c => c.id === activeCategory)?.types;
 
                     const request = {
                         fields: ['displayName', 'location', 'businessStatus', 'rating', 'userRatingCount', 'formattedAddress', 'svgIconMaskURI', 'photos'],
@@ -110,7 +143,7 @@ function WaitingPlaceMap({ storeInfo, texts, isFullScreen = false, selectedLangu
                             center: storeLocation,
                             radius: 1000.0,
                         },
-                        includedPrimaryTypes: activeCategoryTypes || localizedCategories[0].types,
+                        includedPrimaryTypes: activeCategoryTypes || CATEGORIES[0].types,
                         maxResultCount: 20,
                         rankPreference: SearchNearbyRankPreference.POPULARITY,
                         language: selectedLanguageCode?.startsWith('ja') ? 'ja' : 'en',
@@ -119,9 +152,11 @@ function WaitingPlaceMap({ storeInfo, texts, isFullScreen = false, selectedLangu
                     // Execute search
                     const { places } = await Place.searchNearby(request);
 
+                    // Abandon stale response if a newer request has been triggered
+                    if (currentRequestId !== fetchRequestId.current) return;
+
                     // Map new result format to existing state structure
                     const mappedPlaces = places.map(p => {
-                        // Calculate walking time (80m/min)
                         let walkingTime = null;
                         let distanceStr = null;
                         if (storeLocation && p.location) {
@@ -131,25 +166,14 @@ function WaitingPlaceMap({ storeInfo, texts, isFullScreen = false, selectedLangu
                             const lng2 = typeof p.location.lng === 'function' ? p.location.lng() : p.location.lng;
 
                             if (lat1 && lng1 && lat2 && lng2) {
-                                const R = 6371e3; // metres
-                                const φ1 = lat1 * Math.PI / 180;
-                                const φ2 = lat2 * Math.PI / 180;
-                                const Δφ = (lat2 - lat1) * Math.PI / 180;
-                                const Δλ = (lng2 - lng1) * Math.PI / 180;
-
-                                const a = Math.sin(Δφ / 2) * Math.sin(Δφ / 2) +
-                                    Math.cos(φ1) * Math.cos(φ2) *
-                                    Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
-                                const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-                                distanceStr = Math.round(R * c);
-                                walkingTime = Math.ceil((R * c) / 80);
+                                const distMeters = calculateDistanceMeters(lat1, lng1, lat2, lng2);
+                                distanceStr = Math.round(distMeters);
+                                walkingTime = Math.ceil(distMeters / 80);
                             }
                         }
 
                         let photoUrl = null;
                         if (p.photos && p.photos.length > 0) {
-                            // Correctly accessing the photo URI for New Places API
-                            // Check if getURI exists, otherwise fallback or skip
                             if (typeof p.photos[0].getURI === 'function') {
                                 photoUrl = p.photos[0].getURI({ maxWidth: 200, maxHeight: 150 });
                             }
@@ -191,7 +215,7 @@ function WaitingPlaceMap({ storeInfo, texts, isFullScreen = false, selectedLangu
         };
 
         fetchPlaces();
-    }, [map, storeLocation, activeCategory, localizedCategories, selectedLanguageCode]);
+    }, [map, storeLocation, activeCategory, selectedLanguageCode]);
 
     // Extract the list item click logic into a handler to pass to the new component
     const handlePlaceClick = useCallback((place) => {
@@ -422,7 +446,7 @@ function WaitingPlaceMap({ storeInfo, texts, isFullScreen = false, selectedLangu
             <CommonPopup
                 isOpen={!!pendingUrl}
                 onClose={() => setPendingUrl(null)}
-                message={texts?.google_map_popup?.message || "Google Mapを開きますか？"}
+                message={t?.google_map_popup?.message || "Google Mapを開きますか？"}
                 actions={
                     <button
                         className="confirmation-btn"
@@ -433,7 +457,7 @@ function WaitingPlaceMap({ storeInfo, texts, isFullScreen = false, selectedLangu
                             }
                         }}
                     >
-                        {texts?.google_map_popup?.confirm || "開く"}
+                        {t?.google_map_popup?.confirm || "開く"}
                     </button>
                 }
             />
