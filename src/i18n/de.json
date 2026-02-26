@@ -93,5 +93,20 @@
             "429": "Entschuldigung, wir haben gerade viel Betrieb. Bitte versuchen Sie es später noch einmal.",
             "general": "Ein Fehler ist aufgetreten. Bitte versuchen Sie es später noch einmal."
         }
+    },
+    "waiting_place_map": {
+        "title": "Umgebungskarte",
+        "list_title": "Empfohlene Orte",
+        "not_found": "nicht gefunden.",
+        "walking": "Gehen ",
+        "minutes": " Min",
+        "category_all": "Alle",
+        "category_cafe": "Café",
+        "category_park": "Park",
+        "category_convenience": "Bedarfsartikelgeschäft",
+        "category_shopping": "Einkaufszentrum",
+        "category_library": "Bibliothek",
+        "no_image": "Kein Bild",
+        "view_on_map": "Auf Google Maps ansehen"
     }
 }

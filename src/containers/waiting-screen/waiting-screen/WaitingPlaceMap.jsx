@@ -2,8 +2,8 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { GoogleMap, useJsApiLoader, Marker, InfoWindow } from '@react-google-maps/api';
 import CommonPopup from '../../../components/CommonPopup';
 import RecommendedPlacesList from './RecommendedPlacesList';
-import "./WaitingScreen.css";
 import "./WaitingPlaceMap.css";
+import useTranslation from '../../../hook/useTranslation';
 
 const containerStyle = {
     width: '100%',
@@ -20,15 +20,22 @@ const defaultCenter = {
 const libraries = ['places'];
 
 const CATEGORIES = [
-    { id: 'all', label: 'すべて', types: ['cafe', 'park', 'shopping_mall', 'library', 'convenience_store'] },
     { id: 'cafe', label: 'カフェ', types: ['cafe'] },
     { id: 'park', label: '公園', types: ['park'] },
-    { id: 'convenience_store', label: 'コンビニ', types: ['convenience_store'] },
-    { id: 'shopping_mall', label: 'ショッピングモール', types: ['shopping_mall'] },
-    { id: 'library', label: '図書館', types: ['library'] }
+    { id: 'convenience', label: 'コンビニ', types: ['convenience_store'] },
+    { id: 'shopping', label: 'ショッピングモール', types: ['shopping_mall'] },
+    { id: 'library', types: ['library'] }
 ];
 
-function WaitingPlaceMap({ storeInfo, texts, isFullScreen = false }) {
+function WaitingPlaceMap({ storeInfo, texts, isFullScreen = false, selectedLanguageCode }) {
+    const t = useTranslation(selectedLanguageCode);
+    const mapText = t.waiting_place_map || {};
+
+    const localizedCategories = CATEGORIES.map(cat => ({
+        ...cat,
+        label: mapText[`category_${cat.id}`] || cat.id
+    }));
+
     const { isLoaded } = useJsApiLoader({
         id: 'google-map-script',
         googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY,
@@ -43,7 +50,7 @@ function WaitingPlaceMap({ storeInfo, texts, isFullScreen = false }) {
     const [pendingUrl, setPendingUrl] = useState(null);
 
     const [isOpen, setIsOpen] = useState(isFullScreen);
-    const [activeCategory, setActiveCategory] = useState('all');
+    const [activeCategory, setActiveCategory] = useState('cafe');
 
     useEffect(() => {
         if (isFullScreen) {
@@ -85,27 +92,28 @@ function WaitingPlaceMap({ storeInfo, texts, isFullScreen = false }) {
                     // Use modern importLibrary
                     const { Place, SearchNearbyRankPreference } = await window.google.maps.importLibrary("places");
 
+                    const activeCategoryTypes = localizedCategories.find(c => c.id === activeCategory)?.types;
+
                     const request = {
                         fields: ['displayName', 'location', 'businessStatus', 'rating', 'userRatingCount', 'formattedAddress', 'svgIconMaskURI', 'photos'],
                         locationRestriction: {
                             center: storeLocation,
-                            radius: 500, // meters
+                            radius: 1000.0,
                         },
-                        includedPrimaryTypes: CATEGORIES.find(c => c.id === activeCategory)?.types || CATEGORIES[0].types,
+                        includedPrimaryTypes: activeCategoryTypes || localizedCategories[0].types,
                         maxResultCount: 20,
                         rankPreference: SearchNearbyRankPreference.POPULARITY,
-                        language: 'ja',
+                        language: selectedLanguageCode?.startsWith('ja') ? 'ja' : 'en',
                     };
 
                     // Execute search
                     const { places } = await Place.searchNearby(request);
 
-
-
                     // Map new result format to existing state structure
                     const mappedPlaces = places.map(p => {
                         // Calculate walking time (80m/min)
                         let walkingTime = null;
+                        let distanceStr = null;
                         if (storeLocation && p.location) {
                             const lat1 = storeLocation.lat;
                             const lng1 = storeLocation.lng;
@@ -123,8 +131,8 @@ function WaitingPlaceMap({ storeInfo, texts, isFullScreen = false }) {
                                     Math.cos(φ1) * Math.cos(φ2) *
                                     Math.sin(Δλ / 2) * Math.sin(Δλ / 2);
                                 const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-                                const d = R * c;
-                                walkingTime = Math.ceil(d / 80);
+                                distanceStr = Math.round(R * c);
+                                walkingTime = Math.ceil((R * c) / 80);
                             }
                         }
 
@@ -141,13 +149,21 @@ function WaitingPlaceMap({ storeInfo, texts, isFullScreen = false }) {
                             place_id: p.id,
                             geometry: { location: p.location },
                             name: p.displayName,
-                            vicinity: p.formattedAddress,
+                            vicinity: distanceStr ? `${distanceStr}m` : '',
                             rating: p.rating,
                             user_ratings_total: p.userRatingCount,
                             icon: p.svgIconMaskURI,
                             walking_time: walkingTime,
+                            distance: distanceStr,
                             photoUrl: photoUrl
                         };
+                    });
+
+                    // Sort places by calculated distance (ascending)
+                    mappedPlaces.sort((a, b) => {
+                        const distA = a.distance || Infinity;
+                        const distB = b.distance || Infinity;
+                        return distA - distB;
                     });
 
                     setNearbyPlaces(mappedPlaces);
@@ -219,7 +235,7 @@ function WaitingPlaceMap({ storeInfo, texts, isFullScreen = false }) {
                         )}
                     </span>
                     <span className="menu-category-name">
-                        {isOpen ? "地図を閉じる" : "周辺の待機スポットを見る"}
+                        {isOpen ? (mapText?.close_map || "地図を閉じる") : (mapText?.open_map || "周辺の待機スポットを見る")}
                     </span>
                 </div>
             )}
@@ -316,6 +332,7 @@ function WaitingPlaceMap({ storeInfo, texts, isFullScreen = false }) {
                                         <div className="infowindow-content">
                                             {/* Rating and Meta row */}
                                             <div>
+
                                                 <div className="infowindow-meta">
                                                     <div className="infowindow-rating">
                                                         <span className="infowindow-star">★</span>
@@ -326,11 +343,18 @@ function WaitingPlaceMap({ storeInfo, texts, isFullScreen = false }) {
                                                             ({selectedPlace.user_ratings_total || 0})
                                                         </span>
                                                     </div>
-                                                    {selectedPlace.walking_time && (
-                                                        <span className="infowindow-walking-badge">
-                                                            徒歩{selectedPlace.walking_time}分
-                                                        </span>
-                                                    )}
+                                                    <div className="infowindow-badges-container" style={{ display: 'flex', gap: '4px' }}>
+                                                        {selectedPlace.distance && (
+                                                            <span className="infowindow-walking-badge">
+                                                                {selectedPlace.distance}m
+                                                            </span>
+                                                        )}
+                                                        {selectedPlace.walking_time && (
+                                                            <span className="infowindow-walking-badge">
+                                                                {mapText?.walking || "徒歩"}{selectedPlace.walking_time}{mapText?.minutes || "分"}
+                                                            </span>
+                                                        )}
+                                                    </div>
                                                 </div>
                                             </div>
 
@@ -343,7 +367,7 @@ function WaitingPlaceMap({ storeInfo, texts, isFullScreen = false }) {
                                                     />
                                                 ) : (
                                                     <div className="infowindow-no-image">
-                                                        No Image
+                                                        {mapText?.no_image || "No Image"}
                                                     </div>
                                                 )}
                                             </div>
@@ -358,7 +382,7 @@ function WaitingPlaceMap({ storeInfo, texts, isFullScreen = false }) {
                                                     setPendingUrl(url);
                                                 }}
                                             >
-                                                Google Mapで見る
+                                                {mapText?.view_on_map || "View on Google Maps"}
                                             </button>
                                         </div>
                                     </div>
@@ -372,9 +396,10 @@ function WaitingPlaceMap({ storeInfo, texts, isFullScreen = false }) {
                         nearbyPlaces={nearbyPlaces}
                         activeCategory={activeCategory}
                         setActiveCategory={setActiveCategory}
-                        CATEGORIES={CATEGORIES}
+                        CATEGORIES={localizedCategories}
                         onPlaceClick={handlePlaceClick}
                         isFullScreen={isFullScreen}
+                        mapText={mapText}
                     />
                 </div>
             )}

@@ -93,5 +93,20 @@
             "429": "Spiacenti, c'è molto traffico al momento. Per favore, riprovi più tardi.",
             "general": "Si è verificato un errore. Per favore, riprovi più tardi."
         }
+    },
+    "waiting_place_map": {
+        "title": "Mappa dei Dintorni",
+        "list_title": "Luoghi Consigliati",
+        "not_found": "non trovato.",
+        "walking": "A piedi ",
+        "minutes": " min",
+        "category_all": "Tutto",
+        "category_cafe": "Caffetteria",
+        "category_park": "Parco",
+        "category_convenience": "Minimarket",
+        "category_shopping": "Centro Commerciale",
+        "category_library": "Biblioteca",
+        "no_image": "Nessuna immagine",
+        "view_on_map": "Vedi su Google Maps"
     }
 }

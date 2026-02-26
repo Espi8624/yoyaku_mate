@@ -93,5 +93,20 @@
             "429": "Maaf, lalu lintas sedang padat. Silakan coba lagi nanti.",
             "general": "Terjadi kesalahan. Silakan coba lagi nanti."
         }
+    },
+    "waiting_place_map": {
+        "title": "Peta Sekitar",
+        "list_title": "Tempat Rekomendasi",
+        "not_found": "tidak ditemukan.",
+        "walking": "Jalan kaki ",
+        "minutes": " mnt",
+        "category_all": "Semua",
+        "category_cafe": "Kafe",
+        "category_park": "Taman",
+        "category_convenience": "Minimarket",
+        "category_shopping": "Pusat Perbelanjaan",
+        "category_library": "Perpustakaan",
+        "no_image": "Tidak ada gambar",
+        "view_on_map": "Lihat di Google Maps"
     }
 }

@@ -93,5 +93,20 @@
             "429": "Xin lỗi, hiện tại đang có quá nhiều truy cập. Vui lòng thử lại sau.",
             "general": "Đã xảy ra lỗi. Vui lòng thử lại sau."
         }
+    },
+    "waiting_place_map": {
+        "title": "Bản đồ lân cận",
+        "list_title": "Địa điểm được đề xuất",
+        "not_found": "không tìm thấy.",
+        "walking": "Đi bộ ",
+        "minutes": " phút",
+        "category_all": "Tất cả",
+        "category_cafe": "Quán cà phê",
+        "category_park": "Công viên",
+        "category_convenience": "Cửa hàng tiện lợi",
+        "category_shopping": "Trung tâm mua sắm",
+        "category_library": "Thư viện",
+        "no_image": "Không có hình ảnh",
+        "view_on_map": "Xem trên Google Maps"
     }
 }

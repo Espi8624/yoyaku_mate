@@ -93,5 +93,20 @@
             "429": "Извините, сейчас высокая нагрузка. Пожалуйста, попробуйте позже.",
             "general": "Произошла ошибка. Пожалуйста, попробуйте позже."
         }
+    },
+    "waiting_place_map": {
+        "title": "Карта окрестностей",
+        "list_title": "Рекомендуемые места",
+        "not_found": "не найдено.",
+        "walking": "Пешком ",
+        "minutes": " мин",
+        "category_all": "Все",
+        "category_cafe": "Кафе",
+        "category_park": "Парк",
+        "category_convenience": "Круглосуточный магазин",
+        "category_shopping": "Торговый центр",
+        "category_library": "Библиотека",
+        "no_image": "Нет изображения",
+        "view_on_map": "Смотреть в Google Maps"
     }
 }

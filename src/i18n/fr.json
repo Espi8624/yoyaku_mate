@@ -93,5 +93,20 @@
             "429": "Désolé, le service est surchargé. Veuillez réessayer dans un instant.",
             "general": "Une erreur est survenue. Veuillez réessayer plus tard."
         }
+    },
+    "waiting_place_map": {
+        "title": "Carte des Environs",
+        "list_title": "Lieux Recommandés",
+        "not_found": "introuvable.",
+        "walking": "Marche ",
+        "minutes": " min",
+        "category_all": "Tout",
+        "category_cafe": "Café",
+        "category_park": "Parc",
+        "category_convenience": "Supérette",
+        "category_shopping": "Centre Commercial",
+        "category_library": "Bibliothèque",
+        "no_image": "Aucune image",
+        "view_on_map": "Voir sur Google Maps"
     }
 }

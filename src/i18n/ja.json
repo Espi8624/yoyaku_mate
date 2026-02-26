@@ -97,5 +97,20 @@
             "429": "申し訳ありません。現在アクセスが集中しており応答できません。しばらく待ってから再度お試しください。",
             "general": "現在AI応答サービスを利用できません。"
         }
+    },
+    "waiting_place_map": {
+        "title": "周辺マップ",
+        "list_title": "おすすめスポット一覧",
+        "not_found": "は見つかりませんでした。",
+        "walking": "徒歩",
+        "minutes": "分",
+        "category_all": "すべて",
+        "category_cafe": "カフェ",
+        "category_park": "公園",
+        "category_convenience": "コンビニ",
+        "category_shopping": "ショッピングモール",
+        "category_library": "図書館",
+        "no_image": "画像なし",
+        "view_on_map": "Google Mapで見る"
     }
 }
