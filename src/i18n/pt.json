@@ -108,5 +108,9 @@
         "category_library": "Biblioteca",
         "no_image": "Sem imagem",
         "view_on_map": "Ver no Google Maps"
+    },
+    "google_map_popup": {
+        "message": "Deseja abrir o Google Maps?",
+        "confirm": "Abrir"
     }
 }

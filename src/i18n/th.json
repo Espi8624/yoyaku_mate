@@ -108,5 +108,9 @@
         "category_library": "ห้องสมุด",
         "no_image": "ไม่มีรูปภาพ",
         "view_on_map": "ดูบน Google Maps"
+    },
+    "google_map_popup": {
+        "message": "คุณต้องการเปิด Google Maps หรือไม่?",
+        "confirm": "เปิด"
     }
 }

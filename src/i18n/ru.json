@@ -108,5 +108,9 @@
         "category_library": "Библиотека",
         "no_image": "Нет изображения",
         "view_on_map": "Смотреть в Google Maps"
+    },
+    "google_map_popup": {
+        "message": "Вы хотите открыть Google Maps?",
+        "confirm": "Открыть"
     }
 }

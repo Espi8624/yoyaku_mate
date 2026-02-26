@@ -110,5 +110,9 @@
         "category_library": "Library",
         "no_image": "No Image",
         "view_on_map": "View on Google Maps"
+    },
+    "google_map_popup": {
+        "message": "Do you want to open Google Maps?",
+        "confirm": "Open"
     }
 }
