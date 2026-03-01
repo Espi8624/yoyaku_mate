@@ -13,7 +13,7 @@ function CongestionPopup() {
   } = useWaitingScreen();
 
   // 多国語データ呼出
-  const popupTexts = t.waiting_screen_preview.popup;
+  const popupTexts = t?.waiting_screen_preview?.popup || {};
 
   let actions = (
     <button
