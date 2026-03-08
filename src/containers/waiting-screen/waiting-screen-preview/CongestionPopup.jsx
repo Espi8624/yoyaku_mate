@@ -25,6 +25,19 @@ function CongestionPopup() {
     </button>
   );
 
+  // 登録完了通知の場合、OKボタンのみ表示
+  if (popupInfo.mode === "registration_complete") {
+    actions = (
+      <button
+        className="confirmation-btn"
+        onClick={closePopupAndProceed}
+        style={{ width: '100%', margin: 0 }}
+      >
+        OK
+      </button>
+    );
+  }
+
   // 入店完了通知の場合、閉じるボタンと初期化ボタンを表示
   if (popupInfo.mode === "completed_notification") {
     actions = (
@@ -62,11 +75,11 @@ function CongestionPopup() {
   return (
     <CommonPopup
       isOpen={true} // CongestionPopup is conditionally rendered by parent, so always true if mounted
-      onClose={popupInfo.mode !== "max" ? closePopupOnly : undefined}
+      onClose={popupInfo.mode !== "max" && popupInfo.mode !== "registration_complete" ? closePopupOnly : undefined}
       closeLabel={popupTexts.close}
       message={popupInfo.message}
       actions={actions}
-      showCloseButton={popupInfo.mode !== "max"}
+      showCloseButton={popupInfo.mode !== "max" && popupInfo.mode !== "registration_complete"}
     />
   );
 }

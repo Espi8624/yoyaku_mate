@@ -115,7 +115,6 @@ export function WaitingScreenProvider({ children }) {
           if (data && data.v_token) {
             console.log('[Dev] Dynamic v_token fetched:', data.v_token);
             setVToken(data.v_token);
-            localStorage.setItem("v_token", data.v_token);
           }
         })
         .catch(err => {
@@ -141,7 +140,7 @@ export function WaitingScreenProvider({ children }) {
   const [contact, setContact] = useState("");
   const [notes, setNotes] = useState("");
   const [waitingId, setWaitingId] = useState(initialParams.waitingId || localStorage.getItem("waiting_id") || "");
-  const [vToken, setVToken] = useState(initialParams.vToken || localStorage.getItem("v_token") || "");
+  const [vToken, setVToken] = useState(initialParams.vToken || "");
   const [isCancelled, setIsCancelled] = useState(false);
   const [cancellationReason, setCancellationReason] = useState(null); // 'user', 'store', 'absence'
 
@@ -188,7 +187,6 @@ export function WaitingScreenProvider({ children }) {
     setStoreId(initialParams.storeId);
     if (initialParams.vToken) {
       setVToken(initialParams.vToken);
-      localStorage.setItem("v_token", initialParams.vToken);
     }
     if (initialParams.waitingId) {
       setWaitingId(initialParams.waitingId);
@@ -218,13 +216,12 @@ export function WaitingScreenProvider({ children }) {
           if (storeId) localStorage.setItem("store_id", storeId);
         }
 
-        alert("登録が完了しました");
-        setStep(3); // step 3へ移動
+        setPopupInfo({ message: selectedLanguageCode === 'ja' ? '登録が完了しました' : 'Registration complete!', mode: 'registration_complete' });
+        setPopupVisible(true);
       } else {
         // 登録失敗時にローカルストレージから削除
         localStorage.removeItem("waiting_id");
         localStorage.removeItem("store_id");
-        localStorage.removeItem("v_token");
         const errorMessage = res.data?.message || '登録に失敗しました';
         alert("登録に失敗しました: " + errorMessage);
       }
@@ -249,8 +246,8 @@ export function WaitingScreenProvider({ children }) {
         store_id: storeId,
         party_size: Number(partySize),
         nationality: selectedNationality,
-        contact: contact.trim() === "" ? "なし" : contact,
-        notes: notes.trim() === "" ? "なし" : notes,
+        contact: contact.trim() === "" ? "-" : contact,
+        notes: notes.trim() === "" ? "-" : notes,
         status: "waiting",
         menu_items: selectedMenus.map(m => ({
           menu_id: m.menuId,
@@ -327,7 +324,6 @@ export function WaitingScreenProvider({ children }) {
         // ローカルストレージからwaiting_idとstore_idを削除
         localStorage.removeItem("waiting_id");
         localStorage.removeItem("store_id");
-        localStorage.removeItem("v_token");
         // 初期状態に戻す
         setStep(1);
         setPartySize('');
@@ -350,6 +346,8 @@ export function WaitingScreenProvider({ children }) {
     setPopupVisible(false);
     if (popupInfo.mode === "congestion" && pendingPayload) {
       await _performSubmit(pendingPayload);
+    } else if (popupInfo.mode === "registration_complete") {
+      setStep(3);
     } else if (popupInfo.mode === "max") {
       setStep(1);
     } else if (popupInfo.mode === "completed_notification") {

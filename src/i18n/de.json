@@ -40,6 +40,8 @@
     "waiting_screen": {
         "label_1": "Anmeldung erfolgreich abgeschlossen!",
         "label_2": "Bitte warten Sie einen Moment, wir rufen Sie gleich auf.",
+        "notified_label_1": "Vielen Dank für Ihre Geduld!",
+        "notified_label_2": "Bitte begeben Sie sich zur Theke. Unser Personal wird Sie begleiten.",
         "waiting_number_label": "Wartenummer",
         "name_label": "Name",
         "party_size_label": "Anzahl der Personen",

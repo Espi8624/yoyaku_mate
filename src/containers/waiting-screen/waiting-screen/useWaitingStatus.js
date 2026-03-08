@@ -56,7 +56,6 @@ function useWaitingStatus(storeId, waitingId, enabled) {
                 // ローカルストレージをクリアして再登録を促す
                 localStorage.removeItem("waiting_id");
                 localStorage.removeItem("store_id");
-                localStorage.removeItem("v_token");
                 setError("待機情報が見つかりません。再度登録してください。");
                 return;
             }
@@ -74,7 +73,6 @@ function useWaitingStatus(storeId, waitingId, enabled) {
                 // 呼び出し元コンポーネントが status ではなく error を見て対応する
                 localStorage.removeItem("waiting_id");
                 localStorage.removeItem("store_id");
-                localStorage.removeItem("v_token");
                 setError("__NOT_FOUND__"); // 404専用マーカー
             } else {
                 setError("データの読み込みに失敗しました。");

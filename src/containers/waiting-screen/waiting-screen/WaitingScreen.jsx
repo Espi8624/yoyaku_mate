@@ -137,10 +137,11 @@ function WaitingScreen() {
       chimeIntervalRef.current = setInterval(playLoopChime, 3000);
 
     } else if (status === 'cancelled' && context.cancellationReason === null) {
-      // キャンセルステータスの対応 (Context 経由で CancelledScreen へ)
-      context.setCancellationReason && context.setCancellationReason('store');
-    } else if (status === 'absence' && context.cancellationReason === null) {
-      // 無断キャンセルステータスの対応
+      // 呼び出し済み（notificationState !== IDLE）の状態でキャンセルされた場合は不在扱い
+      const isAbsence = notificationState !== NOTIFICATION_STATE.IDLE;
+      context.setCancellationReason && context.setCancellationReason(isAbsence ? 'absence' : 'store');
+    } else if (status === 'no_show' && context.cancellationReason === null) {
+      // サーバー側のno_showステータスも不在扱い
       context.setCancellationReason && context.setCancellationReason('absence');
     }
   }, [status, notificationState, context]);
@@ -255,9 +256,17 @@ function WaitingScreen() {
         </div>
       )}
 
-      <div className="preview-label">{waitingScreenTexts.label_1}</div>
+      <div className="preview-label">
+        {notificationState !== NOTIFICATION_STATE.IDLE
+          ? waitingScreenTexts.notified_label_1 || waitingScreenTexts.label_1
+          : waitingScreenTexts.label_1}
+      </div>
       {waitingScreenTexts.label_2 && (
-        <div className="waiting-label-2">{waitingScreenTexts.label_2}</div>
+        <div className="waiting-label-2">
+          {notificationState !== NOTIFICATION_STATE.IDLE
+            ? waitingScreenTexts.notified_label_2 || waitingScreenTexts.label_2
+            : waitingScreenTexts.label_2}
+        </div>
       )}
 
       {error && error !== '__NOT_FOUND__' ? (

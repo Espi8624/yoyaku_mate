@@ -283,8 +283,8 @@ function WaitingPlaceMap({ storeInfo, texts, isFullScreen = false, selectedLangu
                     className={isFullScreen ? "map-content-full" : "menu-content"}
                     style={isFullScreen ? { flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden', minHeight: 0 } : { padding: '0 0 16px 0' }}
                 >
-                    {/* Map takes 60% of the content area */}
-                    <div style={isFullScreen ? { height: '60%', position: 'relative', flexShrink: 0, overflow: 'hidden' } : { position: 'relative' }}>
+                    {/* Map takes 45% of the content area */}
+                    <div style={isFullScreen ? { height: '45%', position: 'relative', flexShrink: 0, overflow: 'hidden' } : { position: 'relative' }}>
                         <GoogleMap
                             mapContainerStyle={finalContainerStyle}
                             center={center}
@@ -298,6 +298,7 @@ function WaitingPlaceMap({ storeInfo, texts, isFullScreen = false, selectedLangu
                                 zoomControl: true, // Enable zoom control for better UX in full screen
                                 fullscreenControl: false, // Disable default fullscreen control as we are already in modal
                                 clickableIcons: false, // Disable default Google POI InfoWindow
+                                gestureHandling: 'greedy', // 1本指でのスワイプ操作を許可
                             }}
                         >
                             {/* Store Marker (Blue) */}
@@ -345,7 +346,8 @@ function WaitingPlaceMap({ storeInfo, texts, isFullScreen = false, selectedLangu
                                     }}
                                     options={{
                                         disableAutoPan: false,
-                                        pixelOffset: new window.google.maps.Size(0, -40)
+                                        pixelOffset: new window.google.maps.Size(0, -30),
+                                        maxWidth: 220
                                     }}
                                 >
                                     <div className="infowindow-container">
