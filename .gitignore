@@ -13,6 +13,7 @@ config.js
 /build
 
 # misc
+.infisical.json
 .DS_Store
 .env
 .env.local

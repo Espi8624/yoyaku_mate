@@ -40,6 +40,8 @@
     "waiting_screen": {
         "label_1": "Pendaftaran berhasil!",
         "label_2": "Mohon tunggu sebentar, kami akan segera memanggil Anda.",
+        "notified_label_1": "Terima kasih atas kesabaran Anda!",
+        "notified_label_2": "Silakan menuju ke meja kasir. Staf kami akan memandu Anda.",
         "waiting_number_label": "Nomor Antrean",
         "name_label": "Nama",
         "party_size_label": "Jumlah Orang",

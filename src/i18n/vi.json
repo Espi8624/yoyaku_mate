@@ -40,6 +40,8 @@
     "waiting_screen": {
         "label_1": "Đã đăng ký thành công!",
         "label_2": "Vui lòng đợi một chút, chúng tôi sẽ gọi bạn sớm.",
+        "notified_label_1": "Cảm ơn bạn đã kiên nhẫn chờ đợi!",
+        "notified_label_2": "Vui lòng đến quầy lễ tân. Nhân viên của chúng tôi sẽ hướng dẫn bạn.",
         "waiting_number_label": "Số thứ tự",
         "name_label": "Tên",
         "party_size_label": "Số lượng người",
