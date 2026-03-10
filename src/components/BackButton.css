@@ -5,11 +5,8 @@
     width: 40px;
     height: 40px;
     min-width: 40px;
-    /* Ensure it doesn't shrink below this width */
     min-height: 40px;
-    /* Ensure it doesn't shrink below this height */
     flex-shrink: 0;
-    /* Prevent flexbox from squishing it */
     padding: 0;
     margin-right: 12px;
     display: flex;
