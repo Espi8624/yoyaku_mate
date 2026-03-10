@@ -27,7 +27,6 @@ function NotifiedScreen() {
           console.log('[NotifiedScreen] 入店完了のため、ローカルストレージをクリアします');
           localStorage.removeItem("store_id");
           localStorage.removeItem("waiting_id");
-          localStorage.removeItem("v_token");
 
           // ポーリング停止
           if (pollingRef.current) {

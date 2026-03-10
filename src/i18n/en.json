@@ -40,6 +40,8 @@
     "waiting_screen": {
         "label_1": "Thank you! Your information has been successfully registered!",
         "label_2": "Please wait a moment the restaurant will call you shortly.",
+        "notified_label_1": "Thank you for your patience!",
+        "notified_label_2": "Please make your way to the counter. Our staff will guide you.",
         "waiting_number_label": "Waiting Number",
         "name_label": "Name",
         "party_size_label": "Party Size",

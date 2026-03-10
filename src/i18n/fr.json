@@ -40,6 +40,8 @@
     "waiting_screen": {
         "label_1": "Inscription réussie !",
         "label_2": "Veuillez patienter, nous vous appellerons dès que possible.",
+        "notified_label_1": "Merci de votre patience !",
+        "notified_label_2": "Veuillez vous rendre au comptoir. Notre personnel vous guidera.",
         "waiting_number_label": "Numéro d'attente",
         "name_label": "Nom",
         "party_size_label": "Nombre de personnes",

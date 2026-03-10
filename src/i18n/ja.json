@@ -42,6 +42,8 @@
     "waiting_screen": {
         "label_1": "ご記入いただいた情報で登録が完了しました！",
         "label_2": "少々お待ちいただければ、お店からお呼びいたします。",
+        "notified_label_1": "大変お待たせいたしました！",
+        "notified_label_2": "スタッフがご案内いたしますので、カウンターまでお越しください。",
         "waiting_number_label": "受付番号",
         "name_label": "お名前",
         "party_size_label": "人数",

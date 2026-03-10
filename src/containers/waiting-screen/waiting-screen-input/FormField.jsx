@@ -6,7 +6,6 @@ function FormField({ id, label, example, value, onChange, type = "text", require
       <label htmlFor={id} className="input-field-label">
         {label}
       </label>
-      <div className="input-example">{example}</div>
       <input
         type={type}
         id={id}
@@ -14,6 +13,7 @@ function FormField({ id, label, example, value, onChange, type = "text", require
         value={value}
         onChange={onChange}
         required={required}
+        placeholder={example}
         className="input-field-value"
       />
     </div>
