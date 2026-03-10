@@ -40,6 +40,8 @@
     "waiting_screen": {
         "label_1": "已使用您提供的資訊完成登記！",
         "label_2": "請稍作等待，店家將儘快為您安排叫號。",
+        "notified_label_1": "感謝您的耐心等待！",
+        "notified_label_2": "請前往櫃台，我們的工作人員將為您引導。",
         "waiting_number_label": "候位號碼",
         "name_label": "姓名",
         "party_size_label": "人數",

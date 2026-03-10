@@ -57,10 +57,10 @@ function WaitingScreenPreview() {
         <div className="confirmation-field-value">{partySize}</div>
 
         <label className="confirmation-field-label">{watingScreenPreview.contact_label}</label>
-        <div className="confirmation-field-value">{contact || (selectedLanguageCode === 'ja' ? 'なし' : '-')}</div>
+        <div className="confirmation-field-value">{contact || '-'}</div>
 
         <label className="confirmation-field-label">{watingScreenPreview.note_label}</label>
-        <div className="confirmation-field-value">{notes || (selectedLanguageCode === 'ja' ? 'なし' : '-')}</div>
+        <div className="confirmation-field-value">{notes || '-'}</div>
 
         {selectedMenus.length > 0 && (
           <>

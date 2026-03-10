@@ -40,6 +40,8 @@
     "waiting_screen": {
         "label_1": "작성해주신 정보로 등록 완료했습니다!",
         "label_2": "조금만 기다려주시면 가게에서 부를게요.",
+        "notified_label_1": "오래 기다리셨습니다!",
+        "notified_label_2": "카운터로 오시면 직원이 안내해 드리겠습니다.",
         "waiting_number_label": "대기번호",
         "name_label": "성함",
         "party_size_label": "인원수",

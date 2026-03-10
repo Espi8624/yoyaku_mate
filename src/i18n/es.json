@@ -40,6 +40,8 @@
     "waiting_screen": {
         "label_1": "¡Registro completado con éxito!",
         "label_2": "Por favor, espere un momento. Le llamaremos pronto.",
+        "notified_label_1": "¡Gracias por su paciencia!",
+        "notified_label_2": "Por favor, diríjase al mostrador. Nuestro personal le guiará.",
         "waiting_number_label": "Número de espera",
         "name_label": "Nombre",
         "party_size_label": "Personas",

@@ -57,7 +57,6 @@ function FlowController() {
             console.log(`[FlowController] ステータスが${details.status}のため、ローカルストレージをクリアします`);
             localStorage.removeItem("store_id");
             localStorage.removeItem("waiting_id");
-            localStorage.removeItem("v_token");
             // step 1にリセット（新規登録可能な状態）
             if (setStep) setStep(1);
           }
@@ -67,7 +66,6 @@ function FlowController() {
             console.log('[FlowController] データが存在しないため、ローカルストレージをクリアします');
             localStorage.removeItem("store_id");
             localStorage.removeItem("waiting_id");
-            localStorage.removeItem("v_token");
             if (setStep) setStep(1);
           } else {
             console.error('[FlowController] ステータス確認エラー:', err);
