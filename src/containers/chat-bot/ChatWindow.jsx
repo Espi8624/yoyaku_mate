@@ -4,6 +4,7 @@ import { getStoreAIContext } from '../../api/waitingService';
 // Gemini API は Go バックエンドのプロキシ経由で呼び出します (APIキーはサーバーサイド管理)
 import { generateSystemPrompt } from './SystemPrompt';
 import useTranslation from '../../hook/useTranslation';
+import ReactMarkdown from 'react-markdown';
 import './ChatWindow.css';
 
 const API_BASE = process.env.NODE_ENV === 'production'
@@ -150,7 +151,7 @@ const ChatWindow = () => {
             <div className="chat-messages">
                 {messages.map(msg => (
                     <div key={msg.id} className={`message ${msg.sender}`}>
-                        {msg.text}
+                        <ReactMarkdown>{msg.text}</ReactMarkdown>
                     </div>
                 ))}
                 {isLoading && <div className="message bot">...</div>}

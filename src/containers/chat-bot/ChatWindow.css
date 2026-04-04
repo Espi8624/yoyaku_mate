@@ -70,7 +70,39 @@
     border-radius: 12px;
     font-size: 14px;
     line-height: 1.4;
-    white-space: pre-wrap;
+}
+
+.message p {
+    margin: 0;
+}
+
+.message p + p {
+    margin-top: 8px;
+}
+
+.message ul,
+.message ol {
+    margin: 8px 0 8px 0;
+    padding-left: 20px;
+}
+
+.message li {
+    margin-bottom: 4px;
+}
+
+.message li:last-child {
+    margin-bottom: 0;
+}
+
+.message code {
+    background-color: rgba(0, 0, 0, 0.05);
+    padding: 2px 4px;
+    border-radius: 4px;
+    font-family: monospace;
+}
+
+.message.user code {
+    background-color: rgba(255, 255, 255, 0.2);
 }
 
 .message.bot {
