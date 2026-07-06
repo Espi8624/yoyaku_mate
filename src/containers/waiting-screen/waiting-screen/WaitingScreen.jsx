@@ -348,7 +348,7 @@ function WaitingScreen() {
             </div>
           )}
 
-          <MenuDisplay menuList={menuList} texts={waitingScreenTexts} />
+          <MenuDisplay menuList={menuList} texts={waitingScreenTexts} selectedLanguageCode={selectedLanguageCode} />
 
           <button className="confirmation-btn cancel-btn" onClick={() => setShowCancelPopup(true)}>
             {waitingScreenTexts.cancel_reservation}
