@@ -1,90 +1,92 @@
-# 💻 Yoyaku Mate - 고객 대기 화면 (Web Client)
+# 💻 Yoyaku Mate - お客様待機画面（Web クライアント）
 
-> **Yoyaku Mate**는 매장 예약 및 대기열을 실시간으로 관리하고 편리하게 대기할 수 있도록 지원하는 실시간 웨이팅 시스템입니다. 본 저장소는 고객이 스마트폰(모바일 웹)을 통해 대기 현황을 확인하고, 챗봇 및 지도를 활용할 수 있는 **사용자용 웹 클라이언트** 프로젝트입니다.
-
----
-
-## 🛠 Tech Stack (기술 스택)
-
-- **Frontend Core:** React 19, React Router DOM 7
-- **HTTP Client:** Axios (API 비동기 통신)
-- **Maps API:** `@react-google-maps/api` (구글 맵 매장 위치 정보 제공)
-- **AI Chatbot:** Gemini API (대기 중 매장 정보 및 안내를 담당하는 AI 어시스턴트)
-- **Utility:** `qrcode.react` (고객 고유 QR 코드 생성)
-- **Deployment & Proxy:** Vercel (Edge Middleware Rewrites 활용)
+> **Yoyaku Mate** は、店舗の予約・順番待ちをリアルタイムで管理し、来店されたお客様が快適にお待ちいただけるよう支援するリアルタイム順番待ちシステムです。本リポジトリは、お客様がスマートフォン（モバイルWeb）を通じて待ち状況の確認、チャットボットや地図の利用ができる**お客様向けWebクライアント**プロジェクトです。
 
 ---
 
-## ✨ Key Features (핵심 기능)
+## 🛠 Tech Stack（技術スタック）
 
-- **실시간 대기열 상태 조회:** 내 대기 순서 및 예상 대기 시간을 실시간으로 확인합니다.
-- **다국어 지원 (i18n):** 한국어, 일본어, 영어, 중국어, 태국어, 베트남어 등 다국어 지원으로 글로벌 고객 대응이 가능합니다.
-- **매장 정보 및 지도 제공:** 구글 맵 API를 통해 매장의 정확한 위치를 파악하고 길을 찾을 수 있습니다.
-- **AI 매장 가이드 챗봇:** Gemini AI 챗봇이 매장의 영업 시간, 화장실 위치, 메뉴 추천 등 대기 중인 고객의 다양한 질문에 답변합니다.
-- **모바일 QR 티켓:** 현장 키오스크나 대기 보드에서 바로 확인 가능한 개인용 QR 티켓을 제공합니다.
+- **Frontend Core:** React 19、React Router DOM 7
+- **HTTP Client:** Axios（API 非同期通信）
+- **Maps API:** `@react-google-maps/api`（Google マップによる店舗位置情報の提供）
+- **AI Chatbot:** Gemini API（待ち時間中に店舗情報・案内を担当する AI アシスタント）
+- **Utility:** `qrcode.react`（お客様固有の QR コード生成）
+- **Deployment & Proxy:** Vercel（Edge Middleware Rewrites を活用）
 
 ---
 
-## 📂 Project Structure (폴더 구조)
+## ✨ Key Features（主要機能）
+
+- **リアルタイム順番待ち状況確認：** 現在の待ち順番および予想待ち時間をリアルタイムで確認できます。
+- **多言語対応（i18n）：** 日本語・韓国語・英語・中国語・タイ語・ベトナム語など、多言語に対応しグローバルなお客様への対応が可能です。
+- **店舗情報・地図の提供：** Google マップ API を通じて店舗の正確な位置情報を確認し、ルート案内を利用できます。
+- **AI 店舗ガイドチャットボット：** Gemini AI チャットボットが営業時間・お手洗いの場所・メニューのご提案など、待ち時間中のお客様のさまざまなご質問にお答えします。
+- **モバイル QR チケット：** 現場のキオスクや順番待ちボードでそのまま確認できる、お客様専用の QR チケットを提供します。
+
+---
+
+## 📂 Project Structure（フォルダ構成）
 
 ```bash
 src/
-├── api/                  # API 통신 정의 (Axios 인터셉터 및 대기열 서비스 호출)
-├── components/           # 공통 UI 컴포넌트
-├── containers/           # 페이지/컨테이너별 비즈니스 로직 및 화면
-│   ├── board/            # 실시간 현황판 보드 화면
-│   ├── chat-bot/         # Gemini 기반 AI 챗봇 화면
-│   └── waiting-screen/   # 고객 대기 상세 화면 (지도, 메뉴 프리뷰, 알림 등)
-├── data/                 # 정적 데이터 (국적 데이터 등)
-├── hook/                 # 커스텀 React 훅
-├── i18n/                 # 다국어 번역 리소스 파일들 (ko.json, ja.json 등)
-├── styles/               # 전역 스타일 및 테마 정의
-└── utils/                # 유틸리티 함수 모음
+├── api/                  # API 通信の定義（Axios インターセプターおよび順番待ちサービス呼び出し）
+├── components/           # 共通 UI コンポーネント
+├── containers/           # ページ/コンテナ別のビジネスロジックおよび画面
+│   ├── board/            # リアルタイム状況掲示板画面
+│   ├── chat-bot/         # Gemini ベースの AI チャットボット画面
+│   └── waiting-screen/   # お客様待機詳細画面（地図・メニュープレビュー・通知など）
+├── data/                 # 静的データ（国籍データ等）
+├── hook/                 # カスタム React フック
+├── i18n/                 # 多言語翻訳リソースファイル（ko.json、ja.json 等）
+├── styles/               # グローバルスタイルおよびテーマ定義
+└── utils/                # ユーティリティ関数群
 ```
 
 ---
 
-## 🚀 Getting Started (시작 가이드)
+## 🚀 Getting Started（セットアップガイド）
 
-### 1. 환경 변수 설정
-로컬 개발 환경 구성을 위해 프로젝트 루트 디렉토리에 `.env.development` 파일을 작성합니다.
-*(API 키 및 민감 정보는 배포 환경 혹은 비공개 개발 환경 변수로 로컬에만 관리합니다.)*
+### 1. 環境変数の設定
+
+ローカル開発環境を構築するため、プロジェクトルートディレクトリに `.env.development` ファイルを作成します。  
+*（API キーおよび機密情報は、デプロイ環境または非公開の開発環境変数としてローカルのみで管理します。）*
 
 ```env
-# 개발 환경 API 서버 주소
+# 開発環境 API サーバーアドレス
 REACT_APP_API_URL=http://localhost:8080/api
 
-# 구글 맵 API 키 (클라이언트 전용)
+# Google マップ API キー（クライアント専用）
 REACT_APP_GOOGLE_MAPS_API_KEY=YOUR_GOOGLE_MAPS_API_KEY
-
-# Gemini AI 챗봇 API 키
-REACT_APP_GEMINI_API_KEY=YOUR_GEMINI_API_KEY
 ```
 
-### 2. 패키지 설치 및 실행
+### 2. パッケージのインストールと起動
+
 ```bash
-# 의존성 패키지 설치
+# 依存パッケージのインストール
 npm install
 
-# 로컬 개발 서버 실행
+# ローカル開発サーバーの起動
 npm start
 ```
-실행이 완료되면 브라우저에서 `http://localhost:3000` 주소로 접속할 수 있습니다.
+
+起動が完了したら、ブラウザで `http://localhost:3000` にアクセスしてください。
 
 ---
 
-## 🔒 Security & Deployment (배포 및 보안)
+## 🔒 Security & Deployment（デプロイおよびセキュリティ）
 
-- **배포 플랫폼:** Vercel
-- **API 프록시 설정 (`vercel.json`):**
-  - 클라이언트 도메인과 API 도메인 간의 CORS 문제를 방지하고 보안을 높이기 위해 Vercel의 `rewrites` 설정을 통해 `/api` 요청을 백엔드 서버(`fly.dev`)로 리다이렉트합니다.
-  ```json
-  {
-      "rewrites": [
-          {
-              "source": "/api/:match*",
-              "destination": "https://rusui-prod.fly.dev/api/:match*"
-          }
-      ]
-  }
-  ```
+- **デプロイプラットフォーム：** Vercel
+- **API プロキシ設定（`vercel.json`）：**
+  - クライアントドメインと API ドメイン間の CORS 問題を防止し、セキュリティを強化するため、Vercel の `rewrites` 設定を通じて `/api` へのリクエストをバックエンドサーバーへリダイレクトします。
+  - 設定方法は `vercel.json.example` を参照し、ご自身のバックエンドドメインに書き換えてご利用ください。
+
+```json
+{
+    "rewrites": [
+        {
+            "source": "/api/:match*",
+            "destination": "https://YOUR_BACKEND_DOMAIN/api/:match*"
+        }
+    ]
+}
+```
