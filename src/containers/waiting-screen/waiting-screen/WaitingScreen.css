@@ -1,0 +1,357 @@
+.cancel-btn {
+  margin-top: 32px;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  background: var(--color-accent-primary);
+  color: var(--color-text-primary-light);
+  border-radius: 8px;
+  padding: 18px;
+  font-weight: bold;
+  border: none;
+  cursor: pointer;
+  display: block !important;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.12);
+  transition: opacity 0.2s, box-shadow 0.3s;
+}
+
+.cancel-modal {
+  position: relative;
+}
+
+.congestion-close-btn {
+  position: absolute;
+  top: 8px;
+  right: 12px;
+  background: transparent;
+  border: none;
+  font-size: 1.5em;
+  cursor: pointer;
+}
+
+.cancel-actions {
+  justify-content: center;
+}
+
+.waiting-section {
+  width: 100%;
+  max-width: 420px;
+  margin: 0 auto;
+  min-height: 100vh;
+  position: relative;
+  background: var(--color-card-background);
+  border-radius: 0;
+  box-shadow: none;
+  padding: 84px 16px 120px 16px;
+  /* Bottom padding for fixed footer */
+  border: none;
+  box-sizing: border-box;
+}
+
+.fixed-action-footer {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 420px;
+  padding: 20px 16px 30px 16px;
+  /* Safe area padding */
+  background: linear-gradient(to top, #ffffff 80%, rgba(255, 255, 255, 0));
+  /* Fade out background */
+  z-index: 100;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+}
+
+.fixed-action-footer .confirmation-btn {
+  width: 100%;
+  margin: 0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.waiting-label-2 {
+  color: var(--color-text-secondary);
+  margin-bottom: 18px;
+}
+
+.confirmation-btn {
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  display: block;
+  padding: 18px;
+  background-color: var(--color-primary-black);
+  color: var(--color-text-primary-light);
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1em;
+  font-weight: bold;
+  transition: opacity 0.3s;
+}
+
+.confirmation-btn:hover {
+  opacity: 0.9;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+}
+
+.cancel-btn:hover {
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+}
+
+input,
+textarea {
+  border: 2px solid var(--color-accent-primary) !important;
+  background: var(--color-card-background) !important;
+  color: inherit;
+  border-radius: 8px;
+}
+
+/* プレビュー項目のラベル (Party Size, Notes etc.) */
+.preview-item-label {
+  font-size: 0.75em;
+  /* 0.9em -> 0.75em (より小さく) */
+  color: var(--color-text-secondary);
+  font-weight: normal;
+  margin-bottom: 8px;
+  /* Group layout handles spacing now */
+  display: block;
+  opacity: 0.8;
+  /* 少し薄くしてデータを目立たせる */
+}
+
+.preview-item-value {
+  background: transparent;
+  color: inherit;
+  border: none;
+  border-radius: 0;
+  padding: 0;
+  margin-top: 0;
+  margin-bottom: 8px;
+  /* Handled by .preview-info-group */
+  box-sizing: border-box;
+  font-size: 1.3em;
+  font-weight: 800;
+  line-height: 1.1;
+}
+
+/* New Group Container */
+.preview-info-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 8px;
+  /* Clear separation between groups */
+}
+
+/* ポップアップのオーバーレイ */
+.congestion-popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+/* ポップアップ本体 */
+.congestion-popup-modal {
+  position: relative;
+  background: var(--color-card-background);
+  border-radius: 12px;
+  padding: 32px 24px 24px 24px;
+  min-width: 320px;
+  max-width: 90vw;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.18);
+  text-align: center;
+}
+
+/* 閉じるボタン（右上×） */
+.congestion-popup-close-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: transparent;
+  border: none;
+  font-size: 2rem;
+  color: var(--color-text-tertiary);
+  cursor: pointer;
+  transition: color 0.2s, transform 0.2s;
+  z-index: 10;
+}
+
+.congestion-popup-close-btn:hover {
+  color: var(--color-text-primary);
+  transform: scale(1.15);
+}
+
+/* メッセージ部分 */
+.congestion-popup-message {
+  margin: 24px 0 16px 0;
+  font-size: 1.1rem;
+  white-space: pre-line;
+}
+
+/* ボタン配置 */
+.congestion-popup-actions {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  margin-top: 8px;
+}
+
+.waiting-number-label {
+  text-align: center;
+  font-size: 1.1em;
+  /* 1.5em -> 1.1em (小さく) */
+  margin-top: 8px;
+  margin-bottom: 8px;
+  font-weight: bold;
+  letter-spacing: 0.1em;
+  color: var(--color-text-secondary);
+  /* 色も少し抑えめに */
+  border: none;
+  background: none;
+}
+
+.waiting-number-value {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 6em;
+  /* 4.5em -> 6em (大きく) */
+  font-weight: 800;
+  /* 太く */
+  color: var(--color-accent-primary);
+  margin-bottom: 0;
+  /* Handled by group */
+  border: none;
+  background: none;
+  letter-spacing: 0;
+  width: 100%;
+  line-height: 1;
+}
+
+.store-name-header {
+  text-align: center;
+  margin-bottom: 20px;
+  padding: 15px;
+  background: var(--color-primary-black);
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+
+/* Shared Preview Menu Styles */
+.store-name-header h2 {
+  margin: 0;
+  color: var(--color-text-primary-light);
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.preview-menu-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+}
+
+.preview-menu-item {
+  display: flex;
+  align-items: center;
+  padding: 8px;
+  background-color: var(--color-card-background);
+  border-radius: 8px;
+  border: 1px solid var(--color-border);
+}
+
+.preview-menu-image {
+  width: 48px;
+  height: 48px;
+  border-radius: 6px;
+  object-fit: cover;
+  margin-right: 12px;
+  background-color: #eee;
+}
+
+.preview-menu-placeholder {
+  width: 48px;
+  height: 48px;
+  border-radius: 6px;
+  margin-right: 12px;
+  background-color: #eee;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 8px;
+  color: #999;
+}
+
+.preview-menu-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.preview-menu-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.preview-menu-name {
+  font-weight: 500;
+  font-size: 14px;
+  color: var(--color-text-primary);
+}
+
+.preview-menu-quantity {
+  font-size: 14px;
+  color: var(--color-text-primary);
+}
+
+/* Google Maps InfoWindow Scrollbar Removal */
+.gm-style-iw,
+.gm-style-iw-c,
+.gm-style-iw-d {
+  overflow: hidden !important;
+  padding: 0 !important;
+}
+
+/* For Webkit browsers - Hide Scrollbars */
+.gm-style-iw::-webkit-scrollbar,
+.gm-style-iw-c::-webkit-scrollbar,
+.gm-style-iw-d::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+/* Remove focus outline on map elements */
+.gm-style :focus {
+  outline: none !important;
+  border: none !important;
+}
+
+.gm-style-iw-c:focus {
+  outline: none !important;
+}
+
+/* Ensure max-height doesn't clip prematurely */
+.gm-style-iw-d {
+  max-height: none !important;
+  overflow: hidden !important;
+  /* Allow negative margins to show content */
+}
+
+/* Hide default Google Maps InfoWindow Close Button */
+.gm-ui-hover-effect {
+  display: none !important;
+}

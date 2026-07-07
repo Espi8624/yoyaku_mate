@@ -1,0 +1,45 @@
+/* src/containers/waiting-screen/notified-screen/NotifiedScreen.css */
+/* .notified-screen is replaced by .waiting-section */
+.notified-section {
+  text-align: center;
+  /* Additional specific styles if needed, but waiting-section handles the card */
+}
+
+.notified-content {
+  background: var(--color-card-background, #fff);
+  border-radius: 12px;
+  padding: 60px 40px;
+  text-align: center;
+  box-shadow: 0 4px 16px rgba(46, 76, 166, 0.1);
+  border: 1px solid var(--color-border, #e0e6f6);
+  max-width: 420px;
+  width: 100%;
+}
+
+.notified-icon {
+  width: 100px;
+  height: 100px;
+  margin: 0 auto 30px;
+  background: var(--color-accent-primary, #2C2C2C);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 60px;
+  color: var(--color-text-primary-light, white);
+  font-weight: bold;
+}
+
+.notified-title {
+  font-size: 28px;
+  font-weight: bold;
+  color: var(--color-text-primary, #2C2C2C);
+  margin-bottom: 20px;
+  line-height: 1.4;
+}
+
+.notified-message {
+  font-size: 20px;
+  color: var(--color-text-secondary, #666);
+  margin: 0;
+}

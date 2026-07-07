@@ -1,0 +1,122 @@
+{
+    "waiting_screen_nationality": {
+        "welcome": "いらっしゃいませ！",
+        "origin": "Which country are you visiting from?",
+        "confirm": "→"
+    },
+    "waiting_screen_input": {
+        "input_label": "以下の情報をご記入いただければ、順番をお取りいたします！",
+        "name_label": "このお名前でお呼びします。",
+        "party_size_label": "何名様でご来店されましたか？",
+        "party_size_placeholder": "例: 2",
+        "contact_label": "何かございましたら、こちらのご連絡先にご連絡いたします。",
+        "contact_placeholder": "例: 080-1234-5678",
+        "note_label": "お店側にお伝えしたいことがございますでしょうか？",
+        "note_placeholder": "例: 窓際希望 / アレルギーあり",
+        "confirm": "次へ"
+    },
+    "waiting_screen_menu": {
+        "title": "メニュー選択",
+        "skip": "スキップ",
+        "confirm": "次へ",
+        "no_menus": "現在注文可能なメニューがありません",
+        "view_details": "詳細表示",
+        "close_details": "詳細を閉じる",
+        "select_at_least_one": "メニューを少なくとも1つ選択してください",
+        "one_menu_per_person_error": "人数と同じ数量のメニューを選択してください",
+        "back": "戻る"
+    },
+    "waiting_screen_preview": {
+        "preview_label": "入力内容の確認",
+        "party_size_label": "人数",
+        "contact_label": "連絡先",
+        "note_label": "備考",
+        "pre_order": "事前注文",
+        "back": "戻る",
+        "confirm": "確定する"
+    },
+    "waiting_screen_notified": {
+        "title": "大変お待たせいたしました。",
+        "message": "只今ご案内いたします。"
+    },
+    "waiting_screen": {
+        "label_1": "ご記入いただいた情報で登録が完了しました！",
+        "label_2": "少々お待ちいただければ、お店からお呼びいたします。",
+        "notified_label_1": "大変お待たせいたしました！",
+        "notified_label_2": "スタッフがご案内いたしますので、カウンターまでお越しください。",
+        "waiting_number_label": "受付番号",
+        "name_label": "お名前",
+        "party_size_label": "人数",
+        "note_label": "備考",
+        "current_waiting_label": "現在お待ちのお客様",
+        "group_label": "組",
+        "estimated_wait_time_label": "予想待機時間",
+        "registration_time_label": "受付時間",
+        "pre_order": "事前注文",
+        "cancel_reservation": "予約をキャンセル",
+        "menu_label": "お待ちの間にメニューをご覧になりませんか？",
+        "menu_overview_label": "メニューを見る",
+        "menu_close_label": "メニューを閉じる",
+        "category_overview_labe": "カテゴリーを見る",
+        "cancel_popup": {
+            "message": "予約をキャンセルいたします",
+            "close": "閉じる",
+            "confirm": "確認"
+        },
+        "call_popup": {
+            "message_1": "お待たせいたしました！",
+            "message_2": "ご来店をお願いいたします。",
+            "confirm": "確認"
+        },
+        "completed_screen": {
+            "title": "ご来店ありがとうございます！",
+            "message": "スタッフがご案内いたします。"
+        },
+        "reset_confirm_text": "初期化をご希望の場合は下のボタンを押してください。",
+        "reset_btn": "初期化"
+    },
+    "cancelled_screen": {
+        "user": {
+            "title": "キャンセルされました",
+            "body": "ご利用ありがとうございました。再度ご利用の場合は、もう一度QRコードをスキャンしてください。"
+        },
+        "store": {
+            "title": "キャンセルされました",
+            "body": "大変申し訳ございません。店舗の都合によりキャンセルされました。スタッフまでお問い合わせください。"
+        },
+        "absence": {
+            "title": "キャンセルされました",
+            "body": "お呼び出しいたしましたが、ご不在のためキャンセルされました。再度お待ちになる場合は、もう一度QRコードをスキャンしてください。"
+        }
+    },
+    "chat_bot": {
+        "greeting": "こんにちは！ご注文やお店についてご質問があればお答えします。",
+        "ui": {
+            "title": "AI アシスタント",
+            "placeholder": "メッセージを入力..."
+        },
+        "errors": {
+            "429": "申し訳ありません。現在アクセスが集中しており応答できません。しばらく待ってから再度お試しください。",
+            "general": "現在AI応答サービスを利用できません。"
+        }
+    },
+    "waiting_place_map": {
+        "title": "周辺マップ",
+        "list_title": "おすすめスポット一覧",
+        "not_found": "は見つかりませんでした。",
+        "walking": "徒歩",
+        "minutes": "分",
+        "category_all": "すべて",
+        "category_cafe": "カフェ",
+        "category_park": "公園",
+        "category_convenience": "コンビニ",
+        "category_shopping": "ショッピングモール",
+        "category_library": "図書館",
+        "no_image": "画像なし",
+        "view_on_map": "Google Mapで見る"
+    },
+    "google_map_popup": {
+        "message": "Google Mapを開きますか？",
+        "confirm": "開く"
+    }
+}

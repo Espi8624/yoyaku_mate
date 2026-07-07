@@ -1,0 +1,118 @@
+{
+    "waiting_screen_nationality": {
+        "welcome": "¡Bienvenido!",
+        "origin": "¿De qué país nos visita?",
+        "confirm": "→"
+    },
+    "waiting_screen_input": {
+        "input_label": "¡Por favor, complete la siguiente información para unirse a la lista de espera!",
+        "name_label": "¿Cómo prefiere que le llamemos?",
+        "party_size_label": "¿Cuántas personas son en su grupo?",
+        "contact_label": "Le contactaremos a este número si hay algún inconveniente.",
+        "note_label": "¿Hay algo que el restaurante deba saber con antelación?",
+        "confirm": "Siguiente"
+    },
+    "waiting_screen_menu": {
+        "title": "Seleccionar menú",
+        "skip": "Omitir",
+        "confirm": "Siguiente",
+        "no_menus": "No hay menús disponibles en este momento",
+        "view_details": "Ver detalles",
+        "close_details": "Cerrar detalles",
+        "select_at_least_one": "Por favor, seleccione al menos un artículo",
+        "one_menu_per_person_error": "Por favor, seleccione el mismo número de menús que de personas",
+        "back": "Volver"
+    },
+    "waiting_screen_preview": {
+        "preview_label": "¡Le registraremos en la lista de espera con la información proporcionada!",
+        "name_label": "Nombre",
+        "party_size_label": "Número de personas",
+        "contact_label": "Contacto",
+        "note_label": "Nota",
+        "back": "Editar",
+        "confirm": "Confirmar registro",
+        "popup": {
+            "close": "Cerrar",
+            "back": "Volver",
+            "confirm": "Confirmar"
+        }
+    },
+    "waiting_screen": {
+        "label_1": "¡Registro completado con éxito!",
+        "label_2": "Por favor, espere un momento. Le llamaremos pronto.",
+        "notified_label_1": "¡Gracias por su paciencia!",
+        "notified_label_2": "Por favor, diríjase al mostrador. Nuestro personal le guiará.",
+        "waiting_number_label": "Número de espera",
+        "name_label": "Nombre",
+        "party_size_label": "Personas",
+        "note_label": "Nota",
+        "estimated_wait_time_label": "Tiempo de espera estimado",
+        "current_waiting_label": "Grupos en espera",
+        "group_label": "Grupo(s)",
+        "menu_label": "¿Le gustaría ver el menú mientras espera?",
+        "menu_overview_label": "Ver menú",
+        "menu_close_label": "Cerrar menú",
+        "category_overview_labe": "Ver categorías",
+        "registration_time_label": "Hora de registro",
+        "pre_order": "Pre-pedido",
+        "cancel_reservation": "Cancelar reserva",
+        "cancel_popup": {
+            "message": "¿Está seguro de que desea cancelar su reserva?",
+            "close": "Cerrar",
+            "confirm": "Sí, cancelar"
+        },
+        "call_popup": {
+            "message_1": "¡Gracias por su espera!",
+            "message_2": "Por favor, acérquese al establecimiento.",
+            "confirm": "Confirmar"
+        },
+        "completed_screen": {
+            "title": "¡Gracias por su visita!",
+            "message": "El personal le guiará."
+        }
+    },
+    "cancelled_screen": {
+        "user": {
+            "title": "Cancelado",
+            "body": "Gracias por visitarnos. Si desea registrarse de nuevo, escanee el código QR otra vez."
+        },
+        "store": {
+            "title": "Cancelado",
+            "body": "Lo sentimos mucho. Su reserva ha sido cancelada por motivos del establecimiento. Por favor, consulte con el personal."
+        },
+        "absence": {
+            "title": "Cancelado",
+            "body": "Su reserva ha sido cancelada porque no estaba presente cuando le llamamos. Escanee el código QR para registrarse de nuevo."
+        }
+    },
+    "chat_bot": {
+        "greeting": "¡Hola! Por favor, hágame saber si tiene alguna pregunta sobre su pedido o el establecimiento.",
+        "ui": {
+            "title": "Asistente IA",
+            "placeholder": "Escriba un mensaje..."
+        },
+        "errors": {
+            "429": "Lo sentimos, hay mucho tráfico en este momento. Por favor, inténtelo de nuevo más tarde.",
+            "general": "Ha ocurrido un error. Por favor, inténtelo de nuevo más tarde."
+        }
+    },
+    "waiting_place_map": {
+        "title": "Mapa Cercano",
+        "list_title": "Lugares Recomendados",
+        "not_found": "no encontrado.",
+        "walking": "Caminar ",
+        "minutes": " min",
+        "category_all": "Todo",
+        "category_cafe": "Cafetería",
+        "category_park": "Parque",
+        "category_convenience": "Tienda de Conveniencia",
+        "category_shopping": "Centro Comercial",
+        "category_library": "Biblioteca",
+        "no_image": "Sin imagen",
+        "view_on_map": "Ver en Google Maps"
+    },
+    "google_map_popup": {
+        "message": "¿Quieres abrir Google Maps?",
+        "confirm": "Abrir"
+    }
+}

@@ -1,0 +1,120 @@
+{
+    "waiting_screen_nationality": {
+        "welcome": "いらっしゃいませ！",
+        "origin": "Which country are you visiting from?",
+        "confirm": "→"
+    },
+    "waiting_screen_input": {
+        "input_label": "Please fill out the information below to help us with your waiting list!",
+        "name_label": "This is how we'll call you.",
+        "party_size_label": "How many people are in your party?",
+        "contact_label": "If anything comes up, we will contact you at this number.",
+        "note_label": "Is there anything you'd like us to inform the restaurant about?",
+        "confirm": "Next"
+    },
+    "waiting_screen_menu": {
+        "title": "Select Menu",
+        "skip": "Skip",
+        "confirm": "Next",
+        "no_menus": "No menus available at the moment",
+        "view_details": "View Details",
+        "close_details": "Close Details",
+        "select_at_least_one": "Please select at least one menu item",
+        "one_menu_per_person_error": "Please select the same number of menu items as the number of people",
+        "back": "Back"
+    },
+    "waiting_screen_preview": {
+        "preview_label": "We will proceed with the waiting list based on the information you provided!",
+        "name_label": "Name",
+        "party_size_label": "Party Size",
+        "contact_label": "Contact",
+        "note_label": "Notes",
+        "confirm": "Register as is",
+        "back": "Edit",
+        "popup": {
+            "close": "Close",
+            "back": "Back",
+            "confirm": "Confirm"
+        }
+    },
+    "waiting_screen": {
+        "label_1": "Thank you! Your information has been successfully registered!",
+        "label_2": "Please wait a moment the restaurant will call you shortly.",
+        "notified_label_1": "Thank you for your patience!",
+        "notified_label_2": "Please make your way to the counter. Our staff will guide you.",
+        "waiting_number_label": "Waiting Number",
+        "name_label": "Name",
+        "party_size_label": "Party Size",
+        "note_label": "Notes",
+        "current_waiting_label": "Current Waiting Customers",
+        "group_label": "group(s)",
+        "estimated_wait_time_label": "Estimated Wait Time",
+        "menu_label": "How about checking the menu while you wait?",
+        "menu_overview_label": "View Menu",
+        "menu_close_label": "Close Menu",
+        "category_overview_labe": "View Category",
+        "registration_time_label": "Registration Time",
+        "pre_order": "Pre-order",
+        "cancel_reservation": "Cancel Reservation",
+        "cancel_popup": {
+            "message": "Are you sure you want to cancel your reservation?",
+            "close": "Close",
+            "confirm": "Confirm"
+        },
+        "call_popup": {
+            "message_1": "Thank you for waiting!",
+            "message_2": "Please come to the store.",
+            "confirm": "Confirm"
+        },
+        "completed_screen": {
+            "title": "Thank you for visiting!",
+            "message": "Step right this way, our staff will guide you."
+        },
+        "reset_confirm_text": "If you would like to reset, please press the button below.",
+        "reset_btn": "Reset"
+    },
+    "cancelled_screen": {
+        "user": {
+            "title": "Cancelled",
+            "body": "Thank you for visiting. If you wish to register again, please scan the QR code again."
+        },
+        "store": {
+            "title": "Cancelled",
+            "body": "We apologize deeply. Your reservation was cancelled by the store. Please contact the staff for assistance."
+        },
+        "absence": {
+            "title": "Cancelled",
+            "body": "Your reservation was cancelled because you were not present when called. Please scan the QR code again to re-register."
+        }
+    },
+    "chat_bot": {
+        "greeting": "Hello! Please let me know if you have any questions about your order or the store.",
+        "ui": {
+            "title": "AI Assistant",
+            "placeholder": "Type a message..."
+        },
+        "errors": {
+            "429": "Sorry, we are experiencing high traffic. Please try again later.",
+            "general": "An error occurred. Please try again later."
+        }
+    },
+    "waiting_place_map": {
+        "title": "Nearby Map",
+        "list_title": "Recommended Spots",
+        "not_found": "not found.",
+        "walking": "Walk ",
+        "minutes": " min",
+        "category_all": "All",
+        "category_cafe": "Cafe",
+        "category_park": "Park",
+        "category_convenience": "Convenience Store",
+        "category_shopping": "Shopping Mall",
+        "category_library": "Library",
+        "no_image": "No Image",
+        "view_on_map": "View on Google Maps"
+    },
+    "google_map_popup": {
+        "message": "Do you want to open Google Maps?",
+        "confirm": "Open"
+    }
+}

@@ -1,0 +1,39 @@
+/**
+ * カラーパレット定義
+ * yoyaku_mate_providerのapp_colors.dartから抽出したカラーシステム
+ */
+
+:root {
+    /* === 基本パレット === */
+    --color-background: #F8F9FA;
+    --color-primary-black: #161616;
+    --color-card-background: #FFFFFF;
+
+    /* === アクセント & インタラクティブパレット === */
+    --color-accent-primary: #2C2C2C;
+    --color-accent-secondary: #424242;
+
+    /* === テキスト & コンテンツパレット === */
+    --color-text-primary: #161616;
+    --color-text-primary-light: #F8F9FA;
+    --color-text-secondary: #6E6E6E;
+    --color-text-tertiary: #A6A6A6;
+
+    /* === UI & ユーティリティパレット === */
+    --color-border: #EAEAEA;
+    --color-disabled: #DCDCDC;
+    --color-disabled-background: #F0F0F0;
+
+    /* === セマンティックパレット === */
+    --color-error: #C53030;
+    --color-warning: #DD6B20;
+    --color-success: #2F855A;
+
+    /* === 状態管理色 === */
+    --color-pending-background: #FFF3E0;
+    --color-pending: #F57C00;
+    --color-approved-background: #E8F5E9;
+    --color-approved: #388E3C;
+    --color-rejected-background: #FFEBEE;
+    --color-rejected: #D32F2F;
+}
