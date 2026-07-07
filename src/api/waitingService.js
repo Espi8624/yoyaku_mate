@@ -179,3 +179,20 @@ export const getStoreInfo = async (storeId) => {
     throw error;
   }
 };
+
+/**
+ * AIチャットボット用リアルタイム店舗コンテキストデータ取得
+ * @param {string} storeId - 店舗ID
+ * @returns {Promise<object>}
+ */
+export const getStoreAIContext = async (storeId) => {
+  try {
+    const response = await axios.get(`${API_BASE_URL}/public/store_ai_context`, {
+      params: { store_id: storeId }
+    });
+    return response.data.data;
+  } catch (error) {
+    console.error('AI Store Context 取得失敗:', error);
+    throw error;
+  }
+};
