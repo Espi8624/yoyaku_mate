@@ -236,14 +236,46 @@ export function WaitingScreenProvider({ children }) {
     }
   };
 
+  /**
+   * JST (UTC+9) 基準のユニークな待機IDと登録時間を生成するヘルパー関数
+   * 冪等性の確保およびオフライン復帰時の時間整合性のために使用
+   * @returns {{ waitingId: string, registrationTime: string }}
+   */
+  const getJSTDateStrings = () => {
+    const now = new Date();
+    const jstOffset = 9 * 60 * 60 * 1000; // 日本時間のオフセット (9時間)
+    const jstTime = new Date(now.getTime() + jstOffset); // JST時間に変換
+
+    const year = jstTime.getUTCFullYear();
+    const month = String(jstTime.getUTCMonth() + 1).padStart(2, '0');
+    const day = String(jstTime.getUTCDate()).padStart(2, '0');
+    const hour = String(jstTime.getUTCHours()).padStart(2, '0');
+    const minute = String(jstTime.getUTCMinutes()).padStart(2, '0');
+    const second = String(jstTime.getUTCSeconds()).padStart(2, '0');
+    const ms = String(jstTime.getUTCMilliseconds()).padStart(3, '0');
+    const randomSuffix = String(Math.floor(100 + Math.random() * 900)); // 重複防止用の3桁の乱数
+
+    const dateStr = `${year}${month}${day}`;
+    const timeStr = `${hour}${minute}${second}`;
+
+    return {
+      // 冪等キーとなる時間ベースのユニークID (フォーマット: YYYYMMDD-HHmmss-SSS-Random)
+      waitingId: `${dateStr}-${timeStr}-${ms}-${randomSuffix}`,
+      // 顧客が登録ボタンを押した実際の時刻 (ISO 8601 フォーマット)
+      registrationTime: `${year}-${month}-${day}T${hour}:${minute}:${second}.${ms}+09:00`
+    };
+  };
+
   const handleSubmitWaiting = async () => {
     try {
       const { waitingPartySum, estimatedWaitingCount, maxWaitingCount } = await getWaitingStatus(storeId);
       const currentWaitingCount = waitingPartySum + Number(partySize);
+      const { waitingId: clientWaitingId, registrationTime: clientRegistrationTime } = getJSTDateStrings();
 
-      // Payloadからwaiting_idを除外
       const payload = {
         store_id: storeId,
+        waiting_id: clientWaitingId,
+        registration_time: clientRegistrationTime,
         party_size: Number(partySize),
         nationality: selectedNationality,
         contact: contact.trim() === "" ? "-" : contact,
