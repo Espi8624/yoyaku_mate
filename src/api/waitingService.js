@@ -120,6 +120,35 @@ export const subscribeToWaitingList = (storeId, onMessage, onError) => {
 };
 
 /**
+ * 特定待機のリアルタイム更新を購読 (SSE)
+ * @param {string} storeId
+ * @param {string} waitingId
+ * @param {function} onMessage - データ受信時のコールバック
+ * @param {function} onError - エラー発生時のコールバック
+ * @returns {EventSource} - 接続オブジェクト (クリーンアップ用)
+ */
+export const subscribeToWaitingStatus = (storeId, waitingId, onMessage, onError) => {
+  const url = `${API_BASE_URL}/waiting-list/stream-user?store_id=${storeId}&waiting_id=${waitingId}`;
+  const eventSource = new EventSource(url);
+
+  eventSource.onmessage = (event) => {
+    try {
+      const data = JSON.parse(event.data);
+      onMessage(data);
+    } catch (e) {
+      console.error('[SSE User] JSON parse error:', e);
+    }
+  };
+
+  eventSource.onerror = (error) => {
+    console.warn('[SSE User] Connection error:', error);
+    if (onError) onError(error);
+  };
+
+  return eventSource;
+};
+
+/**
  * 店舗のQRトークンを取得 (Board用)
  * @param {string} storeId
  * @returns {Promise<{v_token: string, date: string}>}

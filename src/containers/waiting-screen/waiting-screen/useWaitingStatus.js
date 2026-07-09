@@ -1,8 +1,5 @@
-import { useState, useEffect, useRef, useCallback } from "react";
-import { getWaitingDetails, getMenuList } from "../../../api/waitingService";
-
-// ポーリング間隔 (ミリ秒)
-const POLLING_INTERVAL = 3000;
+import { useState, useEffect, useCallback } from "react";
+import { getWaitingDetails, getMenuList, subscribeToWaitingStatus } from "../../../api/waitingService";
 
 /**
  * 待機状況をポーリングで監視するカスタムフック。
@@ -25,8 +22,7 @@ function useWaitingStatus(storeId, waitingId, enabled) {
     const [status, setStatus] = useState(null);
     const [error, setError] = useState(null);
 
-    // ポーリング用タイマーref (アンマウント時のクリーンアップに使用)
-    const pollingRef = useRef(null);
+
 
     const fetchData = useCallback(async () => {
         // storeId/waitingId が未設定の場合はスキップ
@@ -81,20 +77,34 @@ function useWaitingStatus(storeId, waitingId, enabled) {
     }, [storeId, waitingId]);
 
     useEffect(() => {
-        // enabled=false の間はポーリングしない (ローカルストレージ復元待ち等)
-        if (!enabled) return;
+        // enabled=false の間は購読しない
+        if (!enabled || !storeId || !waitingId) return;
 
-        // マウント直後にデータ取得
+        // マウント直後に初期データ取得
         fetchData();
 
-        // 一定間隔でポーリング開始
-        pollingRef.current = setInterval(fetchData, POLLING_INTERVAL);
+        // SSEでのリアルタイム監視を開始
+        const eventSource = subscribeToWaitingStatus(
+            storeId,
+            waitingId,
+            (updatedDetails) => {
+                console.log("[useWaitingStatus] SSE受信:", updatedDetails);
+                if (updatedDetails) {
+                    setStatus(updatedDetails.status || null);
+                    setDetails(updatedDetails);
+                }
+            },
+            (err) => {
+                console.error("[useWaitingStatus] SSEエラー:", err);
+                setError("接続状況が不安定です。自動的に再接続を試みます。");
+            }
+        );
 
         return () => {
-            // アンマウント時にポーリング停止
-            if (pollingRef.current) clearInterval(pollingRef.current);
+            // アンマウント時に接続をクローズ
+            eventSource.close();
         };
-    }, [fetchData, enabled]);
+    }, [fetchData, enabled, storeId, waitingId]);
 
     return { details, menuList, status, error };
 }
