@@ -2,6 +2,16 @@
 
 QRコードベースのリアルタイム待機列管理およびAI店舗案内チャットボットを提供するお客様用モバイルウェブクライアントです。
 
+## Screenshots
+<!-- リアルタイム待機状況画面、AIチャットボット画面、GoogleマップおよびQRコードチケットなどのスクリーンショット画像配置領域 -->
+| 1. 待機画面への進入 | 2. リアルタイム待機状況 | 3. メニュープレビュー |
+| :---: | :---: | :---: |
+| ![待機画面への進入](./docs/screenshots/screen_1.png) | ![リアルタイム待機状況](./docs/screenshots/screen_2.png) | ![メニュープレビュー](./docs/screenshots/screen_3.png) |
+
+| 4. AI店舗ガイドチャットボット | 5. モバイルQRチケット |
+| :---: | :---: |
+| ![AI店舗ガイドチャットボット](./docs/screenshots/screen_4.png) | ![モバイルQRチケット](./docs/screenshots/screen_5.png) |
+
 ## Tech Stack
 
 | 項目 | 技術 |

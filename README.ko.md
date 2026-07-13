@@ -2,6 +2,16 @@
 
 QR 코드 기반 실시간 대기열 관리 및 AI 점포 안내 챗봇을 제공하는 손님용 모바일 웹 클라이언트입니다.
 
+## Screenshots
+<!-- 실시간 대기 현황 화면, AI 챗봇 화면, 구글 맵 및 QR 코드 티켓 등의 스크린샷 이미지 배치 영역 -->
+| 1. 대기 화면 진입 | 2. 실시간 대기 현황 | 3. 메뉴 프리뷰 |
+| :---: | :---: | :---: |
+| ![대기 화면 진입](./docs/screenshots/screen_1.png) | ![실시간 대기 현황](./docs/screenshots/screen_2.png) | ![메뉴 프리뷰](./docs/screenshots/screen_3.png) |
+
+| 4. AI 매장 가이드 챗봇 | 5. 모바일 QR 티켓 |
+| :---: | :---: |
+| ![AI 매장 가이드 챗봇](./docs/screenshots/screen_4.png) | ![모바일 QR 티켓](./docs/screenshots/screen_5.png) |
+
 ## Tech Stack
 
 | 항목 | 기술 |
