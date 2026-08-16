@@ -2,8 +2,9 @@ import React from "react";
 
 import { useWaitingScreen } from "../WaitingScreenContext";
 import FormField from "./FormField";
-import "../waiting-screen/WaitingScreen.css";
-import "./WaitingScreenInput.css";
+import baseStyles from "../waiting-screen/WaitingScreen.module.css";
+import specificStyles from "./WaitingScreenInput.module.css";
+const styles = { ...baseStyles, ...specificStyles };
 import ChatbotButton from "../../chat-bot/ChatbotButton";
 import useTranslation from "../../../hook/useTranslation";
 
@@ -40,10 +41,14 @@ function WaitingScreenInput() {
   };
 
   return (
-    <div className="waiting-section">
-      <ChatbotButton />
-      <div className="input-title">{waitingScreenInput.input_label}</div>
-      <form className="input-form" onSubmit={handleSubmit}>
+    <div className="page-container">
+      <div className="page-top-bar">
+        <div className="page-top-bar-right">
+          <ChatbotButton />
+        </div>
+      </div>
+      <h1 className="page-title">{waitingScreenInput.input_label}</h1>
+      <form className={styles["input-form"]} onSubmit={handleSubmit}>
 
         <FormField
           id="party_size"
@@ -72,11 +77,14 @@ function WaitingScreenInput() {
           onChange={(e) => setNotes(e.target.value)}
         />
 
-        <div className="waiting-form-actions fixed-action-footer">
-          <button type="submit" className="confirmation-btn">
-            {waitingScreenInput.confirm}
-          </button>
+        <div className="fixed-footer">
+          <div className="fixed-footer-inner">
+            <button type="submit" className="btn-primary">
+              {waitingScreenInput.confirm}
+            </button>
+          </div>
         </div>
+
       </form>
     </div>
   );

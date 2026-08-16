@@ -10,7 +10,10 @@
         "party_size_label": "كم عدد الأشخاص؟",
         "contact_label": "سنتواصل معك عبر هذا الرقم في حال حدوث أي طارئ.",
         "note_label": "هل هناك أي شيء تريد إبلاغ المتجر به مسبقاً؟",
-        "confirm": "التالي"
+        "confirm": "التالي",
+        "party_size_placeholder": "مثال: 2",
+        "contact_placeholder": "مثال: 0555-123-456",
+        "note_placeholder": "مثال: مقعد بجانب النافذة / حساسية غذائية"
     },
     "waiting_screen_menu": {
         "title": "اختيار القائمة",
@@ -25,7 +28,6 @@
     },
     "waiting_screen_preview": {
         "preview_label": "سنقوم بتسجيلك في قائمة الانتظار بناءً على المعلومات المدخلة!",
-        "name_label": "الاسم",
         "party_size_label": "عدد الأشخاص",
         "contact_label": "رقم التواصل",
         "note_label": "ملاحظات",
@@ -35,6 +37,12 @@
             "close": "إغلاق",
             "back": "رجوع",
             "confirm": "تأكيد"
+        },
+        "pre_order": "الطلب المسبق",
+        "submit_confirm": {
+            "message": "هل تريد المتابعة بتسجيل هذه المعلومات؟",
+            "cancel": "إلغاء",
+            "confirm": "نعم"
         }
     },
     "waiting_screen": {
@@ -69,6 +77,14 @@
         "completed_screen": {
             "title": "شكراً لزيارتكم!",
             "message": "سيقوم الموظفون بإرشادكم."
+        },
+        "reset_btn": "إعادة تعيين",
+        "reset_confirm_text": "إذا كنت ترغب في إعادة التعيين، يرجى الضغط على الزر أدناه.",
+        "registration_complete_popup": {
+            "message": "اكتمل التسجيل!"
+        },
+        "completed_notification_popup": {
+            "message": "لقد اكتملت هذه الزيارة بالفعل."
         }
     },
     "cancelled_screen": {
@@ -114,5 +130,9 @@
     "google_map_popup": {
         "message": "Do you want to open Google Maps?",
         "confirm": "Open"
+    },
+    "waiting_screen_notified": {
+        "title": "شكراً لانتظاركم.",
+        "message": "سنقوم بإرشادكم الآن."
     }
 }

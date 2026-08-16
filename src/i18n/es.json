@@ -10,7 +10,10 @@
         "party_size_label": "¿Cuántas personas son en su grupo?",
         "contact_label": "Le contactaremos a este número si hay algún inconveniente.",
         "note_label": "¿Hay algo que el restaurante deba saber con antelación?",
-        "confirm": "Siguiente"
+        "confirm": "Siguiente",
+        "party_size_placeholder": "ej.: 2",
+        "contact_placeholder": "ej.: 612-345-678",
+        "note_placeholder": "ej.: Mesa junto a la ventana / Alergias"
     },
     "waiting_screen_menu": {
         "title": "Seleccionar menú",
@@ -25,7 +28,6 @@
     },
     "waiting_screen_preview": {
         "preview_label": "¡Le registraremos en la lista de espera con la información proporcionada!",
-        "name_label": "Nombre",
         "party_size_label": "Número de personas",
         "contact_label": "Contacto",
         "note_label": "Nota",
@@ -35,6 +37,12 @@
             "close": "Cerrar",
             "back": "Volver",
             "confirm": "Confirmar"
+        },
+        "pre_order": "Pedido anticipado",
+        "submit_confirm": {
+            "message": "¿Desea continuar con el registro con esta información?",
+            "cancel": "Cancelar",
+            "confirm": "Sí"
         }
     },
     "waiting_screen": {
@@ -69,6 +77,14 @@
         "completed_screen": {
             "title": "¡Gracias por su visita!",
             "message": "El personal le guiará."
+        },
+        "reset_btn": "Restablecer",
+        "reset_confirm_text": "Si desea restablecer, pulse el botón de abajo.",
+        "registration_complete_popup": {
+            "message": "¡Registro completado!"
+        },
+        "completed_notification_popup": {
+            "message": "Esta visita ya se ha completado."
         }
     },
     "cancelled_screen": {
@@ -114,5 +130,9 @@
     "google_map_popup": {
         "message": "¿Quieres abrir Google Maps?",
         "confirm": "Abrir"
+    },
+    "waiting_screen_notified": {
+        "title": "Gracias por su espera.",
+        "message": "Le atenderemos ahora mismo."
     }
 }

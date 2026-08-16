@@ -3,15 +3,15 @@ import { useLocation } from 'react-router-dom';
 import nationalitiesData from '../../data/nationalities.json';
 import useTranslation from '../../hook/useTranslation';
 import { getWaitingStatus, submitWaiting as apiSubmitWaiting, cancelWaiting, getQRToken, getWaitingDetails } from '../../api/waitingService';
-import './NetworkErrorPopup.css';  // CSSファイル名を変更
+import styles from "./NetworkErrorPopup.module.css";  // CSSファイル名を変更
 
 // NetworkErrorPopupをインラインコンポーネントとして定義
 const NetworkErrorPopup = ({ isOffline }) => {
   if (!isOffline) return null;
 
   return (
-    <div className="network-error-popup">
-      <span className="network-error-message">
+    <div className={styles["network-error-popup"]}>
+      <span className={styles["network-error-message"]}>
         インターネット接続が不安定です
       </span>
     </div>
@@ -102,8 +102,15 @@ export function WaitingScreenProvider({ children }) {
   }, [location.search]);
 
   useEffect(() => {
-    console.log('[Context] Initial Params:', initialParams);
-    console.log('[Context] v_token:', initialParams.vToken);
+    if (process.env.NODE_ENV === 'development') {
+      // vTokenはセキュリティ上ログに出力しない
+      console.log('[Context] Initial Params:', {
+        storeId: initialParams.storeId,
+        waitingId: initialParams.waitingId,
+        nationality: initialParams.nationality,
+        languageCode: initialParams.languageCode,
+      });
+    }
   }, [initialParams]);
 
   // [DEV] Development mode: Fetch valid v_token if missing
@@ -184,7 +191,10 @@ export function WaitingScreenProvider({ children }) {
 
   // URLパラメータが変更される時、ステータスを更新
   useEffect(() => {
-    setStoreId(initialParams.storeId);
+    // 値が実際に変わった時のみsetStateを呼び出す → 不要な再レンダリング及びメニュー重複fetchを防止
+    if (initialParams.storeId !== storeId) {
+      setStoreId(initialParams.storeId);
+    }
     if (initialParams.vToken) {
       setVToken(initialParams.vToken);
     }
@@ -192,13 +202,17 @@ export function WaitingScreenProvider({ children }) {
       setWaitingId(initialParams.waitingId);
       localStorage.setItem("waiting_id", initialParams.waitingId);
     }
-    setSelectedNationality(initialParams.nationality);
-    setSelectedLanguageCode(initialParams.languageCode);
-    // stepはローカルストレージ優先で初期化されているのでここでは変更しない
+    if (initialParams.nationality !== selectedNationality) {
+      setSelectedNationality(initialParams.nationality);
+    }
+    if (initialParams.languageCode !== selectedLanguageCode) {
+      setSelectedLanguageCode(initialParams.languageCode);
+    }
     setPartySize("");
     setContact("");
     setNotes("");
     setWaitingId(localStorage.getItem("waiting_id") || "");
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [initialParams]);
 
   // サーバー通信関係
@@ -216,7 +230,7 @@ export function WaitingScreenProvider({ children }) {
           if (storeId) localStorage.setItem("store_id", storeId);
         }
 
-        setPopupInfo({ message: selectedLanguageCode === 'ja' ? '登録が完了しました' : 'Registration complete!', mode: 'registration_complete' });
+        setPopupInfo({ message: t.waiting_screen?.registration_complete_popup?.message, mode: 'registration_complete' });
         setPopupVisible(true);
       } else {
         // 登録失敗時にローカルストレージから削除
@@ -339,7 +353,7 @@ export function WaitingScreenProvider({ children }) {
 
         // ポップアップを表示
         setPopupInfo({
-          message: selectedLanguageCode === 'ja' ? "既に入店手続きが完了しています。" : "This visit has already been completed.",
+          message: t.waiting_screen?.completed_notification_popup?.message,
           mode: "completed_notification"
         });
         setPopupVisible(true);

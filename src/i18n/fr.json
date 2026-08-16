@@ -10,7 +10,10 @@
         "party_size_label": "Nombre de personnes",
         "contact_label": "Numéro de contact (en cas d'urgence)",
         "note_label": "Remarques particulières pour le restaurant",
-        "confirm": "Suivant"
+        "confirm": "Suivant",
+        "party_size_placeholder": "ex. 2",
+        "contact_placeholder": "ex. 06 12 34 56 78",
+        "note_placeholder": "ex. Table près de la fenêtre / Allergies"
     },
     "waiting_screen_menu": {
         "title": "Choix du menu",
@@ -25,7 +28,6 @@
     },
     "waiting_screen_preview": {
         "preview_label": "Vérifiez vos informations avant de confirmer l'inscription.",
-        "name_label": "Nom",
         "party_size_label": "Nombre de personnes",
         "contact_label": "Contact",
         "note_label": "Notes",
@@ -35,6 +37,12 @@
             "close": "Fermer",
             "back": "Retour",
             "confirm": "Confirmer"
+        },
+        "pre_order": "Commande anticipée",
+        "submit_confirm": {
+            "message": "Souhaitez-vous confirmer l'inscription avec ces informations ?",
+            "cancel": "Annuler",
+            "confirm": "Oui"
         }
     },
     "waiting_screen": {
@@ -69,6 +77,14 @@
         "completed_screen": {
             "title": "Merci de votre visite !",
             "message": "Le personnel va vous guider."
+        },
+        "reset_btn": "Réinitialiser",
+        "reset_confirm_text": "Si vous souhaitez réinitialiser, veuillez appuyer sur le bouton ci-dessous.",
+        "registration_complete_popup": {
+            "message": "Inscription terminée !"
+        },
+        "completed_notification_popup": {
+            "message": "Cette visite a déjà été complétée."
         }
     },
     "cancelled_screen": {
@@ -114,5 +130,9 @@
     "google_map_popup": {
         "message": "Voulez-vous ouvrir Google Maps ?",
         "confirm": "Ouvrir"
+    },
+    "waiting_screen_notified": {
+        "title": "Merci de votre patience.",
+        "message": "Nous allons vous accueillir maintenant."
     }
 }

@@ -1,6 +1,7 @@
 import React from "react";
-import "../waiting-screen/WaitingScreen.css";
-import "../ErrorScreen.css";
+import baseStyles from "../waiting-screen/WaitingScreen.module.css";
+import specificStyles from "../ErrorScreen.module.css";
+const styles = { ...baseStyles, ...specificStyles };
 import ChatbotButton from "../../chat-bot/ChatbotButton";
 import { useWaitingScreen } from "../WaitingScreenContext";
 import useTranslation from "../../../hook/useTranslation";
@@ -32,8 +33,12 @@ const CancelledScreen = ({ reason }) => {
             message: "スタッフがご案内いたします。"
         };
         return (
-            <div className="waiting-section success-section">
-                <ChatbotButton />
+            <div className="page-container">
+                <div className="page-top-bar">
+                    <div className="page-top-bar-right">
+                        <ChatbotButton />
+                    </div>
+                </div>
                 <h2>{completedInfo.title}</h2>
                 <p>{completedInfo.message}</p>
             </div>
@@ -43,8 +48,12 @@ const CancelledScreen = ({ reason }) => {
     const info = content[reason] || content.user;
 
     return (
-        <div className="waiting-section success-section">
-            <ChatbotButton />
+        <div className="page-container">
+            <div className="page-top-bar">
+                <div className="page-top-bar-right">
+                    <ChatbotButton />
+                </div>
+            </div>
             <h2>{info.title}</h2>
             <p>{info.body}</p>
         </div>

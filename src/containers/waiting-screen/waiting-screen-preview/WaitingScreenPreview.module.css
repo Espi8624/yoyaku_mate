@@ -35,15 +35,15 @@
   box-sizing: border-box;
 }
 
-/* 확인 화면 전용 스타일 - 대기 화면과 유사하게 */
+/* 確認画面専用スタイル - 待機画面と同様の構成 */
 .confirmation-field-label {
   width: 100%;
   display: block;
   font-size: 0.85em;
-  /* 라벨을 작게 */
+  /* ラベルを小さく */
   font-weight: normal;
   color: #888;
-  /* 회색 */
+  /* グレー */
   margin-bottom: 4px;
   letter-spacing: 0.01em;
   box-sizing: border-box;
@@ -56,13 +56,13 @@
   border: none;
   border-radius: 0;
   font-size: 1.5em;
-  /* 값을 크게 */
+  /* 値を大きく */
   font-weight: 700;
-  /* 굵게 */
+  /* 太字 */
   background: transparent;
   margin-bottom: 24px;
   color: #222;
-  /* 검은색 */
+  /* 黒色 */
   box-sizing: border-box;
   line-height: 1.2;
 }

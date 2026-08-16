@@ -1,6 +1,6 @@
 import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 
-import './App.css';
+import styles from './App.module.css';
 import WaitingScreenFlow from './containers/waiting-screen/WaitingScreenFlow';
 import Board from './containers/board/Board';
 

@@ -10,7 +10,7 @@ import NotifiedScreen from "./waiting-screen-notified/NotifiedScreen";
 import CancelledScreen from "./waiting-screen-cancelled/CancelledScreen";
 import MapWindow from './map/MapWindow';
 import { getWaitingDetails } from "../../api/waitingService";
-import './ErrorScreen.css';
+import styles from './ErrorScreen.module.css';
 // Chatbot components
 import ChatWindow from "../chat-bot/ChatWindow";
 
@@ -116,7 +116,7 @@ function FlowController() {
   // storeIdの状態確認
   if (!storeId) {
     return (
-      <div className="waiting-section error-section">
+      <div className="page-container">
         <h2>不正なアクセスです</h2>
         <p>QRコードを再度スキャンするか、正しいURLでアクセスしてください。</p>
       </div>
@@ -145,7 +145,7 @@ function WaitingScreenFlow() {
   const content = <FlowController />;
   return (
     <WaitingScreenProvider>
-      <div className="waiting-screen-container">
+      <div className="page-container">
         {content}
         <ChatWindow />
         <MapWindow />

@@ -10,7 +10,7 @@
     },
     {
       "name": "Algeria",
-      "languageCode": "en"
+      "languageCode": "ar"
     },
     {
       "name": "Andorra",
@@ -26,7 +26,7 @@
     },
     {
       "name": "Argentina",
-      "languageCode": "en"
+      "languageCode": "es"
     },
     {
       "name": "Armenia",
@@ -38,7 +38,7 @@
     },
     {
       "name": "Austria",
-      "languageCode": "en"
+      "languageCode": "de"
     },
     {
       "name": "Azerbaijan",
@@ -50,7 +50,7 @@
     },
     {
       "name": "Bahrain",
-      "languageCode": "en"
+      "languageCode": "ar"
     },
     {
       "name": "Bangladesh",
@@ -62,7 +62,7 @@
     },
     {
       "name": "Belarus",
-      "languageCode": "en"
+      "languageCode": "ru"
     },
     {
       "name": "Belgium",
@@ -82,7 +82,7 @@
     },
     {
       "name": "Bolivia",
-      "languageCode": "en"
+      "languageCode": "es"
     },
     {
       "name": "Bosnia and Herzegovina",
@@ -94,7 +94,7 @@
     },
     {
       "name": "Brazil",
-      "languageCode": "en"
+      "languageCode": "pt"
     },
     {
       "name": "Brunei",
@@ -138,19 +138,19 @@
     },
     {
       "name": "Chile",
-      "languageCode": "en"
+      "languageCode": "es"
     },
     {
       "name": "China",
-      "languageCode": "en"
+      "languageCode": "zh"
     },
     {
       "name": "Colombia",
-      "languageCode": "en"
+      "languageCode": "es"
     },
     {
       "name": "Comoros",
-      "languageCode": "en"
+      "languageCode": "ar"
     },
     {
       "name": "Congo",
@@ -158,7 +158,7 @@
     },
     {
       "name": "Costa Rica",
-      "languageCode": "en"
+      "languageCode": "es"
     },
     {
       "name": "Croatia",
@@ -166,7 +166,7 @@
     },
     {
       "name": "Cuba",
-      "languageCode": "en"
+      "languageCode": "es"
     },
     {
       "name": "Cyprus",
@@ -186,7 +186,7 @@
     },
     {
       "name": "Djibouti",
-      "languageCode": "en"
+      "languageCode": "ar"
     },
     {
       "name": "Dominica",
@@ -194,23 +194,23 @@
     },
     {
       "name": "Dominican Republic",
-      "languageCode": "en"
+      "languageCode": "es"
     },
     {
       "name": "Ecuador",
-      "languageCode": "en"
+      "languageCode": "es"
     },
     {
       "name": "Egypt",
-      "languageCode": "en"
+      "languageCode": "ar"
     },
     {
       "name": "El Salvador",
-      "languageCode": "en"
+      "languageCode": "es"
     },
     {
       "name": "Equatorial Guinea",
-      "languageCode": "en"
+      "languageCode": "es"
     },
     {
       "name": "Eritrea",
@@ -254,7 +254,7 @@
     },
     {
       "name": "Germany",
-      "languageCode": "en"
+      "languageCode": "de"
     },
     {
       "name": "Ghana",
@@ -270,7 +270,7 @@
     },
     {
       "name": "Guatemala",
-      "languageCode": "en"
+      "languageCode": "es"
     },
     {
       "name": "Guinea",
@@ -290,7 +290,7 @@
     },
     {
       "name": "Honduras",
-      "languageCode": "en"
+      "languageCode": "es"
     },
     {
       "name": "Hungary",
@@ -306,7 +306,7 @@
     },
     {
       "name": "Indonesia",
-      "languageCode": "en"
+      "languageCode": "id"
     },
     {
       "name": "Iran",
@@ -314,7 +314,7 @@
     },
     {
       "name": "Iraq",
-      "languageCode": "en"
+      "languageCode": "ar"
     },
     {
       "name": "Ireland",
@@ -326,7 +326,7 @@
     },
     {
       "name": "Italy",
-      "languageCode": "en"
+      "languageCode": "it"
     },
     {
       "name": "Ivory Coast",
@@ -342,7 +342,7 @@
     },
     {
       "name": "Jordan",
-      "languageCode": "en"
+      "languageCode": "ar"
     },
     {
       "name": "Kazakhstan",
@@ -358,7 +358,7 @@
     },
     {
       "name": "Kuwait",
-      "languageCode": "en"
+      "languageCode": "ar"
     },
     {
       "name": "Kyrgyzstan",
@@ -374,7 +374,7 @@
     },
     {
       "name": "Lebanon",
-      "languageCode": "en"
+      "languageCode": "ar"
     },
     {
       "name": "Lesotho",
@@ -386,11 +386,11 @@
     },
     {
       "name": "Libya",
-      "languageCode": "en"
+      "languageCode": "ar"
     },
     {
       "name": "Liechtenstein",
-      "languageCode": "en"
+      "languageCode": "de"
     },
     {
       "name": "Lithuania",
@@ -430,7 +430,7 @@
     },
     {
       "name": "Mauritania",
-      "languageCode": "en"
+      "languageCode": "ar"
     },
     {
       "name": "Mauritius",
@@ -438,7 +438,7 @@
     },
     {
       "name": "Mexico",
-      "languageCode": "en"
+      "languageCode": "es"
     },
     {
       "name": "Micronesia",
@@ -462,7 +462,7 @@
     },
     {
       "name": "Morocco",
-      "languageCode": "en"
+      "languageCode": "ar"
     },
     {
       "name": "Mozambique",
@@ -494,7 +494,7 @@
     },
     {
       "name": "Nicaragua",
-      "languageCode": "en"
+      "languageCode": "es"
     },
     {
       "name": "Niger",
@@ -518,7 +518,7 @@
     },
     {
       "name": "Oman",
-      "languageCode": "en"
+      "languageCode": "ar"
     },
     {
       "name": "Pakistan",
@@ -530,11 +530,11 @@
     },
     {
       "name": "Palestine",
-      "languageCode": "en"
+      "languageCode": "ar"
     },
     {
       "name": "Panama",
-      "languageCode": "en"
+      "languageCode": "es"
     },
     {
       "name": "Papua New Guinea",
@@ -542,11 +542,11 @@
     },
     {
       "name": "Paraguay",
-      "languageCode": "en"
+      "languageCode": "es"
     },
     {
       "name": "Peru",
-      "languageCode": "en"
+      "languageCode": "es"
     },
     {
       "name": "Philippines",
@@ -558,11 +558,11 @@
     },
     {
       "name": "Portugal",
-      "languageCode": "en"
+      "languageCode": "pt"
     },
     {
       "name": "Qatar",
-      "languageCode": "en"
+      "languageCode": "ar"
     },
     {
       "name": "Romania",
@@ -570,7 +570,7 @@
     },
     {
       "name": "Russia",
-      "languageCode": "en"
+      "languageCode": "ru"
     },
     {
       "name": "Rwanda",
@@ -594,7 +594,7 @@
     },
     {
       "name": "San Marino",
-      "languageCode": "en"
+      "languageCode": "it"
     },
     {
       "name": "Sao Tome and Principe",
@@ -602,7 +602,7 @@
     },
     {
       "name": "Saudi Arabia",
-      "languageCode": "en"
+      "languageCode": "ar"
     },
     {
       "name": "Senegal",
@@ -638,7 +638,7 @@
     },
     {
       "name": "Somalia",
-      "languageCode": "en"
+      "languageCode": "ar"
     },
     {
       "name": "South Africa",
@@ -654,7 +654,7 @@
     },
     {
       "name": "Spain",
-      "languageCode": "en"
+      "languageCode": "es"
     },
     {
       "name": "Sri Lanka",
@@ -662,7 +662,7 @@
     },
     {
       "name": "Sudan",
-      "languageCode": "en"
+      "languageCode": "ar"
     },
     {
       "name": "Suriname",
@@ -674,11 +674,11 @@
     },
     {
       "name": "Switzerland",
-      "languageCode": "en"
+      "languageCode": "de"
     },
     {
       "name": "Syria",
-      "languageCode": "en"
+      "languageCode": "ar"
     },
     {
       "name": "Tajikistan",
@@ -690,7 +690,7 @@
     },
     {
       "name": "Thailand",
-      "languageCode": "en"
+      "languageCode": "th"
     },
     {
       "name": "Timor-Leste",
@@ -710,7 +710,7 @@
     },
     {
       "name": "Tunisia",
-      "languageCode": "en"
+      "languageCode": "ar"
     },
     {
       "name": "Turkey",
@@ -734,7 +734,7 @@
     },
     {
       "name": "United Arab Emirates",
-      "languageCode": "en"
+      "languageCode": "ar"
     },
     {
       "name": "United Kingdom",
@@ -746,7 +746,7 @@
     },
     {
       "name": "Uruguay",
-      "languageCode": "en"
+      "languageCode": "es"
     },
     {
       "name": "Uzbekistan",
@@ -758,19 +758,19 @@
     },
     {
       "name": "Vatican City",
-      "languageCode": "en"
+      "languageCode": "it"
     },
     {
       "name": "Venezuela",
-      "languageCode": "en"
+      "languageCode": "es"
     },
     {
       "name": "Vietnam",
-      "languageCode": "en"
+      "languageCode": "vi"
     },
     {
       "name": "Yemen",
-      "languageCode": "en"
+      "languageCode": "ar"
     },
     {
       "name": "Zambia",
@@ -782,7 +782,7 @@
     },
     {
       "name": "Taiwan",
-      "languageCode": "en"
+      "languageCode": "zh"
     },
     {
       "name": "Kosovo",
@@ -790,15 +790,15 @@
     },
     {
       "name": "Hong Kong",
-      "languageCode": "en"
+      "languageCode": "zh"
     },
     {
       "name": "Macau",
-      "languageCode": "en"
+      "languageCode": "zh"
     },
     {
       "name": "Western Sahara",
-      "languageCode": "en"
+      "languageCode": "ar"
     }
   ]
 }

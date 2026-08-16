@@ -103,6 +103,10 @@ export const subscribeToWaitingList = (storeId, onMessage, onError) => {
   const eventSource = new EventSource(url);
 
   eventSource.onmessage = (event) => {
+    // SSE 仕様上、':' で始まるメッセージはサーバーの keepalive コメント（例: :ping）
+    // → 実データではないため無視する
+    if (!event.data || event.data.startsWith(':')) return;
+
     try {
       const data = JSON.parse(event.data);
       onMessage(data);
@@ -110,6 +114,7 @@ export const subscribeToWaitingList = (storeId, onMessage, onError) => {
       console.error('[SSE] JSON parse error:', e);
     }
   };
+
 
   eventSource.onerror = (error) => {
     console.warn('[SSE] Connection error:', error);
@@ -132,6 +137,10 @@ export const subscribeToWaitingStatus = (storeId, waitingId, onMessage, onError)
   const eventSource = new EventSource(url);
 
   eventSource.onmessage = (event) => {
+    // SSE 仕様上、':' で始まるメッセージはサーバーの keepalive コメント（例: :ping）
+    // → 実データではないため無視する
+    if (!event.data || event.data.startsWith(':')) return;
+
     try {
       const data = JSON.parse(event.data);
       onMessage(data);
@@ -139,6 +148,7 @@ export const subscribeToWaitingStatus = (storeId, waitingId, onMessage, onError)
       console.error('[SSE User] JSON parse error:', e);
     }
   };
+
 
   eventSource.onerror = (error) => {
     console.warn('[SSE User] Connection error:', error);

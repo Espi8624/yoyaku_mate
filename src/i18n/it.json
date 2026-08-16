@@ -10,7 +10,10 @@
         "party_size_label": "Quante persone ci sono nel Suo gruppo?",
         "contact_label": "La contatteremo a questo numero in caso di necessità.",
         "note_label": "C'è qualcosa che il ristorante dovrebbe sapere in anticipo?",
-        "confirm": "Avanti"
+        "confirm": "Avanti",
+        "party_size_placeholder": "es. 2",
+        "contact_placeholder": "es. 345-678-9012",
+        "note_placeholder": "es. Tavolo vicino alla finestra / Allergie"
     },
     "waiting_screen_menu": {
         "title": "Selezione Menu",
@@ -25,7 +28,6 @@
     },
     "waiting_screen_preview": {
         "preview_label": "La registreremo nella lista d'attesa con le informazioni fornite.",
-        "name_label": "Nome",
         "party_size_label": "Numero di persone",
         "contact_label": "Contatto",
         "note_label": "Note",
@@ -35,6 +37,12 @@
             "close": "Chiudi",
             "back": "Indietro",
             "confirm": "Conferma"
+        },
+        "pre_order": "Preordine",
+        "submit_confirm": {
+            "message": "Vuole procedere con la registrazione con queste informazioni?",
+            "cancel": "Annulla",
+            "confirm": "Sì"
         }
     },
     "waiting_screen": {
@@ -69,6 +77,14 @@
         "completed_screen": {
             "title": "Grazie per la visita!",
             "message": "Il personale vi guiderà."
+        },
+        "reset_btn": "Ripristina",
+        "reset_confirm_text": "Se desidera ripristinare, prema il pulsante qui sotto.",
+        "registration_complete_popup": {
+            "message": "Registrazione completata!"
+        },
+        "completed_notification_popup": {
+            "message": "Questa visita è già stata completata."
         }
     },
     "cancelled_screen": {
@@ -114,5 +130,9 @@
     "google_map_popup": {
         "message": "Vuoi aprire Google Maps?",
         "confirm": "Apri"
+    },
+    "waiting_screen_notified": {
+        "title": "Grazie per l'attesa.",
+        "message": "La accompagneremo subito."
     }
 }
