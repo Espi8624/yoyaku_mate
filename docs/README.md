@@ -45,9 +45,12 @@ docs/
 |------|------|
 | [001-lessons-learned.md](./troubles/001-lessons-learned.md) | CORS、SSE再接続、AIプロンプト最適化の振り返り |
 | [002-google-maps-api-loop.md](./troubles/002-google-maps-api-loop.md) | 3万画素の教訓: Google Maps API無限ループ障害と防御ロジック |
+| [003-i18n-partial-breakage.md](./troubles/003-i18n-partial-breakage.md) | 多言語対応が一部無効化されていた問題 (国籍マッピング表、未接続の翻訳ファイル、キー欠落、ハードコーディング) |
 
 ---
 
 ## Refactoring (リファクタリング)
 
-*記録予定*
+| ドキュメント | 説明 |
+|------|------|
+| [001-css-modules-migration.md](./refactoring/001-css-modules-migration.md) | CSS Modulesへのスタイルシステムmigration (グローバルCSS → CSS Modules + 共通デザインシステム) |

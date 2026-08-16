@@ -33,7 +33,17 @@
         "note_label": "備考",
         "pre_order": "事前注文",
         "back": "戻る",
-        "confirm": "確定する"
+        "confirm": "確定する",
+        "popup": {
+            "close": "閉じる",
+            "back": "戻る",
+            "confirm": "確定する"
+        },
+        "submit_confirm": {
+            "message": "この内容で登録を進めてもよろしいですか？",
+            "cancel": "キャンセル",
+            "confirm": "はい"
+        }
     },
     "waiting_screen_notified": {
         "title": "大変お待たせいたしました。",
@@ -73,7 +83,13 @@
             "message": "スタッフがご案内いたします。"
         },
         "reset_confirm_text": "初期化をご希望の場合は下のボタンを押してください。",
-        "reset_btn": "初期化"
+        "reset_btn": "初期化",
+        "registration_complete_popup": {
+            "message": "登録が完了しました"
+        },
+        "completed_notification_popup": {
+            "message": "既に入店手続きが完了しています。"
+        }
     },
     "cancelled_screen": {
         "user": {

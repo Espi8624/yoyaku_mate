@@ -10,7 +10,10 @@
         "party_size_label": "How many people are in your party?",
         "contact_label": "If anything comes up, we will contact you at this number.",
         "note_label": "Is there anything you'd like us to inform the restaurant about?",
-        "confirm": "Next"
+        "confirm": "Next",
+        "party_size_placeholder": "e.g. 2",
+        "contact_placeholder": "e.g. 080-1234-5678",
+        "note_placeholder": "e.g. Window seat preferred / Allergies"
     },
     "waiting_screen_menu": {
         "title": "Select Menu",
@@ -25,7 +28,6 @@
     },
     "waiting_screen_preview": {
         "preview_label": "We will proceed with the waiting list based on the information you provided!",
-        "name_label": "Name",
         "party_size_label": "Party Size",
         "contact_label": "Contact",
         "note_label": "Notes",
@@ -35,6 +37,12 @@
             "close": "Close",
             "back": "Back",
             "confirm": "Confirm"
+        },
+        "pre_order": "Pre-order",
+        "submit_confirm": {
+            "message": "Are you sure you want to proceed with this registration?",
+            "cancel": "Cancel",
+            "confirm": "Yes"
         }
     },
     "waiting_screen": {
@@ -71,7 +79,13 @@
             "message": "Step right this way, our staff will guide you."
         },
         "reset_confirm_text": "If you would like to reset, please press the button below.",
-        "reset_btn": "Reset"
+        "reset_btn": "Reset",
+        "registration_complete_popup": {
+            "message": "Registration complete!"
+        },
+        "completed_notification_popup": {
+            "message": "This visit has already been completed."
+        }
     },
     "cancelled_screen": {
         "user": {
@@ -116,5 +130,9 @@
     "google_map_popup": {
         "message": "Do you want to open Google Maps?",
         "confirm": "Open"
+    },
+    "waiting_screen_notified": {
+        "title": "Thank you for waiting.",
+        "message": "We will guide you now."
     }
 }

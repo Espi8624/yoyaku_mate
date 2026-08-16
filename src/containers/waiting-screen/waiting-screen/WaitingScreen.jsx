@@ -8,7 +8,7 @@ import { getTranslatedText } from "../../../utils/i18nHelper";
 import ChatbotButton from "../../chat-bot/ChatbotButton";
 import MapButton from '../map/MapButton';
 import useWaitingStatus from "./useWaitingStatus";
-import "./WaitingScreen.css";
+import styles from "./WaitingScreen.module.css";
 
 /**
  * 通知状態を表す列挙値
@@ -245,24 +245,29 @@ function WaitingScreen() {
   };
 
   return (
-    <div className="waiting-section">
-      <ChatbotButton />
-      <MapButton />
+    <div className="page-container">
+      {/* Top Action Bar (Map & Chatbot Buttons) */}
+      <div className="page-top-bar">
+        <div className="page-top-bar-right">
+          <MapButton />
+          <ChatbotButton />
+        </div>
+      </div>
 
-      {/* 店名を表示 */}
+      {/* Store Name Banner (Full width below buttons to support any store name length) */}
       {storeInfo && storeInfo.store_name && (
-        <div className="store-name-header">
+        <div className={styles["store-name-header"]}>
           <h2>{storeInfo.store_name}</h2>
         </div>
       )}
 
-      <div className="preview-label">
+      <div className={styles["preview-label"]}>
         {notificationState !== NOTIFICATION_STATE.IDLE
           ? waitingScreenTexts.notified_label_1 || waitingScreenTexts.label_1
           : waitingScreenTexts.label_1}
       </div>
       {waitingScreenTexts.label_2 && (
-        <div className="waiting-label-2">
+        <div className={styles["waiting-label-2"]}>
           {notificationState !== NOTIFICATION_STATE.IDLE
             ? waitingScreenTexts.notified_label_2 || waitingScreenTexts.label_2
             : waitingScreenTexts.label_2}
@@ -270,37 +275,37 @@ function WaitingScreen() {
       )}
 
       {error && error !== '__NOT_FOUND__' ? (
-        <div className="waiting-section">{error}</div>
+        <div className="page-container">{error}</div>
       ) : (
         <>
-          <form className="preview-form">
-            <div className="preview-info-group">
-              <div className="waiting-number-label">{waitingScreenTexts.waiting_number_label}</div>
-              <div className="waiting-number-value">
+          <form className={styles["preview-form"]}>
+            <div className={styles["preview-info-group"]}>
+              <div className={styles["waiting-number-label"]}>{waitingScreenTexts.waiting_number_label}</div>
+              <div className={styles["waiting-number-value"]}>
                 {waitingDetails.queue_number || '-'}
               </div>
             </div>
 
-            <div className="preview-info-group">
-              <label className="preview-item-label">{waitingScreenTexts.party_size_label}</label>
-              <div className="preview-item-value">{waitingDetails.party_size || '-'}</div>
+            <div className={styles["preview-info-group"]}>
+              <label className={styles["preview-item-label"]}>{waitingScreenTexts.party_size_label}</label>
+              <div className={styles["preview-item-value"]}>{waitingDetails.party_size || '-'}</div>
             </div>
 
-            <div className="preview-info-group">
-              <label className="preview-item-label">{waitingScreenTexts.note_label}</label>
-              <div className="preview-item-value">{waitingDetails.notes || '-'}</div>
+            <div className={styles["preview-info-group"]}>
+              <label className={styles["preview-item-label"]}>{waitingScreenTexts.note_label}</label>
+              <div className={styles["preview-item-value"]}>{waitingDetails.notes || '-'}</div>
             </div>
 
-            <div className="preview-info-group">
-              <label className="preview-item-label">{waitingScreenTexts.current_waiting_label}</label>
-              <div className="preview-item-value">{Math.max(0, waitingDetails.waiting_count - 1)}{waitingScreenTexts.group_label}</div>
+            <div className={styles["preview-info-group"]}>
+              <label className={styles["preview-item-label"]}>{waitingScreenTexts.current_waiting_label}</label>
+              <div className={styles["preview-item-value"]}>{Math.max(0, waitingDetails.waiting_count - 1)}{waitingScreenTexts.group_label}</div>
             </div>
 
-            <div className="preview-info-group">
-              <label className="preview-item-label">
+            <div className={styles["preview-info-group"]}>
+              <label className={styles["preview-item-label"]}>
                 {waitingScreenTexts.registration_time_label}
               </label>
-              <div className="preview-item-value">
+              <div className={styles["preview-item-value"]}>
                 {waitingDetails.registration_time ? (() => {
                   const date = new Date(waitingDetails.registration_time);
                   return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
@@ -308,17 +313,17 @@ function WaitingScreen() {
               </div>
             </div>
 
-            <div className="preview-info-group">
-              <label className="preview-item-label">{waitingScreenTexts.estimated_wait_time_label}</label>
-              <div className="preview-item-value">{waitingDetails.estimated_waiting_time || "-"}</div>
+            <div className={styles["preview-info-group"]}>
+              <label className={styles["preview-item-label"]}>{waitingScreenTexts.estimated_wait_time_label}</label>
+              <div className={styles["preview-item-value"]}>{waitingDetails.estimated_waiting_time || "-"}</div>
             </div>
           </form>
 
           {/* 事前注文済みメニューの表示 */}
           {waitingDetails.menu_items && waitingDetails.menu_items.length > 0 && (
-            <div className="menu-container" style={{ marginBottom: '24px' }}>
-              <div className="preview-label" style={{ fontSize: '1.1em', marginBottom: '12px' }}>{waitingScreenTexts.pre_order}</div>
-              <div className="preview-menu-list">
+            <div className={styles["menu-container"]} style={{ marginBottom: '24px' }}>
+              <div className={styles["preview-label"]} style={{ fontSize: '1.1em', marginBottom: '12px' }}>{waitingScreenTexts.pre_order}</div>
+              <div className={styles["preview-menu-list"]}>
                 {waitingDetails.menu_items.map((item, index) => {
                   const fullMenu = menuList.find(m => m.menu_id === item.menu_id);
                   const imageUrl = fullMenu ? fullMenu.menu_image_url : null;
@@ -329,16 +334,16 @@ function WaitingScreen() {
                   }
 
                   return (
-                    <div key={index} className="preview-menu-item">
+                    <div key={index} className={styles["preview-menu-item"]}>
                       {imageUrl ? (
-                        <img src={imageUrl} alt={displayName} className="preview-menu-image" />
+                        <img src={imageUrl} alt={displayName} className={styles["preview-menu-image"]} />
                       ) : (
-                        <div className="preview-menu-placeholder">No Image</div>
+                        <div className={styles["preview-menu-placeholder"]}>No Image</div>
                       )}
-                      <div className="preview-menu-info">
-                        <div className="preview-menu-header">
-                          <span className="preview-menu-name">{displayName}</span>
-                          <span className="preview-menu-quantity">x{item.quantity}</span>
+                      <div className={styles["preview-menu-info"]}>
+                        <div className={styles["preview-menu-header"]}>
+                          <span className={styles["preview-menu-name"]}>{displayName}</span>
+                          <span className={styles["preview-menu-quantity"]}>x{item.quantity}</span>
                         </div>
                       </div>
                     </div>
@@ -350,31 +355,40 @@ function WaitingScreen() {
 
           <MenuDisplay menuList={menuList} texts={waitingScreenTexts} selectedLanguageCode={selectedLanguageCode} />
 
-          <button className="confirmation-btn cancel-btn" onClick={() => setShowCancelPopup(true)}>
+          <button className={`${styles["confirmation-btn"]} ${styles["cancel-btn"]}`} onClick={() => setShowCancelPopup(true)}>
             {waitingScreenTexts.cancel_reservation}
           </button>
 
           {/* キャンセル確認ポップアップ */}
           {showCancelPopup && (
-            <div className="congestion-popup-overlay">
-              <div className="congestion-popup-modal cancel-modal">
+            <div className="popup-overlay">
+              <div className="popup-modal">
                 <button
-                  className="congestion-popup-close-btn"
+                  className="popup-close-btn"
                   onClick={() => setShowCancelPopup(false)}
                   aria-label={waitingScreenTexts.cancel_popup.close}
                   type="button"
                 >×</button>
-                <div className="congestion-popup-message">
+                <p className="popup-message">
                   {waitingScreenTexts.cancel_popup.message}
-                </div>
-                <div className="congestion-popup-actions">
+                </p>
+                <div className="popup-actions">
                   <button
-                    className="confirmation-btn"
+                    className="btn-secondary"
+                    onClick={() => setShowCancelPopup(false)}
+                    type="button"
+                    style={{ width: 'auto', padding: '10px 24px' }}
+                  >
+                    {waitingScreenTexts.cancel_popup.close}
+                  </button>
+                  <button
+                    className="btn-primary"
                     onClick={async () => {
                       setShowCancelPopup(false);
                       await handleCancel();
                     }}
                     type="button"
+                    style={{ width: 'auto', padding: '10px 24px' }}
                   >
                     {waitingScreenTexts.cancel_popup.confirm}
                   </button>
@@ -383,22 +397,20 @@ function WaitingScreen() {
             </div>
           )}
 
-          {/* ★ 呼び出し通知モーダル
-              notificationState === 'showing' の間だけ表示される。
-              「確認」ボタンを押すと 'accepted' に遷移し、以降は再表示されない。 */}
+          {/* ★ 呼び出し通知モーダル */}
           {isNotificationShowing && (
-            <div className="congestion-popup-overlay">
-              <div className="congestion-popup-modal" style={{ textAlign: 'center', padding: '30px' }}>
-                <div className="congestion-popup-message" style={{ fontSize: '1.2em', fontWeight: 'bold', marginBottom: '20px' }}>
+            <div className="popup-overlay">
+              <div className="popup-modal" style={{ textAlign: 'center' }}>
+                <p className="popup-message" style={{ fontWeight: 'bold' }}>
                   {waitingScreenTexts.call_popup?.message_1}<br />
                   {waitingScreenTexts.call_popup?.message_2}
-                </div>
-                <div className="congestion-popup-actions" style={{ justifyContent: 'center' }}>
+                </p>
+                <div className="popup-actions" style={{ justifyContent: 'center' }}>
                   <button
-                    className="confirmation-btn"
+                    className="btn-primary"
                     onClick={handleNotificationConfirm}
                     type="button"
-                    style={{ minWidth: '150px' }}
+                    style={{ width: 'auto', padding: '10px 40px' }}
                   >
                     {waitingScreenTexts.call_popup?.confirm}
                   </button>

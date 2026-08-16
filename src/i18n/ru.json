@@ -10,7 +10,10 @@
         "party_size_label": "Сколько человек в вашей группе?",
         "contact_label": "Мы свяжемся с вами по этому номеру в случае необходимости.",
         "note_label": "Есть ли какие-либо пожелания к заведению?",
-        "confirm": "Далее"
+        "confirm": "Далее",
+        "party_size_placeholder": "напр. 2",
+        "contact_placeholder": "напр. 8-912-345-67-89",
+        "note_placeholder": "напр. Место у окна / Аллергии"
     },
     "waiting_screen_menu": {
         "title": "Выбор меню",
@@ -25,7 +28,6 @@
     },
     "waiting_screen_preview": {
         "preview_label": "Мы зарегистрируем вас в очереди на основе введенных данных.",
-        "name_label": "Имя",
         "party_size_label": "Количество человек",
         "contact_label": "Контактные данные",
         "note_label": "Примечания",
@@ -35,6 +37,12 @@
             "close": "Закрыть",
             "back": "Назад",
             "confirm": "ОК"
+        },
+        "pre_order": "Предзаказ",
+        "submit_confirm": {
+            "message": "Продолжить регистрацию с этими данными?",
+            "cancel": "Отмена",
+            "confirm": "Да"
         }
     },
     "waiting_screen": {
@@ -69,6 +77,14 @@
         "completed_screen": {
             "title": "Спасибо за визит!",
             "message": "Персонал проводит вас."
+        },
+        "reset_btn": "Сбросить",
+        "reset_confirm_text": "Если хотите сбросить, нажмите кнопку ниже.",
+        "registration_complete_popup": {
+            "message": "Регистрация завершена!"
+        },
+        "completed_notification_popup": {
+            "message": "Этот визит уже завершён."
         }
     },
     "cancelled_screen": {
@@ -114,5 +130,9 @@
     "google_map_popup": {
         "message": "Вы хотите открыть Google Maps?",
         "confirm": "Открыть"
+    },
+    "waiting_screen_notified": {
+        "title": "Спасибо за ожидание.",
+        "message": "Мы проводим вас прямо сейчас."
     }
 }

@@ -10,7 +10,10 @@
         "party_size_label": "จำนวนผู้เข้าใช้บริการ (ท่าน)",
         "contact_label": "เบอร์โทรศัพท์สำหรับติดต่อกรณีฉุกเฉิน",
         "note_label": "มีข้อกำหนดพิเศษที่ต้องการแจ้งทางร้านหรือไม่?",
-        "confirm": "ถัดไป"
+        "confirm": "ถัดไป",
+        "party_size_placeholder": "เช่น 2",
+        "contact_placeholder": "เช่น 080-123-4567",
+        "note_placeholder": "เช่น ต้องการที่นั่งริมหน้าต่าง / มีอาการแพ้อาหาร"
     },
     "waiting_screen_menu": {
         "title": "เลือกเมนู",
@@ -25,7 +28,6 @@
     },
     "waiting_screen_preview": {
         "preview_label": "เราจะดำเนินการลงทะเบียนคิวตามข้อมูลที่คุณกรอก",
-        "name_label": "ชื่อ",
         "party_size_label": "จำนวนคน",
         "contact_label": "ข้อมูลติดต่อ",
         "note_label": "หมายเหตุ",
@@ -35,6 +37,12 @@
             "close": "ปิด",
             "back": "ย้อนกลับ",
             "confirm": "ตกลง"
+        },
+        "pre_order": "สั่งล่วงหน้า",
+        "submit_confirm": {
+            "message": "ยืนยันการลงทะเบียนด้วยข้อมูลนี้หรือไม่?",
+            "cancel": "ยกเลิก",
+            "confirm": "ใช่"
         }
     },
     "waiting_screen": {
@@ -69,6 +77,14 @@
         "completed_screen": {
             "title": "ขอบคุณที่ใช้บริการ!",
             "message": "พนักงานจะพาไปที่โต๊ะค่ะ"
+        },
+        "reset_btn": "รีเซ็ต",
+        "reset_confirm_text": "หากต้องการรีเซ็ต กรุณากดปุ่มด้านล่าง",
+        "registration_complete_popup": {
+            "message": "ลงทะเบียนเสร็จสมบูรณ์!"
+        },
+        "completed_notification_popup": {
+            "message": "การเข้าใช้บริการนี้เสร็จสิ้นแล้ว"
         }
     },
     "cancelled_screen": {
@@ -114,5 +130,9 @@
     "google_map_popup": {
         "message": "คุณต้องการเปิด Google Maps หรือไม่?",
         "confirm": "เปิด"
+    },
+    "waiting_screen_notified": {
+        "title": "ขอบคุณที่รอคอย",
+        "message": "ขณะนี้เรากำลังพาท่านไปยังที่นั่ง"
     }
 }

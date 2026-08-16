@@ -10,7 +10,10 @@
         "party_size_label": "Mit wie vielen Personen sind Sie hier?",
         "contact_label": "Wir kontaktieren Sie unter dieser Nummer, falls es Rückfragen gibt.",
         "note_label": "Gibt es etwas, das das Restaurant vorab wissen sollte?",
-        "confirm": "Weiter"
+        "confirm": "Weiter",
+        "party_size_placeholder": "z. B. 2",
+        "contact_placeholder": "z. B. 0151 23456789",
+        "note_placeholder": "z. B. Fensterplatz gewünscht / Allergien"
     },
     "waiting_screen_menu": {
         "title": "Menüauswahl",
@@ -25,7 +28,6 @@
     },
     "waiting_screen_preview": {
         "preview_label": "Wir melden Sie basierend auf Ihren Angaben für die Warteliste an!",
-        "name_label": "Name",
         "party_size_label": "Anzahl der Personen",
         "contact_label": "Kontakt",
         "note_label": "Anmerkung",
@@ -35,6 +37,12 @@
             "close": "Schließen",
             "back": "Zurück",
             "confirm": "Bestätigen"
+        },
+        "pre_order": "Vorbestellung",
+        "submit_confirm": {
+            "message": "Möchten Sie die Anmeldung mit diesen Angaben fortsetzen?",
+            "cancel": "Abbrechen",
+            "confirm": "Ja"
         }
     },
     "waiting_screen": {
@@ -69,6 +77,14 @@
         "completed_screen": {
             "title": "Vielen Dank für Ihren Besuch!",
             "message": "Unser Personal wird Sie begleiten."
+        },
+        "reset_btn": "Zurücksetzen",
+        "reset_confirm_text": "Wenn Sie zurücksetzen möchten, drücken Sie bitte die Schaltfläche unten.",
+        "registration_complete_popup": {
+            "message": "Anmeldung abgeschlossen!"
+        },
+        "completed_notification_popup": {
+            "message": "Dieser Besuch wurde bereits abgeschlossen."
         }
     },
     "cancelled_screen": {
@@ -114,5 +130,9 @@
     "google_map_popup": {
         "message": "Möchten Sie Google Maps öffnen?",
         "confirm": "Öffnen"
+    },
+    "waiting_screen_notified": {
+        "title": "Vielen Dank für Ihre Geduld.",
+        "message": "Wir begleiten Sie jetzt zu Ihrem Platz."
     }
 }

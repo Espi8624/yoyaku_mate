@@ -1,0 +1,272 @@
+/**
+ * 全画面共通コンポーネントスタイル定義
+ * - CSS Modulesで扱わないレイアウト / 共通UIコンポーネントを担当する。
+ * - 画面固有のスタイルは各 *.module.css で管理する。
+ */
+
+/* ==========================================
+   リセット & 基本
+   ========================================== */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* ==========================================
+   共通ページレイアウト
+   ========================================== */
+
+/**
+ * 全画面のルートコンテナ
+ * - 画面幅いっぱいに広げつつ、内部コンテンツは可読性のある最大幅に制限する。
+ */
+.page-container {
+  width: 100%;
+  min-height: 100vh;
+  background: var(--color-card-background);
+  padding: var(--layout-padding-top) var(--layout-padding-x) var(--layout-padding-bottom);
+  position: relative;
+}
+
+/**
+ * コンテンツ幅制限ラッパー
+ * - デスクトップで過度に広がらないようmax-widthを適用する。
+ */
+.page-content {
+  width: 100%;
+  max-width: var(--layout-content-max-width);
+  margin: 0 auto;
+}
+
+/* ==========================================
+   共通ヘッダーナビゲーション / アクションバー
+   ========================================== */
+.page-top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 48px;
+  margin-bottom: var(--space-4);
+}
+
+.page-top-bar-left {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.page-top-bar-right {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-left: auto;
+}
+
+/* ==========================================
+   共通タイトル (アクションバー下で全幅使用)
+   ========================================== */
+.page-title {
+  margin: 0 0 var(--space-5) 0;
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+  line-height: var(--line-height-tight);
+  word-break: break-word;
+}
+
+/* ==========================================
+   共通ボタン
+   ========================================== */
+.btn-primary {
+  display: block;
+  width: 100%;
+  padding: var(--btn-padding-y) var(--btn-padding-x);
+  background-color: var(--color-primary-black);
+  color: var(--color-text-primary-light);
+  border: none;
+  border-radius: var(--btn-radius);
+  font-size: var(--btn-font-size);
+  font-weight: var(--btn-font-weight);
+  cursor: pointer;
+  text-align: center;
+  letter-spacing: 0.02em;
+  transition: opacity var(--transition-fast), box-shadow var(--transition-base);
+}
+
+.btn-primary:hover {
+  opacity: 0.88;
+  box-shadow: var(--shadow-md);
+}
+
+.btn-primary:active {
+  opacity: 0.75;
+}
+
+.btn-primary:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.btn-secondary {
+  display: block;
+  width: 100%;
+  padding: var(--btn-padding-y) var(--btn-padding-x);
+  background-color: transparent;
+  color: var(--color-text-primary);
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--btn-radius);
+  font-size: var(--btn-font-size);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  text-align: center;
+  transition: background-color var(--transition-fast);
+}
+
+.btn-secondary:hover {
+  background-color: var(--color-background);
+}
+
+/* ==========================================
+   固定フッターアクション領域
+   ========================================== */
+.fixed-footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding:
+    var(--space-4)
+    var(--layout-padding-x)
+    calc(var(--space-6) + env(safe-area-inset-bottom, 0px));
+  background: linear-gradient(to top, var(--color-card-background) 75%, transparent);
+  z-index: 100;
+}
+
+/* フッターボタンもコンテンツ最大幅に合わせる */
+.fixed-footer-inner {
+  width: 100%;
+  max-width: var(--layout-content-max-width);
+  margin: 0 auto;
+}
+
+/* ==========================================
+   共通フォームフィールド
+   ========================================== */
+.field-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.field-label {
+  display: block;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-secondary);
+  letter-spacing: 0.01em;
+}
+
+.field-value {
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+  line-height: var(--line-height-tight);
+}
+
+.field-input {
+  width: 100%;
+  padding: var(--space-3) var(--space-4);
+  border: 2px solid var(--color-primary-black);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-md);
+  background: var(--color-card-background);
+  color: var(--color-text-primary);
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.field-input::placeholder {
+  color: var(--color-text-tertiary);
+}
+
+.field-input:focus {
+  outline: none;
+  border-color: var(--color-accent-secondary);
+  box-shadow: 0 0 0 3px rgba(44, 44, 44, 0.08);
+}
+
+/* ==========================================
+   共通ポップアップ / モーダル
+   ========================================== */
+.popup-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: var(--space-4);
+}
+
+.popup-modal {
+  position: relative;
+  background: var(--color-card-background);
+  border-radius: var(--radius-lg);
+  padding: var(--space-8) var(--space-6) var(--space-6);
+  width: 100%;
+  max-width: 400px;
+  box-shadow: var(--shadow-lg);
+  text-align: center;
+}
+
+.popup-close-btn {
+  position: absolute;
+  top: var(--space-2);
+  right: var(--space-3);
+  background: transparent;
+  border: none;
+  font-size: 1.75rem;
+  color: var(--color-text-tertiary);
+  cursor: pointer;
+  transition: color var(--transition-fast), transform var(--transition-fast);
+  line-height: 1;
+}
+
+.popup-close-btn:hover {
+  color: var(--color-text-primary);
+  transform: scale(1.1);
+}
+
+.popup-message {
+  margin: var(--space-4) 0 var(--space-6);
+  font-size: var(--font-size-lg);
+  color: var(--color-text-primary);
+  line-height: var(--line-height-normal);
+  white-space: pre-line;
+}
+
+.popup-actions {
+  display: flex;
+  gap: var(--space-3);
+  justify-content: center;
+}
+
+/* ==========================================
+   共通カード
+   ========================================== */
+.card {
+  background: var(--color-card-background);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+/* ==========================================
+   区切り線
+   ========================================== */
+.divider {
+  height: 1px;
+  background: var(--color-border);
+  margin: var(--space-4) 0;
+}

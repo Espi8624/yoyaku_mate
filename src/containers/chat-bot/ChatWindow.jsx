@@ -4,7 +4,7 @@ import { getStoreAIContext } from '../../api/waitingService';
 // Gemini API は Go バックエンドのプロキシ経由で呼び出します (APIキーはサーバーサイド管理)
 import { generateSystemPrompt } from './SystemPrompt';
 import useTranslation from '../../hook/useTranslation';
-import './ChatWindow.css';
+import styles from "./ChatWindow.module.css";
 
 const API_BASE = process.env.NODE_ENV === 'production'
     ? '/api'
@@ -40,7 +40,7 @@ const ChatWindow = () => {
         scrollToBottom();
     }, [messages, isChatOpen]);
 
-    // Body scroll lock - 챗봇 열릴 때 배경 스크롤 방지
+    // Body scroll lock - チャットボット表示中は背景のスクロールを禁止
     useEffect(() => {
         if (isChatOpen) {
             document.body.style.overflow = 'hidden';
@@ -141,26 +141,26 @@ const ChatWindow = () => {
 
 
     return (
-        <div className="chat-window">
-            <div className="chat-header">
-                <span className="chat-title">{uiText.title}</span>
-                <button className="close-button" onClick={toggleChat}>×</button>
+        <div className={styles["chat-window"]}>
+            <div className={styles["chat-header"]}>
+                <span className={styles["chat-title"]}>{uiText.title}</span>
+                <button className={styles["close-button"]} onClick={toggleChat}>×</button>
             </div>
 
-            <div className="chat-messages">
+            <div className={styles["chat-messages"]}>
                 {messages.map(msg => (
-                    <div key={msg.id} className={`message ${msg.sender}`}>
+                    <div key={msg.id} className={`${styles["message"]} ${msg.sender === "bot" ? styles["bot"] : styles["user"]}`}>
                         {msg.text}
                     </div>
                 ))}
-                {isLoading && <div className="message bot">...</div>}
+                {isLoading && <div className={`${styles["message"]} ${styles["bot"]}`}>...</div>}
                 <div ref={messagesEndRef} />
             </div>
 
-            <form className="chat-input-area" onSubmit={handleSend}>
+            <form className={styles["chat-input-area"]} onSubmit={handleSend}>
                 <textarea
                     ref={inputRef}
-                    className="chat-input"
+                    className={styles["chat-input"]}
                     placeholder={uiText.placeholder}
                     value={inputText}
                     onChange={handleInputChange}
@@ -168,7 +168,7 @@ const ChatWindow = () => {
                     disabled={isLoading}
                     rows={1}
                 />
-                <button type="submit" className="send-button" disabled={!inputText.trim() || isLoading}>
+                <button type="submit" className={styles["send-button"]} disabled={!inputText.trim() || isLoading}>
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                         <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z" />
                     </svg>

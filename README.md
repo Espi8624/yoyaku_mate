@@ -21,7 +21,7 @@ QRコードベースのリアルタイム待機列管理およびAI店舗案内�
 | HTTP / Stream | Axios, EventSource (SSE) |
 | Maps | Google Maps API |
 | AI | Gemini API |
-| i18n | 独自実装 (ja / ko / en / zh / th / vi) |
+| i18n | 独自実装 (ja / en / ko / fr / de / ru / vi / th / zh / id / ar / es / it / pt) |
 | Deployment | Vercel (Edge Rewrite Proxy) |
 
 ## Getting Started

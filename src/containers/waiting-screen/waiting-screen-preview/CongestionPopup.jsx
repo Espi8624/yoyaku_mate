@@ -1,6 +1,7 @@
 import React from "react";
 import { useWaitingScreen } from "../WaitingScreenContext";
 import CommonPopup from "../../../components/CommonPopup";
+import styles from "./WaitingScreenPreview.module.css";
 
 function CongestionPopup() {
   // Contextから必要なものを持ってくる
@@ -9,7 +10,7 @@ function CongestionPopup() {
     closePopupAndProceed,
     closePopupOnly,
     resetApp, // Add resetApp
-    t // 다국어 데이터를 가져옵니다.
+    t // 多言語データを取得
   } = useWaitingScreen();
 
   // 多国語データ呼出
@@ -17,7 +18,7 @@ function CongestionPopup() {
 
   let actions = (
     <button
-      className="confirmation-btn"
+      className={styles["confirmation-btn"]}
       onClick={closePopupAndProceed}
     >
       {/* 「最大人員超過」時、戻るボタン、その外確認ボタンを表示 */}
@@ -29,7 +30,7 @@ function CongestionPopup() {
   if (popupInfo.mode === "registration_complete") {
     actions = (
       <button
-        className="confirmation-btn"
+        className={styles["confirmation-btn"]}
         onClick={closePopupAndProceed}
         style={{ width: '100%', margin: 0 }}
       >
@@ -44,7 +45,7 @@ function CongestionPopup() {
       <>
         {/* 1. 閉じるボタン (メインアクション: 画面維持) */}
         <button
-          className="confirmation-btn"
+          className={styles["confirmation-btn"]}
           onClick={closePopupOnly}
           style={{ width: '100%', margin: 0 }}
         >
@@ -61,7 +62,7 @@ function CongestionPopup() {
           </span>
 
           <button
-            className="confirmation-btn secondary-btn"
+            className={`${styles["confirmation-btn"]} ${styles["secondary-btn"]}`}
             onClick={resetApp}
             style={{ width: '100%', backgroundColor: '#dc3545', margin: 0, border: 'none', fontSize: '1em' }}
           >

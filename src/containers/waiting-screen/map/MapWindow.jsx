@@ -3,7 +3,7 @@ import { useWaitingScreen } from '../WaitingScreenContext';
 import WaitingPlaceMap from '../waiting-screen/WaitingPlaceMap';
 import { getStoreInfo } from '../../../api/waitingService';
 import useTranslation from '../../../hook/useTranslation';
-import './MapWindow.css';
+import styles from "./MapWindow.module.css";
 
 const HEADER_HEIGHT = 57; // px - header height
 
@@ -38,21 +38,21 @@ const MapWindow = () => {
     const contentHeight = `calc(100vh - ${HEADER_HEIGHT}px)`;
 
     return (
-        <div className="map-window-container">
+        <div className={styles["map-window-container"]}>
             {/* Header */}
-            <div className="map-window-header">
-                <h2 className="map-window-title">
+            <div className={styles["map-window-header"]}>
+                <h2 className={styles["map-window-title"]}>
                     {t?.waiting_place_map?.title || "周辺マップ"}
                 </h2>
                 <button
                     onClick={toggleMap}
-                    className="map-window-close-btn"
+                    className={styles["map-window-close-btn"]}
                 >
                     ×
                 </button>
             </div>
 
-            <div className="map-window-content" style={{ height: contentHeight }}>
+            <div className={styles["map-window-content"]} style={{ height: contentHeight }}>
                 {storeInfo ? (
                     <WaitingPlaceMap
                         storeInfo={storeInfo}
@@ -61,7 +61,7 @@ const MapWindow = () => {
                         selectedLanguageCode={selectedLanguageCode}
                     />
                 ) : (
-                    <div className="map-window-loading">
+                    <div className={styles["map-window-loading"]}>
                         読み込み中...
                     </div>
                 )}

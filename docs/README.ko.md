@@ -45,9 +45,12 @@ docs/
 |------|------|
 | [001-lessons-learned.md](./troubles/001-lessons-learned.ko.md) | CORS, SSE 재연결, AI 프롬프팅 최적화 회고 |
 | [002-google-maps-api-loop.md](./troubles/002-google-maps-api-loop.ko.md) | 3만 엔의 교훈: Google Maps API 무한 루프 사태와 방어 로직 |
+| [003-i18n-partial-breakage.md](./troubles/003-i18n-partial-breakage.ko.md) | 다국어 지원이 부분적으로 무력화되어 있던 문제 (국적 매핑 테이블, 미연결 번역 파일, 키 누락, 하드코딩) |
 
 ---
 
 ## Refactoring (리팩토링)
 
-*기록 예정*
+| 문서 | 설명 |
+|------|------|
+| [001-css-modules-migration.md](./refactoring/001-css-modules-migration.ko.md) | CSS Modules 스타일 시스템 마이그레이션 (전역 CSS → CSS Modules + 공통 디자인 시스템) |

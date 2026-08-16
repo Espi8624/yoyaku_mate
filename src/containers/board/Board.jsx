@@ -2,7 +2,7 @@ import React, { useEffect, useState, useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { getWaitingList, getStoreInfo, subscribeToWaitingList, getQRToken, getStoreSettings } from '../../api/waitingService';
 import { QRCodeCanvas } from 'qrcode.react';
-import './Board.css';
+import styles from "./Board.module.css";
 
 function Board() {
     const [searchParams] = useSearchParams();
@@ -99,8 +99,8 @@ function Board() {
         }
     }, [qrData, storeId]);
 
-    if (!storeId) return <div className="board-error">Store ID is missing.</div>;
-    if (loading && waitingList.length === 0) return <div className="board-loading">Loading...</div>;
+    if (!storeId) return <div className={styles["board-error"]}>Store ID is missing.</div>;
+    if (loading && waitingList.length === 0) return <div className={styles["board-loading"]}>Loading...</div>;
 
     const notifiedItems = waitingList
         .filter(item => item.status === 'notified')
@@ -114,32 +114,32 @@ function Board() {
         .sort((a, b) => a.queue_number - b.queue_number);
 
     return (
-        <div className="board-container">
-            <div className="background-mesh"></div>
+        <div className={styles["board-container"]}>
+            <div className={styles["background-mesh"]}></div>
 
-            <header className="board-header glass-panel">
+            <header className={`${styles["board-header"]} ${styles["glass-panel"]}`}>
                 <h1>{storeName || 'Wait Board'}</h1>
-                <div className="board-clock">{/* Digital Clock Placeholder */}</div>
+                <div className={styles["board-clock"]}>{/* Digital Clock Placeholder */}</div>
             </header>
 
-            <main className="bento-grid">
+            <main className={styles["bento-grid"]}>
                 {/* LEFT: HERO SECTION (Now Calling) */}
-                <section className="bento-item hero-section glass-panel">
-                    <div className="section-header">
-                        <h2>現在お呼び出し中 <span className="en-sub">NOW CALLING</span></h2>
-                        <span className="live-indicator">LIVE</span>
+                <section className={`${styles["bento-item"]} ${styles["hero-section"]} ${styles["glass-panel"]}`}>
+                    <div className={styles["section-header"]}>
+                        <h2>現在お呼び出し中 <span className={styles["en-sub"]}>NOW CALLING</span></h2>
+                        <span className={styles["live-indicator"]}>LIVE</span>
                     </div>
 
-                    <div className="hero-content">
+                    <div className={styles["hero-content"]}>
                         {notifiedItems.length === 0 ? (
-                            <div className="empty-state-hero">
+                            <div className={styles["empty-state-hero"]}>
                                 <p>お呼び出し中のお客様はいません</p>
                             </div>
                         ) : (
-                            <div className="hero-cards">
+                            <div className={styles["hero-cards"]}>
                                 {notifiedItems.map(item => (
-                                    <div key={item.waiting_id} className="hero-card">
-                                        <span className="hero-number">#{item.queue_number}</span>
+                                    <div key={item.waiting_id} className={styles["hero-card"]}>
+                                        <span className={styles["hero-number"]}>#{item.queue_number}</span>
                                     </div>
                                 ))}
                             </div>
@@ -148,23 +148,23 @@ function Board() {
                 </section>
 
                 {/* RIGHT COLUMN */}
-                <div className="bento-column">
+                <div className={styles["bento-column"]}>
 
                     {/* TOP: WAITING LIST */}
-                    <section className="bento-item list-section glass-panel">
-                        <div className="section-header">
-                            <h2>お待ちのお客様 <span className="en-sub">WAITING LIST</span></h2>
-                            <span className="count-badge">{waitingItems.length}組</span>
+                    <section className={`${styles["bento-item"]} ${styles["list-section"]} ${styles["glass-panel"]}`}>
+                        <div className={styles["section-header"]}>
+                            <h2>お待ちのお客様 <span className={styles["en-sub"]}>WAITING LIST</span></h2>
+                            <span className={styles["count-badge"]}>{waitingItems.length}組</span>
                         </div>
 
-                        <div className="list-content custom-scroll">
+                        <div className={`${styles["list-content"]} ${styles["custom-scroll"]}`}>
                             {waitingItems.length === 0 ? (
-                                <p className="empty-message-small">現在お待ちのお客様はいません</p>
+                                <p className={styles["empty-message-small"]}>現在お待ちのお客様はいません</p>
                             ) : (
-                                <div className="waiting-list-grid">
+                                <div className={styles["waiting-list-grid"]}>
                                     {waitingItems.map(item => (
-                                        <div key={item.waiting_id} className="list-card">
-                                            <span className="list-number">#{item.queue_number}</span>
+                                        <div key={item.waiting_id} className={styles["list-card"]}>
+                                            <span className={styles["list-number"]}>#{item.queue_number}</span>
                                         </div>
                                     ))}
                                 </div>
@@ -173,22 +173,22 @@ function Board() {
                     </section>
 
                     {/* BOTTOM: INFO & QR */}
-                    <section className="bento-item info-section glass-panel">
-                        <div className="info-grid">
-                            <div className="stats-box">
-                                <div className="stat-item">
-                                    <span className="stat-label">只今の待ち <span className="en-stat">WAITING</span></span>
-                                    <span className="stat-value">{waitingItems.length}<small>組 / groups</small></span>
+                    <section className={`${styles["bento-item"]} ${styles["info-section"]} ${styles["glass-panel"]}`}>
+                        <div className={styles["info-grid"]}>
+                            <div className={styles["stats-box"]}>
+                                <div className={styles["stat-item"]}>
+                                    <span className={styles["stat-label"]}>只今の待ち <span className={styles["en-stat"]}>WAITING</span></span>
+                                    <span className={styles["stat-value"]}>{waitingItems.length}<small>組 / groups</small></span>
                                 </div>
-                                <div className="stat-item">
-                                    <span className="stat-label">予想時間 <span className="en-stat">EST. TIME</span></span>
-                                    <span className="stat-value">{waitingItems.length * estimatedWaitTimePerTeam}<small>分 / min</small></span>
+                                <div className={styles["stat-item"]}>
+                                    <span className={styles["stat-label"]}>予想時間 <span className={styles["en-stat"]}>EST. TIME</span></span>
+                                    <span className={styles["stat-value"]}>{waitingItems.length * estimatedWaitTimePerTeam}<small>分 / min</small></span>
                                 </div>
                             </div>
 
-                            <div className="qr-box">
+                            <div className={styles["qr-box"]}>
                                 {qrUrl && (
-                                    <div className="qr-frame">
+                                    <div className={styles["qr-frame"]}>
                                         <QRCodeCanvas
                                             value={qrUrl}
                                             size={140}
@@ -198,14 +198,14 @@ function Board() {
                                         />
                                     </div>
                                 )}
-                                <p className="qr-hint">スキャンして登録 <br /><span className="en-hint">Scan to Register</span></p>
+                                <p className={styles["qr-hint"]}>スキャンして登録 <br /><span className={styles["en-hint"]}>Scan to Register</span></p>
                             </div>
                         </div>
                     </section>
                 </div>
             </main>
 
-            <footer className="board-footer">
+            <footer className={styles["board-footer"]}>
                 <p>Powered by ルスイ</p>
             </footer>
         </div>

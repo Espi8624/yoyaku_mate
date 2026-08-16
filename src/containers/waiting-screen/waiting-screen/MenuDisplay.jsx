@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from "react";
-import "./MenuDisplay.css";
+import styles from "./MenuDisplay.module.css";
 
 import { getTranslatedText } from "../../../utils/i18nHelper";
 
@@ -40,15 +40,15 @@ function MenuDisplay({ menuList, texts, selectedLanguageCode }) {
   };
 
   return (
-    <div className="menu-container">
-      <div className="menu-label">{texts.menu_label}</div>
+    <div className={styles["menu-container"]}>
+      <div className={styles["menu-label"]}>{texts.menu_label}</div>
 
       {/* メニューを見るヘッダー */}
       <div
-        className="menu-category-header"
+        className={styles["menu-category-header"]}
         onClick={() => setShowMenu(prev => !prev)}
       >
-        <span className="menu-category-icon">
+        <span className={styles["menu-category-icon"]}>
           {showMenu ? (
             <svg width="24" height="24" viewBox="0 0 12 12" fill="currentColor">
               <path d="M2 4 L6 8 L10 4 Z" />
@@ -59,20 +59,20 @@ function MenuDisplay({ menuList, texts, selectedLanguageCode }) {
             </svg>
           )}
         </span>
-        <span className="menu-category-name">
+        <span className={styles["menu-category-name"]}>
           {showMenu ? texts.menu_close_label : texts.menu_overview_label}
         </span>
       </div>
 
       {/* カテゴリータブとアイテム一覧（showMenuがtrueの時のみ表示） */}
       {showMenu && (
-        <div className="menu-content">
+        <div className={styles["menu-content"]}>
           {/* カテゴリタブ（横スクロール） */}
-          <div className="menu-category-tabs">
+          <div className={styles["menu-category-tabs"]}>
             {categories.map((category) => (
               <button
                 key={category}
-                className={`menu-category-tab ${activeCategory === category ? 'active' : ''}`}
+                className={`${styles["menu-category-tab"]} ${activeCategory === category ? styles["active"] : ''}`}
                 onClick={() => setActiveCategory(category)}
               >
                 {category}
@@ -81,42 +81,42 @@ function MenuDisplay({ menuList, texts, selectedLanguageCode }) {
           </div>
 
           {/* アイテムリスト (2カラム) */}
-          <div className="menu-items-list">
+          <div className={styles["menu-items-list"]}>
             {displayedItems.map((item, itemIdx) => {
               const displayTitle = getTranslatedText(item.title, item.title_translations, selectedLanguageCode);
               const displayDescription = getTranslatedText(item.description, item.description_translations, selectedLanguageCode);
 
               return (
                 <div
-                  className="menu-item"
+                  className={styles["menu-item"]}
                   key={itemIdx}
                   onClick={() => setExpandedItem(item)}
                 >
-                  <div className="menu-item-image">
+                  <div className={styles["menu-item-image"]}>
                     {item.menu_image_url ? (
                       <img src={item.menu_image_url} alt={displayTitle} />
                     ) : (
-                      <div className="menu-item-image-placeholder">
+                      <div className={styles["menu-item-image-placeholder"]}>
                         <svg width="48" height="48" viewBox="0 0 24 24" fill="currentColor">
                           <path d="M21.9 21.9l-8.49-8.49-9.82-9.82L2.1 2.1.69 3.51 3 5.83V19c0 1.1.9 2 2 2h13.17l2.31 2.31 1.42-1.41zM5 18l3.5-4.5 2.5 3.01L12.17 15l3 3H5zm16 .17L5.83 3H19c1.1 0 2 .9 2 2v13.17z" />
                         </svg>
                       </div>
                     )}
                   </div>
-                  <div className="menu-item-details">
+                  <div className={styles["menu-item-details"]}>
                     {(() => {
                       const titleParts = displayTitle.split(" / ");
                       const mainTitle = titleParts[0];
                       const pronunciation = titleParts.length > 1 ? titleParts[1] : null;
                       return (
-                        <div className="menu-item-title-container">
-                          <div className="menu-item-title">{mainTitle}</div>
-                          {pronunciation && <div className="menu-item-pronunciation">{pronunciation}</div>}
+                        <div className={styles["menu-item-title-container"]}>
+                          <div className={styles["menu-item-title"]}>{mainTitle}</div>
+                          {pronunciation && <div className={styles["menu-item-pronunciation"]}>{pronunciation}</div>}
                         </div>
                       );
                     })()}
-                    {displayDescription && <span className="menu-item-description">{displayDescription}</span>}
-                    <span className="menu-item-price">¥{Number(item.price).toLocaleString()}</span>
+                    {displayDescription && <span className={styles["menu-item-description"]}>{displayDescription}</span>}
+                    <span className={styles["menu-item-price"]}>¥{Number(item.price).toLocaleString()}</span>
                   </div>
                 </div>
               )
@@ -127,43 +127,43 @@ function MenuDisplay({ menuList, texts, selectedLanguageCode }) {
 
       {/* 詳細モーダル */}
       {expandedItem && (
-        <div className="menu-detail-overlay" onClick={handleCloseModal}>
-          <div className="menu-detail-modal" onClick={e => e.stopPropagation()}>
-            <button className="menu-detail-close-btn" onClick={handleCloseModal}>
+        <div className={styles["menu-detail-overlay"]} onClick={handleCloseModal}>
+          <div className={styles["menu-detail-modal"]} onClick={e => e.stopPropagation()}>
+            <button className={styles["menu-detail-close-btn"]} onClick={handleCloseModal}>
               <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" />
               </svg>
             </button>
 
-            <div className="menu-detail-image-container">
+            <div className={styles["menu-detail-image-container"]}>
               {expandedItem.menu_image_url ? (
                 <img src={expandedItem.menu_image_url} alt={getTranslatedText(expandedItem.title, expandedItem.title_translations, selectedLanguageCode)} />
               ) : (
-                <div className="menu-item-image-placeholder column-layout">
+                <div className={`${styles["menu-item-image-placeholder"]} ${styles["column-layout"]}`}>
                   <svg width="64" height="64" viewBox="0 0 24 24" fill="#999">
                     <path d="M21.9 21.9l-8.49-8.49-9.82-9.82L2.1 2.1.69 3.51 3 5.83V19c0 1.1.9 2 2 2h13.17l2.31 2.31 1.42-1.41zM5 18l3.5-4.5 2.5 3.01L12.17 15l3 3H5zm16 .17L5.83 3H19c1.1 0 2 .9 2 2v13.17z" />
                   </svg>
-                  <span className="no-image-text">No Image</span>
+                  <span className={styles["no-image-text"]}>No Image</span>
                 </div>
               )}
             </div>
 
-            <div className="menu-detail-content">
+            <div className={styles["menu-detail-content"]}>
               {(() => {
                 const titleText = getTranslatedText(expandedItem.title, expandedItem.title_translations, selectedLanguageCode);
                 const titleParts = titleText.split(" / ");
                 const mainTitle = titleParts[0];
                 const pronunciation = titleParts.length > 1 ? titleParts[1] : null;
                 return (
-                  <div className="menu-detail-title-container">
-                    <div className="menu-detail-title">{mainTitle}</div>
-                    {pronunciation && <div className="menu-detail-pronunciation">{pronunciation}</div>}
+                  <div className={styles["menu-detail-title-container"]}>
+                    <div className={styles["menu-detail-title"]}>{mainTitle}</div>
+                    {pronunciation && <div className={styles["menu-detail-pronunciation"]}>{pronunciation}</div>}
                   </div>
                 );
               })()}
-              <div className="menu-detail-price">¥{Number(expandedItem.price).toLocaleString()}</div>
+              <div className={styles["menu-detail-price"]}>¥{Number(expandedItem.price).toLocaleString()}</div>
               {getTranslatedText(expandedItem.description, expandedItem.description_translations, selectedLanguageCode) && (
-                <div className="menu-detail-description">{getTranslatedText(expandedItem.description, expandedItem.description_translations, selectedLanguageCode)}</div>
+                <div className={styles["menu-detail-description"]}>{getTranslatedText(expandedItem.description, expandedItem.description_translations, selectedLanguageCode)}</div>
               )}
             </div>
           </div>

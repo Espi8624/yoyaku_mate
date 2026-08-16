@@ -1,0 +1,76 @@
+/**
+ * デザインシステムトークン定義
+ * - このファイルの変数を活用し、全画面で一貫したデザインを維持する。
+ * - colors.cssの色変数と併用する。
+ */
+:root {
+  /* === レイアウトトークン ===
+   * clamp(最小値, 推奨値, 最大値) を使用し、あらゆる画面サイズに自然に対応
+   */
+  --layout-padding-x: clamp(16px, 4vw, 48px);
+  --layout-padding-top: 20px;
+  --layout-padding-bottom: 100px;
+  --layout-content-max-width: 720px;
+
+  /* === 余白トークン (8ptグリッド基準) === */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+
+  /* === タイポグラフィトークン === */
+  --font-size-xs:  0.75rem;
+  --font-size-sm:  0.875rem;
+  --font-size-md:  1rem;
+  --font-size-lg:  1.125rem;
+  --font-size-xl:  1.25rem;
+  --font-size-2xl: 1.5rem;
+  --font-size-3xl: 2rem;
+
+  --font-weight-normal:    400;
+  --font-weight-medium:    500;
+  --font-weight-semibold:  600;
+  --font-weight-bold:      700;
+  --font-weight-extrabold: 800;
+
+  --line-height-tight:  1.2;
+  --line-height-normal: 1.5;
+  --line-height-loose:  1.75;
+
+  /* === ボーダー & 角丸トークン === */
+  --radius-sm:   6px;
+  --radius-md:   8px;
+  --radius-lg:   12px;
+  --radius-xl:   16px;
+  --radius-full: 9999px;
+
+  /* === ボタントークン === */
+  --btn-padding-y:     16px;
+  --btn-padding-x:     24px;
+  --btn-font-size:     var(--font-size-md);
+  --btn-font-weight:   var(--font-weight-bold);
+  --btn-radius:        var(--radius-md);
+
+  /* === シャドウトークン === */
+  --shadow-sm: 0 1px 4px rgba(0, 0, 0, 0.08);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.10);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.14);
+
+  /* === トランジショントークン === */
+  --transition-fast: 0.15s ease;
+  --transition-base: 0.25s ease;
+  --transition-slow: 0.4s ease;
+}
+
+/* タブレット以上でフォント基準サイズを調整 */
+@media (min-width: 768px) {
+  :root {
+    --layout-padding-top: 24px;
+    --layout-padding-bottom: 120px;
+  }
+}
