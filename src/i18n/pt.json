@@ -10,7 +10,10 @@
         "party_size_label": "Quantas pessoas estão no seu grupo?",
         "contact_label": "Entraremos em contato por este número se houver algum problema.",
         "note_label": "Há algo que o restaurante precise saber com antecedência?",
-        "confirm": "Próximo"
+        "confirm": "Próximo",
+        "party_size_placeholder": "ex.: 2",
+        "contact_placeholder": "ex.: 91-234-5678",
+        "note_placeholder": "ex.: Mesa perto da janela / Alergias"
     },
     "waiting_screen_menu": {
         "title": "Selecionar Menu",
@@ -25,7 +28,6 @@
     },
     "waiting_screen_preview": {
         "preview_label": "Registraremos você na lista de espera com as informações fornecidas.",
-        "name_label": "Nome",
         "party_size_label": "Número de pessoas",
         "contact_label": "Contato",
         "note_label": "Nota",
@@ -35,6 +37,12 @@
             "close": "Fechar",
             "back": "Voltar",
             "confirm": "Confirmar"
+        },
+        "pre_order": "Pedido antecipado",
+        "submit_confirm": {
+            "message": "Deseja prosseguir com o registro com estas informações?",
+            "cancel": "Cancelar",
+            "confirm": "Sim"
         }
     },
     "waiting_screen": {
@@ -69,6 +77,14 @@
         "completed_screen": {
             "title": "Obrigado pela visita!",
             "message": "A equipe irá guiá-lo."
+        },
+        "reset_btn": "Redefinir",
+        "reset_confirm_text": "Se quiser redefinir, pressione o botão abaixo.",
+        "registration_complete_popup": {
+            "message": "Registro concluído!"
+        },
+        "completed_notification_popup": {
+            "message": "Esta visita já foi concluída."
         }
     },
     "cancelled_screen": {
@@ -114,5 +130,9 @@
     "google_map_popup": {
         "message": "Deseja abrir o Google Maps?",
         "confirm": "Abrir"
+    },
+    "waiting_screen_notified": {
+        "title": "Obrigado por aguardar.",
+        "message": "Vamos guiá-lo agora."
     }
 }

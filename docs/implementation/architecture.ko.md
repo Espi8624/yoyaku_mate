@@ -1,6 +1,6 @@
 # 아키텍처 개요
 
-> 최종 수정: 2026-07-10
+> 최종 수정: 2026-08-16
 
 ## 기술 스택
 
@@ -12,7 +12,7 @@
 | 실시간 스트림 | EventSource (SSE) |
 | 지도 | Google Maps API (`@react-google-maps/api`) |
 | AI | Gemini API |
-| i18n | 자체 구현 (ja/ko/en/zh/th/vi) |
+| i18n | 자체 구현 (ja/en/ko/fr/de/ru/vi/th/zh/id/ar/es/it/pt) |
 | 배포 | Vercel (Edge Rewrite Proxy) |
 
 ---

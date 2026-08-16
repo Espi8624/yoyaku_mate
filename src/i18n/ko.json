@@ -10,7 +10,10 @@
         "party_size_label": "몇 명이서 오셨나요?",
         "contact_label": "혹시 문제가 생기면 이 연락처로 연락할게요.",
         "note_label": "가게에 미리 알려주실 사항이 있으신가요?",
-        "confirm": "다음으로"
+        "confirm": "다음으로",
+        "party_size_placeholder": "예: 2",
+        "contact_placeholder": "예: 010-1234-5678",
+        "note_placeholder": "예: 창가 자리 희망 / 알레르기 있음"
     },
     "waiting_screen_menu": {
         "title": "메뉴 선택",
@@ -25,7 +28,6 @@
     },
     "waiting_screen_preview": {
         "preview_label": "작성해주신 정보를 바탕으로 웨이팅 진행할게요!",
-        "name_label": "성함함",
         "party_size_label": "인원수",
         "contact_label": "연락처",
         "note_label": "비고",
@@ -35,6 +37,12 @@
             "close": "닫기",
             "back": "뒤로가기",
             "confirm": "확인"
+        },
+        "pre_order": "사전 주문",
+        "submit_confirm": {
+            "message": "이 내용으로 등록을 진행할까요?",
+            "cancel": "취소",
+            "confirm": "예"
         }
     },
     "waiting_screen": {
@@ -71,7 +79,13 @@
             "message": "직원이 안내해 드리겠습니다."
         },
         "reset_confirm_text": "혹시 초기화를 원한다면 아래 버튼을 눌러주세요.",
-        "reset_btn": "초기화"
+        "reset_btn": "초기화",
+        "registration_complete_popup": {
+            "message": "등록이 완료되었습니다"
+        },
+        "completed_notification_popup": {
+            "message": "이미 입장 처리가 완료되었습니다."
+        }
     },
     "cancelled_screen": {
         "user": {
@@ -116,5 +130,9 @@
     "google_map_popup": {
         "message": "Google Map을 여시겠습니까?",
         "confirm": "열기"
+    },
+    "waiting_screen_notified": {
+        "title": "많이 기다리셨습니다.",
+        "message": "지금 안내해드리겠습니다."
     }
 }

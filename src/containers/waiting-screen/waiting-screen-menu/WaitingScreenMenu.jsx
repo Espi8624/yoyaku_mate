@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef, useCallback } from "react";
 import { useWaitingScreen } from "../WaitingScreenContext";
 import useTranslation from "../../../hook/useTranslation";
 import { getTranslatedText } from "../../../utils/i18nHelper";
@@ -6,8 +6,9 @@ import { getMenuList } from "../../../api/waitingService";
 import CommonPopup from "../../../components/CommonPopup";
 import BackButton from "../../../components/BackButton";
 import ChatbotButton from "../../chat-bot/ChatbotButton";
-import "../waiting-screen/WaitingScreen.css";
-import "./WaitingScreenMenu.css";
+import baseStyles from "../waiting-screen/WaitingScreen.module.css";
+import specificStyles from "./WaitingScreenMenu.module.css";
+const styles = { ...baseStyles, ...specificStyles };
 
 function WaitingScreenMenu() {
     const {
@@ -24,7 +25,10 @@ function WaitingScreenMenu() {
     const [isLoading, setIsLoading] = useState(true);
     const [expandedMenus, setExpandedMenus] = useState(new Set());
     const [showErrorPopup, setShowErrorPopup] = useState(false);
-    const [popupMessage, setPopupMessage] = useState(""); // Add state for dynamic message
+    const [popupMessage, setPopupMessage] = useState("");
+
+    // 直前にfetchしたstoreIdを追跡 → 同一storeIdでの重複呼び出しを防止
+    const fetchedStoreIdRef = useRef(null);
 
     const handleNext = () => {
         // Calculate total quantity
@@ -57,31 +61,32 @@ function WaitingScreenMenu() {
     const t = useTranslation(selectedLanguageCode);
     const menuText = t.waiting_screen_menu; // Use the object from resources
 
-    useEffect(() => {
-        const fetchMenus = async () => {
-            setIsLoading(true);
-            try {
-                const menus = await getMenuList(storeId);
-                console.log("Fetched Menus:", menus); // Debug log
+    const fetchMenus = useCallback(async () => {
+        // 同一storeIdで既にfetch済みの場合は重複呼び出しを防止
+        if (!storeId || fetchedStoreIdRef.current === storeId) return;
+        fetchedStoreIdRef.current = storeId;
 
-                // ステータスがactiveかつ事予約可能(pre-order available)なメニューのみフィルタリング
-                const availableMenus = menus.filter(
-                    (m) => m.menu_status === "available" && m.is_pre_order_available
-                );
-                console.log("Available Menus:", availableMenus); // Debug log
+        setIsLoading(true);
+        try {
+            const menus = await getMenuList(storeId);
 
-                setMenuList(availableMenus);
-            } catch (error) {
-                console.error("Failed to fetch menus", error);
-            } finally {
-                setIsLoading(false);
-            }
-        };
-
-        if (storeId) {
-            fetchMenus();
+            // ステータスがavailableかつ事前注文可能なメニューのみフィルタリング
+            const availableMenus = menus.filter(
+                (m) => m.menu_status === "available" && m.is_pre_order_available
+            );
+            setMenuList(availableMenus);
+        } catch (error) {
+            // fetch失敗時はrefを初期化 → 再試行できるようにする
+            fetchedStoreIdRef.current = null;
+            console.error("Failed to fetch menus:", error);
+        } finally {
+            setIsLoading(false);
         }
     }, [storeId]);
+
+    useEffect(() => {
+        fetchMenus();
+    }, [fetchMenus]);
 
     // 数量変更ハンドラ
     const handleQuantityChange = (menu, delta) => {
@@ -136,20 +141,24 @@ function WaitingScreenMenu() {
     };
 
     return (
-        <div className="waiting-section">
-            <ChatbotButton />
-            <div className="menu-header-row" style={{ display: 'flex', alignItems: 'center', marginBottom: '18px' }}>
-                <BackButton onClick={() => setStep(1)} className="header-back-button" />
-                <div className="preview-label" style={{ marginBottom: 0 }}>{menuText.title}</div>
+        <div className="page-container">
+            <div className="page-top-bar">
+                <div className="page-top-bar-left">
+                    <BackButton onClick={() => setStep(1)} />
+                </div>
+                <div className="page-top-bar-right">
+                    <ChatbotButton />
+                </div>
             </div>
+            <h1 className="page-title">{menuText.title}</h1>
 
             {isLoading ? (
-                <div className="menu-loading">Loading...</div>
+                <div className={styles["menu-loading"]}>Loading...</div>
             ) : menuList.length === 0 ? (
-                <div className="menu-empty">{menuText.no_menus}</div>
+                <div className={styles["menu-empty"]}>{menuText.no_menus}</div>
             ) : (
-                <div className="menu-selection-container">
-                    <div className="menu-list">
+                <div className={styles["menu-selection-container"]}>
+                    <div className={styles["menu-list"]}>
                         {menuList.map((menu) => {
                             const displayTitle = getTranslatedText(menu.title, menu.title_translations, selectedLanguageCode);
                             const displayDescription = getTranslatedText(menu.description, menu.description_translations, selectedLanguageCode);
@@ -161,28 +170,28 @@ function WaitingScreenMenu() {
                             return (
                                 <div
                                     key={menu.menu_id}
-                                    className="menu-item-card"
+                                    className={styles["menu-item-card"]}
                                 >
-                                    <div className="menu-item-top-row">
+                                    <div className={styles["menu-item-top-row"]}>
                                         {menu.menu_image_url ? (
                                             <img
                                                 src={menu.menu_image_url}
                                                 alt={mainTitle}
-                                                className="waiting-menu-item-image"
+                                                className={styles["waiting-menu-item-image"]}
                                             />
                                         ) : (
-                                            <div className="menu-item-placeholder">No Image</div>
+                                            <div className={styles["menu-item-placeholder"]}>No Image</div>
                                         )}
-                                        <div className="menu-item-details">
-                                            <div className="menu-item-title-container">
-                                                <div className="menu-item-title">{mainTitle}</div>
-                                                {pronunciation && <div className="menu-item-pronunciation">{pronunciation}</div>}
+                                        <div className={styles["menu-item-details"]}>
+                                            <div className={styles["menu-item-title-container"]}>
+                                                <div className={styles["menu-item-title"]}>{mainTitle}</div>
+                                                {pronunciation && <div className={styles["menu-item-pronunciation"]}>{pronunciation}</div>}
                                             </div>
-                                            <div className="menu-item-price-row">
-                                                <div className="menu-item-price">¥{Number(menu.price).toLocaleString()}</div>
-                                                <div className="menu-item-controls">
+                                            <div className={styles["menu-item-price-row"]}>
+                                                <div className={styles["menu-item-price"]}>¥{Number(menu.price).toLocaleString()}</div>
+                                                <div className={styles["menu-item-controls"]}>
                                                     <button
-                                                        className="quantity-btn minus"
+                                                        className={`${styles["quantity-btn"]} ${styles["minus"]}`}
                                                         onClick={() => handleQuantityChange(menu, -1)}
                                                         disabled={getQuantity(menu.menu_id) === 0}
                                                     >
@@ -190,9 +199,9 @@ function WaitingScreenMenu() {
                                                             <rect width="12" height="2" rx="1" fill="#333" />
                                                         </svg>
                                                     </button>
-                                                    <span className="quantity-value">{getQuantity(menu.menu_id)}</span>
+                                                    <span className={styles["quantity-value"]}>{getQuantity(menu.menu_id)}</span>
                                                     <button
-                                                        className="quantity-btn plus"
+                                                        className={`${styles["quantity-btn"]} ${styles["plus"]}`}
                                                         onClick={() => handleQuantityChange(menu, 1)}
                                                     >
                                                         <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -204,7 +213,7 @@ function WaitingScreenMenu() {
                                             {displayDescription && (
                                                 <button
                                                     onClick={() => toggleDescription(menu.menu_id)}
-                                                    className="menu-item-toggle-btn"
+                                                    className={styles["menu-item-toggle-btn"]}
                                                 >
                                                     {expandedMenus.has(menu.menu_id) ? `▲ ${menuText.close_details}` : `▼ ${menuText.view_details}`}
                                                 </button>
@@ -212,7 +221,7 @@ function WaitingScreenMenu() {
                                         </div>
                                     </div>
                                     {expandedMenus.has(menu.menu_id) && displayDescription && (
-                                        <div className="menu-item-description-box">
+                                        <div className={styles["menu-item-description-box"]}>
                                             {displayDescription}
                                         </div>
                                     )}
@@ -224,10 +233,12 @@ function WaitingScreenMenu() {
             )}
 
             {/* Fixed Footer Actions */}
-            <div className="menu-actions fixed-action-footer">
-                <button type="button" className="confirmation-btn" onClick={handleNext}>
+            <div className="fixed-footer">
+                <div className="fixed-footer-inner">
+                <button type="button" className="btn-primary" onClick={handleNext}>
                     {menuText.confirm}
                 </button>
+                </div>
             </div>
 
             {/* Error Popup for Menu Selection */}
@@ -237,7 +248,7 @@ function WaitingScreenMenu() {
                 message={popupMessage}
                 actions={
                     <button
-                        className="confirmation-btn"
+                        className={styles["confirmation-btn"]}
                         onClick={() => setShowErrorPopup(false)}
                         type="button"
                     >

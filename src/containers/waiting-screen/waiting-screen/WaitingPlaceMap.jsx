@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback, useRef, useMemo } from 'react'
 import { GoogleMap, useJsApiLoader, Marker, InfoWindow } from '@react-google-maps/api';
 import CommonPopup from '../../../components/CommonPopup';
 import RecommendedPlacesList from './RecommendedPlacesList';
-import "./WaitingPlaceMap.css";
+import styles from "./WaitingPlaceMap.module.css";
 import useTranslation from '../../../hook/useTranslation';
 
 const containerStyle = {
@@ -257,10 +257,10 @@ function WaitingPlaceMap({ storeInfo, texts, isFullScreen = false, selectedLangu
             {/* Header - Only show if NOT full screen (Full screen has its own modal header usually) */}
             {!isFullScreen && (
                 <div
-                    className="menu-category-header"
+                    className={styles["menu-category-header"]}
                     onClick={() => setIsOpen(prev => !prev)}
                 >
-                    <span className="menu-category-icon">
+                    <span className={styles["menu-category-icon"]}>
                         {isOpen ? (
                             <svg width="24" height="24" viewBox="0 0 12 12" fill="currentColor">
                                 <path d="M2 4 L6 8 L10 4 Z" />
@@ -271,7 +271,7 @@ function WaitingPlaceMap({ storeInfo, texts, isFullScreen = false, selectedLangu
                             </svg>
                         )}
                     </span>
-                    <span className="menu-category-name">
+                    <span className={styles["menu-category-name"]}>
                         {isOpen ? (mapText?.close_map || "地図を閉じる") : (mapText?.open_map || "周辺の待機スポットを見る")}
                     </span>
                 </div>
@@ -350,13 +350,13 @@ function WaitingPlaceMap({ storeInfo, texts, isFullScreen = false, selectedLangu
                                         maxWidth: 220
                                     }}
                                 >
-                                    <div className="infowindow-container">
-                                        <div className="infowindow-header">
-                                            <h4 className="infowindow-title">
+                                    <div className={styles["infowindow-container"]}>
+                                        <div className={styles["infowindow-header"]}>
+                                            <h4 className={styles["infowindow-title"]}>
                                                 {selectedPlace.name}
                                             </h4>
                                             <button
-                                                className="infowindow-close-btn"
+                                                className={styles["infowindow-close-btn"]}
                                                 onClick={(e) => {
                                                     e.stopPropagation();
                                                     setSelectedPlace(null);
@@ -368,28 +368,28 @@ function WaitingPlaceMap({ storeInfo, texts, isFullScreen = false, selectedLangu
                                                 </svg>
                                             </button>
                                         </div>
-                                        <div className="infowindow-content">
+                                        <div className={styles["infowindow-content"]}>
                                             {/* Rating and Meta row */}
                                             <div>
 
-                                                <div className="infowindow-meta">
-                                                    <div className="infowindow-rating">
-                                                        <span className="infowindow-star">★</span>
-                                                        <span className="infowindow-rating-value">
+                                                <div className={styles["infowindow-meta"]}>
+                                                    <div className={styles["infowindow-rating"]}>
+                                                        <span className={styles["infowindow-star"]}>★</span>
+                                                        <span className={styles["infowindow-rating-value"]}>
                                                             {selectedPlace.rating || '-'}
                                                         </span>
-                                                        <span className="infowindow-rating-count">
+                                                        <span className={styles["infowindow-rating-count"]}>
                                                             ({selectedPlace.user_ratings_total || 0})
                                                         </span>
                                                     </div>
-                                                    <div className="infowindow-badges-container" style={{ display: 'flex', gap: '4px' }}>
+                                                    <div className={styles["infowindow-badges-container"]} style={{ display: 'flex', gap: '4px' }}>
                                                         {selectedPlace.distance && (
-                                                            <span className="infowindow-walking-badge">
+                                                            <span className={styles["infowindow-walking-badge"]}>
                                                                 {selectedPlace.distance}m
                                                             </span>
                                                         )}
                                                         {selectedPlace.walking_time && (
-                                                            <span className="infowindow-walking-badge">
+                                                            <span className={styles["infowindow-walking-badge"]}>
                                                                 {mapText?.walking || "徒歩"}{selectedPlace.walking_time}{mapText?.minutes || "分"}
                                                             </span>
                                                         )}
@@ -398,14 +398,14 @@ function WaitingPlaceMap({ storeInfo, texts, isFullScreen = false, selectedLangu
                                             </div>
 
                                             {/* Image */}
-                                            <div className="infowindow-image">
+                                            <div className={styles["infowindow-image"]}>
                                                 {selectedPlace.photoUrl ? (
                                                     <img
                                                         src={selectedPlace.photoUrl}
                                                         alt={selectedPlace.name}
                                                     />
                                                 ) : (
-                                                    <div className="infowindow-no-image">
+                                                    <div className={styles["infowindow-no-image"]}>
                                                         {mapText?.no_image || "No Image"}
                                                     </div>
                                                 )}
@@ -413,7 +413,7 @@ function WaitingPlaceMap({ storeInfo, texts, isFullScreen = false, selectedLangu
 
                                             {/* Button */}
                                             <button
-                                                className="infowindow-open-btn"
+                                                className={styles["infowindow-open-btn"]}
                                                 onClick={(e) => {
                                                     e.stopPropagation();
                                                     const place = selectedPlace;
@@ -451,7 +451,7 @@ function WaitingPlaceMap({ storeInfo, texts, isFullScreen = false, selectedLangu
                 message={t?.google_map_popup?.message || "Google Mapを開きますか？"}
                 actions={
                     <button
-                        className="confirmation-btn"
+                        className={styles["confirmation-btn"]}
                         onClick={() => {
                             if (pendingUrl) {
                                 window.open(pendingUrl, '_blank');

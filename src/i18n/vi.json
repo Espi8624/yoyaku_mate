@@ -10,7 +10,10 @@
         "party_size_label": "Số lượng khách (người)",
         "contact_label": "Số điện thoại liên lạc (khi cần thiết)",
         "note_label": "Bạn có yêu cầu đặc biệt nào cho cửa hàng không?",
-        "confirm": "Tiếp theo"
+        "confirm": "Tiếp theo",
+        "party_size_placeholder": "VD: 2",
+        "contact_placeholder": "VD: 090-123-4567",
+        "note_placeholder": "VD: Muốn ngồi cạnh cửa sổ / Dị ứng thực phẩm"
     },
     "waiting_screen_menu": {
         "title": "Chọn thực đơn",
@@ -25,7 +28,6 @@
     },
     "waiting_screen_preview": {
         "preview_label": "Chúng tôi sẽ đăng ký danh sách chờ dựa trên thông tin bạn đã cung cấp!",
-        "name_label": "Tên",
         "party_size_label": "Số lượng người",
         "contact_label": "Liên lạc",
         "note_label": "Ghi chú",
@@ -35,6 +37,12 @@
             "close": "Đóng",
             "back": "Quay lại",
             "confirm": "Xác nhận"
+        },
+        "pre_order": "Đặt trước món",
+        "submit_confirm": {
+            "message": "Bạn có muốn tiếp tục đăng ký với thông tin này không?",
+            "cancel": "Hủy",
+            "confirm": "Có"
         }
     },
     "waiting_screen": {
@@ -69,6 +77,14 @@
         "completed_screen": {
             "title": "Cảm ơn quý khách!",
             "message": "Nhân viên sẽ hướng dẫn quý khách."
+        },
+        "reset_btn": "Đặt lại",
+        "reset_confirm_text": "Nếu muốn đặt lại, vui lòng nhấn nút bên dưới.",
+        "registration_complete_popup": {
+            "message": "Đăng ký hoàn tất!"
+        },
+        "completed_notification_popup": {
+            "message": "Lượt ghé thăm này đã hoàn tất."
         }
     },
     "cancelled_screen": {
@@ -114,5 +130,9 @@
     "google_map_popup": {
         "message": "Bạn có muốn mở Google Maps không?",
         "confirm": "Mở"
+    },
+    "waiting_screen_notified": {
+        "title": "Cảm ơn quý khách đã chờ đợi.",
+        "message": "Chúng tôi sẽ hướng dẫn quý khách ngay bây giờ."
     }
 }

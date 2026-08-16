@@ -39,12 +39,13 @@
 }
 
 .input-title {
-  font-size: 1.1em;
-  font-weight: 600;
-  color: #2C2C2C;
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
   text-align: left;
-  margin-bottom: 22px;
-  letter-spacing: 0.02em;
+  margin-bottom: var(--space-6);
+  letter-spacing: 0.01em;
+  padding-right: 50px;
 }
 
 .input-form {
@@ -133,12 +134,12 @@ textarea.input-field-value:focus {
   margin-top: 24px;
 }
 
-/* 입력 화면 전용 스타일 */
+/* 入力画面専用スタイル */
 .input-field-group {
   display: flex;
   flex-direction: column;
   gap: 8px;
-  /* 필드 내부 요소들 사이의 간격 (label, example, input) */
+  /* フィールド内要素間の間隔 (label, example, input) */
 }
 
 .input-field-label {

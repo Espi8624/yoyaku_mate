@@ -9,8 +9,13 @@ import th from '../i18n/th.json';
 import zh from '../i18n/zh.json';
 import id from '../i18n/id.json';
 import ar from '../i18n/ar.json';
+import es from '../i18n/es.json';
+import it from '../i18n/it.json';
+import pt from '../i18n/pt.json';
 
-const translations = { ja, en, ko, fr, de, ru, vi, th, zh, id, ar };
+// 注意: es/it/ptは翻訳ファイル自体は存在していたが、このオブジェクトに接続されておらず
+// スペイン語・イタリア語・ポルトガル語のユーザーが常に英語(en)にフォールバックしていた
+const translations = { ja, en, ko, fr, de, ru, vi, th, zh, id, ar, es, it, pt };
 
 function useTranslation(languageCode) {
   // languageCode can be full "en-US" or "zh-TW", so we check startsWith for simple matching if exact match fails

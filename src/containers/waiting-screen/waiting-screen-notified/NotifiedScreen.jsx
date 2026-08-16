@@ -3,8 +3,9 @@ import { useWaitingScreen } from "../WaitingScreenContext";
 import { getWaitingDetails, subscribeToWaitingStatus } from "../../../api/waitingService";
 import useTranslation from "../../../hook/useTranslation";
 import ChatbotButton from "../../chat-bot/ChatbotButton";
-import "../waiting-screen/WaitingScreen.css";
-import "./NotifiedScreen.css";
+import baseStyles from "../waiting-screen/WaitingScreen.module.css";
+import specificStyles from "./NotifiedScreen.module.css";
+const styles = { ...baseStyles, ...specificStyles };
 
 function NotifiedScreen() {
   const { storeId, waitingId, setStep, selectedLanguageCode } = useWaitingScreen();
@@ -65,12 +66,16 @@ function NotifiedScreen() {
   }, [storeId, waitingId, setStep]);
 
   return (
-    <div className="waiting-section notified-section">
-      <ChatbotButton />
-      <div className="notified-content">
-        <div className="notified-icon">✓</div>
-        <h1 className="notified-title">{notifiedText.title}</h1>
-        <p className="notified-message">{notifiedText.message}</p>
+    <div className="page-container">
+      <div className="page-top-bar">
+        <div className="page-top-bar-right">
+          <ChatbotButton />
+        </div>
+      </div>
+      <div className={styles["notified-content"]}>
+        <div className={styles["notified-icon"]}>✓</div>
+        <h1 className={styles["notified-title"]}>{notifiedText.title}</h1>
+        <p className={styles["notified-message"]}>{notifiedText.message}</p>
       </div>
     </div>
   );

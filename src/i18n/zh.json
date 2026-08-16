@@ -10,7 +10,10 @@
         "party_size_label": "請問共有幾位用餐？",
         "contact_label": "若有任何狀況，我們將透過此號碼與您聯繫。",
         "note_label": "是否有任何需要提前告知店家的事項？",
-        "confirm": "下一步"
+        "confirm": "下一步",
+        "party_size_placeholder": "例：2",
+        "contact_placeholder": "例：0912-345-678",
+        "note_placeholder": "例：靠窗座位 / 有過敏原"
     },
     "waiting_screen_menu": {
         "title": "選擇菜單",
@@ -25,7 +28,6 @@
     },
     "waiting_screen_preview": {
         "preview_label": "我們將根據您填寫的資訊進行候位登記！",
-        "name_label": "姓名",
         "party_size_label": "人數",
         "contact_label": "聯絡電話",
         "note_label": "備註",
@@ -35,6 +37,12 @@
             "close": "關閉",
             "back": "返回",
             "confirm": "確認"
+        },
+        "pre_order": "預先點餐",
+        "submit_confirm": {
+            "message": "是否要以此內容進行登記？",
+            "cancel": "取消",
+            "confirm": "是"
         }
     },
     "waiting_screen": {
@@ -69,6 +77,14 @@
         "completed_screen": {
             "title": "感謝您的光臨！",
             "message": "工作人員將為您帶位。"
+        },
+        "reset_btn": "重置",
+        "reset_confirm_text": "如需重置，請按下方按鈕。",
+        "registration_complete_popup": {
+            "message": "登記完成！"
+        },
+        "completed_notification_popup": {
+            "message": "此次到店已完成。"
         }
     },
     "cancelled_screen": {
@@ -114,5 +130,9 @@
     "google_map_popup": {
         "message": "Do you want to open Google Maps?",
         "confirm": "Open"
+    },
+    "waiting_screen_notified": {
+        "title": "感謝您耐心等候。",
+        "message": "現在為您帶位。"
     }
 }

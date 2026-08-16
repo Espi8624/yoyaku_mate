@@ -1,9 +1,10 @@
 import React from "react";
+import styles from "./WaitingScreenInput.module.css";
 
 function FormField({ id, label, example, value, onChange, type = "text", required = false }) {
   return (
-    <div className="input-field-group">
-      <label htmlFor={id} className="input-field-label">
+    <div className={styles["input-field-group"]}>
+      <label htmlFor={id} className={styles["input-field-label"]}>
         {label}
       </label>
       <input
@@ -14,7 +15,7 @@ function FormField({ id, label, example, value, onChange, type = "text", require
         onChange={onChange}
         required={required}
         placeholder={example}
-        className="input-field-value"
+        className={styles["input-field-value"]}
       />
     </div>
   );

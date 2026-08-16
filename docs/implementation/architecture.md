@@ -1,6 +1,6 @@
 # アーキテクチャの概要
 
-> 最終更新: 2026-07-10
+> 最終更新: 2026-08-16
 
 ## Tech Stack
 
@@ -12,7 +12,7 @@
 | リアルタイムストリーム | EventSource (SSE) |
 | マップ | Google Maps API (`@react-google-maps/api`) |
 | AI | Gemini API |
-| i18n | 自主実装 (ja/ko/en/zh/th/vi) |
+| i18n | 自主実装 (ja/en/ko/fr/de/ru/vi/th/zh/id/ar/es/it/pt) |
 | デプロイ | Vercel (Edge Rewrite Proxy) |
 
 ---
