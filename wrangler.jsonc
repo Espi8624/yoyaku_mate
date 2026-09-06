@@ -1,0 +1,13 @@
+{
+	"$schema": "node_modules/wrangler/config-schema.json",
+	"name": "yoyaku-mate-dev",
+	"compatibility_date": "2026-09-03",
+	"observability": {
+		"enabled": true
+	},
+	"assets": {
+		"directory": "build",
+		// SPA(React Router)のため、静的ファイルに一致しないパスは全て index.html を200で返す
+		"not_found_handling": "single-page-application"
+	}
+}
