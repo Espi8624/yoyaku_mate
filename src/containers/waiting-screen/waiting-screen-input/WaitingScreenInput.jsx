@@ -4,9 +4,10 @@ import { useWaitingScreen } from "../WaitingScreenContext";
 import FormField from "./FormField";
 import baseStyles from "../waiting-screen/WaitingScreen.module.css";
 import specificStyles from "./WaitingScreenInput.module.css";
-const styles = { ...baseStyles, ...specificStyles };
 import ChatbotButton from "../../chat-bot/ChatbotButton";
 import useTranslation from "../../../hook/useTranslation";
+
+const styles = { ...baseStyles, ...specificStyles };
 
 function WaitingScreenInput() {
   // Contextから必要なものを持ってくる
