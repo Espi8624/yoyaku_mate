@@ -35,7 +35,8 @@ docs/
 
 | ドキュメント | 決定内容 |
 |------|----------|
-| [ADR-001-vercel-proxy.md](./decisions/ADR-001-vercel-proxy.md) | Vercel Rewriteプロキシ採用の理由 |
+| [ADR-001-vercel-proxy.md](./decisions/ADR-001-vercel-proxy.md) | Vercel Rewriteプロキシ採用の理由 (廃止済み、ADR-002参照) |
+| [ADR-002-remove-vercel-proxy.md](./decisions/ADR-002-remove-vercel-proxy.md) | Vercel Rewriteプロキシの廃止とREACT_APP_API_URLへの一本化 |
 
 ---
 

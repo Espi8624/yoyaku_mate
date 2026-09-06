@@ -26,7 +26,3 @@ config.js
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-
-# Vercel deployment config (contains backend domain)
-# Copy vercel.json.example -> vercel.json and fill in YOUR_BACKEND_DOMAIN
-vercel.json

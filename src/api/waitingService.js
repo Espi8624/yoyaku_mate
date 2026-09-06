@@ -1,8 +1,9 @@
 import axios from 'axios';
 
-const API_BASE_URL = process.env.NODE_ENV === 'production'
-  ? "/api"
-  : (process.env.REACT_APP_API_URL || "http://localhost:8080/api");
+// Note: 以前はNODE_ENV==='production'時にVercel Rewrite経由の相対パス"/api"を
+// 使っていたが、Vercel以外へのデプロイでは中継が存在せず失敗するため廃止。
+// 環境ごとにREACT_APP_API_URLで実際のバックエンドURLを直接指定する
+const API_BASE_URL = process.env.REACT_APP_API_URL || "http://localhost:8080/api";
 
 /**
  * 現在待機状況と、店舗の待機制作を呼び出す

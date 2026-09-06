@@ -22,7 +22,7 @@ QR 코드 기반 실시간 대기열 관리 및 AI 점포 안내 챗봇을 제�
 | Maps | Google Maps API |
 | AI | Gemini API |
 | i18n | 자체 구현 (ja / ko / en / zh / th / vi) |
-| Deployment | Vercel (Edge Rewrite Proxy) |
+| Deployment | Vercel (프로덕션) / Cloudflare Workers Static Assets (개발) |
 
 ## Getting Started
 
@@ -58,8 +58,7 @@ src/
 
 ```mermaid
 graph LR
-    Browser["브라우저"] -->|"/api/*"| Vercel["Vercel Rewrite Proxy"]
-    Vercel -->|"Forward"| Server["Backend (fly.io)"]
+    Browser["브라우저"] -->|"REACT_APP_API_URL (CORS)"| Server["Backend (fly.io)"]
     Server -->|"SSE Stream"| Browser
     Browser -->|"AI Prompt"| Gemini["Gemini API"]
 ```

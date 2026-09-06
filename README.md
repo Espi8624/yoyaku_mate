@@ -22,7 +22,7 @@ QRコードベースのリアルタイム待機列管理およびAI店舗案内�
 | Maps | Google Maps API |
 | AI | Gemini API |
 | i18n | 独自実装 (ja / en / ko / fr / de / ru / vi / th / zh / id / ar / es / it / pt) |
-| Deployment | Vercel (Edge Rewrite Proxy) |
+| Deployment | Vercel (本番) / Cloudflare Workers Static Assets (開発) |
 
 ## Getting Started
 
@@ -58,8 +58,7 @@ src/
 
 ```mermaid
 graph LR
-    Browser["ブラウザ"] -->|"/api/*"| Vercel["Vercel Rewrite Proxy"]
-    Vercel -->|"Forward"| Server["Backend (fly.io)"]
+    Browser["ブラウザ"] -->|"REACT_APP_API_URL (CORS)"| Server["Backend (fly.io)"]
     Server -->|"SSE Stream"| Browser
     Browser -->|"AI Prompt"| Gemini["Gemini API"]
 ```

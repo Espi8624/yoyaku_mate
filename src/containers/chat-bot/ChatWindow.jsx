@@ -6,9 +6,8 @@ import { generateSystemPrompt } from './SystemPrompt';
 import useTranslation from '../../hook/useTranslation';
 import styles from "./ChatWindow.module.css";
 
-const API_BASE = process.env.NODE_ENV === 'production'
-    ? '/api'
-    : (process.env.REACT_APP_API_URL || "http://localhost:8080/api");
+// Note: Vercel Rewrite専用の相対パス"/api"分岐は廃止 (waitingService.js参照)
+const API_BASE = process.env.REACT_APP_API_URL || "http://localhost:8080/api";
 const AI_CHAT_ENDPOINT = `${API_BASE}/public/ai-chat`;
 
 const ChatWindow = () => {
