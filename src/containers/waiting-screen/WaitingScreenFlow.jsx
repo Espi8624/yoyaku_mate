@@ -10,7 +10,6 @@ import NotifiedScreen from "./waiting-screen-notified/NotifiedScreen";
 import CancelledScreen from "./waiting-screen-cancelled/CancelledScreen";
 import MapWindow from './map/MapWindow';
 import { getWaitingDetails } from "../../api/waitingService";
-import styles from './ErrorScreen.module.css';
 // Chatbot components
 import ChatWindow from "../chat-bot/ChatWindow";
 
