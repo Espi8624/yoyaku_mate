@@ -143,13 +143,15 @@ function FlowController() {
 
 function WaitingScreenFlow() {
   const content = <FlowController />;
+  // ★ 各ステップのコンポーネント(WaitingScreenInput/WaitingScreen等)は
+  // 自身で "page-container" を描画するため、ここで重ねて包むと
+  // page-containerが二重にネストされ、背景色やpaddingが二重に適用されてしまう。
+  // ChatWindow/MapWindowはposition:fixedなのでレイアウト上の親要素は不要 → Fragmentで包むだけにする
   return (
     <WaitingScreenProvider>
-      <div className="page-container">
-        {content}
-        <ChatWindow />
-        <MapWindow />
-      </div>
+      {content}
+      <ChatWindow />
+      <MapWindow />
     </WaitingScreenProvider>
   );
 }
