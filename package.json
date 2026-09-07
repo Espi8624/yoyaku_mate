@@ -18,7 +18,10 @@
   },
   "scripts": {
     "start": "react-scripts start",
+    "start:remote-dev": "env-cmd -f .env.remote-dev react-scripts start",
     "build": "react-scripts build",
+    "build:remote-dev": "env-cmd -f .env.remote-dev react-scripts build",
+    "deploy:remote-dev": "npm run build:remote-dev && wrangler deploy",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
@@ -41,6 +44,8 @@
     ]
   },
   "devDependencies": {
-    "@babel/plugin-proposal-private-property-in-object": "^7.21.11"
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
+    "env-cmd": "^11.0.0",
+    "wrangler": "^4.129.0"
   }
 }

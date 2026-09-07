@@ -33,6 +33,16 @@ npm start
 
 브라우저에서 `http://localhost:3000` 으로 접근합니다.
 
+### 환경 티어 (local / remote-dev / prod)
+
+| 명령어 | 환경 파일 | 연결 백엔드 | 용도 |
+|---|---|---|---|
+| `npm start` / `npm run build` | `.env.development` / `.env.production` | `localhost:8080` / `rusui-prod.fly.dev` | 로컬 개발 / 프로덕션 |
+| `npm run start:remote-dev` / `npm run build:remote-dev` | `.env.remote-dev` | `rusui-dev.fly.dev` | 공유 개발 서버. 실기기(스마트폰 등)에서 QR코드로 접근할 때 `localhost`는 그 기기 자신을 가리켜 통신 에러가 나므로 이 티어를 사용 |
+| `npm run deploy:remote-dev` | 〃 | 〃 | `build:remote-dev` 후 Cloudflare Workers(`yoyaku-mate-dev`)에 배포 |
+
+`yoyaku_mate_provider` 쪽은 `--dart-define=APP_ENV=dev`로 실행하면 이 remote-dev 티어에 연결된다.
+
 ### 환경 변수
 
 ```env

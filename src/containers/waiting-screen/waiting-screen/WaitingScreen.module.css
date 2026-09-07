@@ -238,6 +238,34 @@ textarea {
   word-break: break-word;
 }
 
+.sound-banner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: var(--space-5);
+  padding: 10px 16px;
+  background: var(--color-surface-secondary, #f4f4f4);
+  border-radius: var(--radius-lg);
+  box-sizing: border-box;
+  width: 100%;
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+.sound-banner-btn {
+  flex-shrink: 0;
+  background: var(--color-accent-primary);
+  color: var(--color-text-primary-light);
+  border: none;
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-weight: var(--font-weight-bold);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
 .preview-menu-list {
   display: flex;
   flex-direction: column;

@@ -74,6 +74,11 @@
             "message_2": "Si prega di venire al negozio.",
             "confirm": "Conferma"
         },
+        "sound_banner": {
+            "message": "Per ricevere il suono di chiamata, attiva l'audio e mantieni questa schermata aperta.",
+            "enable_btn": "Attiva audio",
+            "enabled_message": "Audio attivo · Mantieni questa schermata aperta"
+        },
         "completed_screen": {
             "title": "Grazie per la visita!",
             "message": "Il personale vi guiderà."

@@ -33,6 +33,16 @@ npm start
 
 ブラウザから `http://localhost:3000` へアクセスします。
 
+### 環境ティア (local / remote-dev / prod)
+
+| コマンド | 環境ファイル | 接続先バックエンド | 用途 |
+|---|---|---|---|
+| `npm start` / `npm run build` | `.env.development` / `.env.production` | `localhost:8080` / `rusui-prod.fly.dev` | ローカル開発 / 本番 |
+| `npm run start:remote-dev` / `npm run build:remote-dev` | `.env.remote-dev` | `rusui-dev.fly.dev` | 共有の開発用サーバー。実機(スマートフォン等)からQRコード経由でアクセスする場合、`localhost`は端末自身を指してしまい通信エラーになるため、このティアを使う |
+| `npm run deploy:remote-dev` | 〃 | 〃 | `build:remote-dev` 後、Cloudflare Workers (`yoyaku-mate-dev`) へデプロイ |
+
+`yoyaku_mate_provider` 側は `--dart-define=APP_ENV=dev` で起動すると、このremote-devティアに接続する。
+
 ### 環境変数
 
 ```env

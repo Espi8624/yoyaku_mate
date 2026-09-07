@@ -74,6 +74,11 @@
             "message_2": "Silakan datang ke toko.",
             "confirm": "Konfirmasi"
         },
+        "sound_banner": {
+            "message": "Untuk menerima suara panggilan, aktifkan suara dan biarkan layar ini tetap terbuka.",
+            "enable_btn": "Aktifkan Suara",
+            "enabled_message": "Suara aktif · Mohon biarkan layar ini tetap terbuka"
+        },
         "completed_screen": {
             "title": "Terima kasih atas kunjungan Anda!",
             "message": "Staf kami akan memandu Anda."

@@ -74,6 +74,11 @@
             "message_2": "Vui lòng đến cửa hàng.",
             "confirm": "Xác nhận"
         },
+        "sound_banner": {
+            "message": "Để nhận âm báo gọi, vui lòng bật âm thanh và giữ màn hình này luôn mở.",
+            "enable_btn": "Bật âm thanh",
+            "enabled_message": "Đã bật âm thanh · Vui lòng giữ màn hình này luôn mở"
+        },
         "completed_screen": {
             "title": "Cảm ơn quý khách!",
             "message": "Nhân viên sẽ hướng dẫn quý khách."

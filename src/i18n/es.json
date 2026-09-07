@@ -74,6 +74,11 @@
             "message_2": "Por favor, acérquese al establecimiento.",
             "confirm": "Confirmar"
         },
+        "sound_banner": {
+            "message": "Para recibir el sonido de la llamada, active el sonido y mantenga esta pantalla abierta.",
+            "enable_btn": "Activar sonido",
+            "enabled_message": "Sonido activado · Mantenga esta pantalla abierta"
+        },
         "completed_screen": {
             "title": "¡Gracias por su visita!",
             "message": "El personal le guiará."

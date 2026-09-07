@@ -74,6 +74,11 @@
             "message_2": "Please come to the store.",
             "confirm": "Confirm"
         },
+        "sound_banner": {
+            "message": "To receive the call notification sound, please turn on sound and keep this screen open.",
+            "enable_btn": "Turn On Sound",
+            "enabled_message": "Sound on · Please keep this screen open"
+        },
         "completed_screen": {
             "title": "Thank you for visiting!",
             "message": "Step right this way, our staff will guide you."

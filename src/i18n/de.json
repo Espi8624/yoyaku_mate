@@ -74,6 +74,11 @@
             "message_2": "Bitte kommen Sie zum Geschäft.",
             "confirm": "Bestätigen"
         },
+        "sound_banner": {
+            "message": "Um den Aufruf-Ton zu erhalten, aktivieren Sie bitte den Ton und lassen Sie diesen Bildschirm geöffnet.",
+            "enable_btn": "Ton aktivieren",
+            "enabled_message": "Ton aktiviert · Bitte lassen Sie diesen Bildschirm geöffnet"
+        },
         "completed_screen": {
             "title": "Vielen Dank für Ihren Besuch!",
             "message": "Unser Personal wird Sie begleiten."

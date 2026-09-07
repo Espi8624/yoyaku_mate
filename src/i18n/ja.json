@@ -78,6 +78,11 @@
             "message_2": "ご来店をお願いいたします。",
             "confirm": "確認"
         },
+        "sound_banner": {
+            "message": "呼び出し通知音を受け取るには、この画面をつけたまま音をオンにしてください。",
+            "enable_btn": "音を有効にする",
+            "enabled_message": "通知音オン · この画面をつけたままにしてください"
+        },
         "completed_screen": {
             "title": "ご来店ありがとうございます！",
             "message": "スタッフがご案内いたします。"

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useWaitingScreen } from "../WaitingScreenContext";
 import useTranslation from "../../../hook/useTranslation";
 import { getStoreInfo } from "../../../api/waitingService";
@@ -79,6 +79,81 @@ function WaitingScreen() {
   // Audio Unlock ref (ユーザーのタップでAudioContextを初期化・再開する)
   const audioCtxRef = useRef(null);
 
+  // ★ 「音を有効化」ボタンをユーザーが押したかどうか (UIバナー表示制御用)
+  // ボタン押下時のクリックイベント内で同期的に AudioContext を生成・resumeするため、
+  // iOS Safari 含むほとんどのブラウザで確実にアンロックできる (呼び出し発生時の非同期resumeは
+  // ユーザー操作起因と見なされずブロックされることが多いため、事前アンロックが本命の対策)
+  const [soundEnabled, setSoundEnabled] = useState(false);
+
+  // 既存の AudioContext を再利用し、無ければ新規生成する共通処理
+  const getOrCreateAudioContext = useCallback(() => {
+    const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+    if (!AudioContextClass) return null;
+    if (!audioCtxRef.current) {
+      audioCtxRef.current = new AudioContextClass();
+    }
+    return audioCtxRef.current;
+  }, []);
+
+  // 「ピン」を1回鳴らす (チャイム・テスト音で共通利用)
+  const playOneChime = useCallback((ctx, startTime) => {
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(880, startTime);        // A5
+    osc.frequency.exponentialRampToValueAtTime(440, startTime + 0.6); // A4へ下降
+
+    gain.gain.setValueAtTime(0.3, startTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, startTime + 0.6);
+
+    osc.start(startTime);
+    osc.stop(startTime + 0.6);
+  }, []);
+
+  // チャイム音をループ再生する関数 (「ピン」を2回鳴らして「ピンポン」のような音を作る)
+  const playLoopChime = useCallback(() => {
+    try {
+      const ctx = getOrCreateAudioContext();
+      if (!ctx) return;
+
+      // ブラウザの自動再生ポリシーで Suspended になっている場合は再開を試みる
+      // (「音を有効化」ボタンで事前にアンロック済みなら通常はここで既に running)
+      if (ctx.state === 'suspended') {
+        ctx.resume().catch(e => console.warn("AudioContext resume失敗:", e));
+      }
+
+      const now = ctx.currentTime;
+      playOneChime(ctx, now);
+      playOneChime(ctx, now + 0.8);
+    } catch (e) {
+      console.error("チャイム再生エラー:", e);
+    }
+  }, [getOrCreateAudioContext, playOneChime]);
+
+  // 「音を有効化」ボタン押下時のハンドラ (ユーザー操作イベント内で同期的にアンロックする)
+  const handleEnableSound = () => {
+    try {
+      const ctx = getOrCreateAudioContext();
+      if (!ctx) {
+        // Web Audio 非対応端末: バナーだけ消し、バイブレーション等の他手段に任せる
+        setSoundEnabled(true);
+        return;
+      }
+      if (ctx.state === 'suspended') {
+        ctx.resume().catch(e => console.warn("AudioContext resume失敗:", e));
+      }
+      // 確認用に短いテスト音を1回鳴らす
+      playOneChime(ctx, ctx.currentTime);
+      setSoundEnabled(true);
+    } catch (e) {
+      console.error("サウンド有効化エラー:", e);
+      setSoundEnabled(true);
+    }
+  };
+
   // status 変化を監視して通知を制御
   useEffect(() => {
     if (status === 'notified' && notificationState === NOTIFICATION_STATE.IDLE) {
@@ -90,48 +165,7 @@ function WaitingScreen() {
         if (navigator.vibrate) navigator.vibrate([1000, 500, 1000, 500, 3000]);
       } catch (e) { /* バイブレーション非対応端末は無視 */ }
 
-      // 2. チャイム音をループ再生する関数
-      const playLoopChime = () => {
-        try {
-          const AudioContextClass = window.AudioContext || window.webkitAudioContext;
-          if (!AudioContextClass) return;
-
-          // Audio Unlock 済みの Context を優先使用
-          let ctx = audioCtxRef.current;
-          if (!ctx) ctx = new AudioContextClass();
-
-          // ブラウザの自動再生ポリシーで Suspended になっている場合は再開を試みる
-          if (ctx.state === 'suspended') {
-            ctx.resume().catch(e => console.warn("AudioContext resume失敗:", e));
-          }
-
-          // 「ピン」を2回鳴らして「ピンポン」のような音を作る
-          const playOneChime = (startTime) => {
-            const osc = ctx.createOscillator();
-            const gain = ctx.createGain();
-            osc.connect(gain);
-            gain.connect(ctx.destination);
-
-            osc.type = 'sine';
-            osc.frequency.setValueAtTime(880, startTime);        // A5
-            osc.frequency.exponentialRampToValueAtTime(440, startTime + 0.6); // A4へ下降
-
-            gain.gain.setValueAtTime(0.3, startTime);
-            gain.gain.exponentialRampToValueAtTime(0.001, startTime + 0.6);
-
-            osc.start(startTime);
-            osc.stop(startTime + 0.6);
-          };
-
-          const now = ctx.currentTime;
-          playOneChime(now);
-          playOneChime(now + 0.8);
-        } catch (e) {
-          console.error("チャイム再生エラー:", e);
-        }
-      };
-
-      // 初回再生し、以降3秒ごとに繰り返す
+      // 2. 初回再生し、以降3秒ごとに繰り返す
       playLoopChime();
       if (chimeIntervalRef.current) clearInterval(chimeIntervalRef.current);
       chimeIntervalRef.current = setInterval(playLoopChime, 3000);
@@ -144,7 +178,7 @@ function WaitingScreen() {
       // サーバー側のno_showステータスも不在扱い
       context.setCancellationReason && context.setCancellationReason('absence');
     }
-  }, [status, notificationState, context]);
+  }, [status, notificationState, context, playLoopChime]);
 
   // 404エラー時は CancelledScreen に遷移
   useEffect(() => {
@@ -161,7 +195,10 @@ function WaitingScreen() {
   }, []);
 
   // -------------------------------------------------------
-  // ★ Audio Context Unlock (ユーザーの最初のタップで初期化)
+  // ★ Audio Context Unlock (バックアップ経路: ページ内のどこかを最初にタップした時点で初期化)
+  // 「音を有効化」バナーのボタン(handleEnableSound)が本命のアンロック経路だが、
+  // バナーを押さずに他の場所(メニュー確認やキャンセルボタン等)を先に触った場合でも
+  // 救済できるよう、汎用のタップ検知も併用しておく
   // -------------------------------------------------------
   useEffect(() => {
     const unlockAudio = () => {
@@ -176,6 +213,7 @@ function WaitingScreen() {
           console.log("AudioContext: ユーザー操作により再開しました");
         });
       }
+      setSoundEnabled(true);
       // 一度アンロックしたらリスナーを削除
       document.removeEventListener('click', unlockAudio);
       document.removeEventListener('touchstart', unlockAudio);
@@ -192,6 +230,22 @@ function WaitingScreen() {
         audioCtxRef.current = null;
       }
     };
+  }, []);
+
+  // -------------------------------------------------------
+  // ★ タブがバックグラウンドから復帰した際に AudioContext の再開を試みる (ベストエフォート)
+  // 端末の画面ロックやタブ切り替えで AudioContext が自動的に suspended になることがあるため、
+  // 復帰時に再試行する。ユーザー操作起因のイベントではないため成功しないブラウザ(iOS Safari等)も
+  // あるが、失敗しても実害はない
+  // -------------------------------------------------------
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible' && audioCtxRef.current?.state === 'suspended') {
+        audioCtxRef.current.resume().catch(() => { /* ユーザー操作起因ではないため失敗しても無視 */ });
+      }
+    };
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
   }, []);
 
   // -------------------------------------------------------
@@ -260,6 +314,24 @@ function WaitingScreen() {
           <h2>{storeInfo.store_name}</h2>
         </div>
       )}
+
+      {/* ★ 呼び出し通知音バナー: ユーザー操作で AudioContext を確実にアンロックするための導線 */}
+      <div className={styles["sound-banner"]}>
+        {soundEnabled ? (
+          <span>🔔 {waitingScreenTexts.sound_banner?.enabled_message}</span>
+        ) : (
+          <>
+            <span>🔕 {waitingScreenTexts.sound_banner?.message}</span>
+            <button
+              type="button"
+              className={styles["sound-banner-btn"]}
+              onClick={handleEnableSound}
+            >
+              {waitingScreenTexts.sound_banner?.enable_btn}
+            </button>
+          </>
+        )}
+      </div>
 
       <div className={styles["preview-label"]}>
         {notificationState !== NOTIFICATION_STATE.IDLE

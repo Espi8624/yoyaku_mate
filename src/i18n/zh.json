@@ -74,6 +74,11 @@
             "message_2": "請前往店內。",
             "confirm": "確認"
         },
+        "sound_banner": {
+            "message": "为了接收到叫号提示音，请开启声音并保持此页面开启。",
+            "enable_btn": "开启声音",
+            "enabled_message": "提示音已开启 · 请保持此页面开启"
+        },
         "completed_screen": {
             "title": "感謝您的光臨！",
             "message": "工作人員將為您帶位。"

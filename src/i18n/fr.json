@@ -74,6 +74,11 @@
             "message_2": "Veuillez vous présenter au magasin.",
             "confirm": "Confirmer"
         },
+        "sound_banner": {
+            "message": "Pour recevoir le son d'appel, activez le son et laissez cet écran ouvert.",
+            "enable_btn": "Activer le son",
+            "enabled_message": "Son activé · Veuillez garder cet écran ouvert"
+        },
         "completed_screen": {
             "title": "Merci de votre visite !",
             "message": "Le personnel va vous guider."
