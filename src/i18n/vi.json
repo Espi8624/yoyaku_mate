@@ -77,7 +77,7 @@
         "sound_banner": {
             "message": "Để nhận âm báo gọi, vui lòng bật âm thanh và giữ màn hình này luôn mở.",
             "enable_btn": "Bật âm thanh",
-            "enabled_message": "Đã bật âm thanh · Vui lòng giữ màn hình này luôn mở"
+            "enabled_message": "Đã bật âm thanh · Vui lòng giữ màn hình này luôn mở (Có thể không phát nếu thiết bị đang ở chế độ im lặng)"
         },
         "completed_screen": {
             "title": "Cảm ơn quý khách!",

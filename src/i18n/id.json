@@ -77,7 +77,7 @@
         "sound_banner": {
             "message": "Untuk menerima suara panggilan, aktifkan suara dan biarkan layar ini tetap terbuka.",
             "enable_btn": "Aktifkan Suara",
-            "enabled_message": "Suara aktif · Mohon biarkan layar ini tetap terbuka"
+            "enabled_message": "Suara aktif · Mohon biarkan layar ini tetap terbuka (Mungkin tidak berbunyi jika perangkat dalam mode senyap)"
         },
         "completed_screen": {
             "title": "Terima kasih atas kunjungan Anda!",

@@ -77,7 +77,7 @@
         "sound_banner": {
             "message": "Um den Aufruf-Ton zu erhalten, aktivieren Sie bitte den Ton und lassen Sie diesen Bildschirm geöffnet.",
             "enable_btn": "Ton aktivieren",
-            "enabled_message": "Ton aktiviert · Bitte lassen Sie diesen Bildschirm geöffnet"
+            "enabled_message": "Ton aktiviert · Bitte lassen Sie diesen Bildschirm geöffnet (Funktioniert je nach Stummschaltung Ihres Geräts eventuell nicht)"
         },
         "completed_screen": {
             "title": "Vielen Dank für Ihren Besuch!",
