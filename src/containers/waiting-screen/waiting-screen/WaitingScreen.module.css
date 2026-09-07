@@ -120,9 +120,11 @@ textarea {
 
 /* ★ この画面(待機ステータス画面)のみ背景を薄いグレーにし、
    下の白いレシートカード(.preview-form)とのコントラストを出す。
-   他の画面(登録フォーム等)のpage-containerには影響しない、この画面専用の上書き */
-.page-container.waiting-screen-page {
-  background: var(--color-background);
+   他の画面(登録フォーム等)のpage-containerには影響しない、この画面専用の上書き。
+   page-containerはCSS Modules対象外のグローバルクラスなので :global() で囲む必要がある
+   (囲まないとハッシュ化されて実際のDOMクラスと一致せず、ルール自体が無効になる) */
+:global(.page-container).waiting-screen-page {
+  background: #F1F3F4;
 }
 
 /* ★ 待機情報カード: 米国で流行っているレシート風デザイン
