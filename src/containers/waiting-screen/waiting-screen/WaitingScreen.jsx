@@ -324,7 +324,7 @@ function WaitingScreen() {
   };
 
   return (
-    <div className="page-container">
+    <div className={`page-container ${styles["waiting-screen-page"]}`}>
       {/* Top Action Bar (Map & Chatbot Buttons) - 機能フラグが無効な間はバー自体を描画しない (空の余白が残るのを防ぐ) */}
       {MAP_CHATBOT_ENABLED && (
         <div className="page-top-bar">

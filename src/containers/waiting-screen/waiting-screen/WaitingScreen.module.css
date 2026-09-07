@@ -118,6 +118,13 @@ textarea {
   line-height: 1.1;
 }
 
+/* ★ この画面(待機ステータス画面)のみ背景を薄いグレーにし、
+   下の白いレシートカード(.preview-form)とのコントラストを出す。
+   他の画面(登録フォーム等)のpage-containerには影響しない、この画面専用の上書き */
+.page-container.waiting-screen-page {
+  background: var(--color-background);
+}
+
 /* ★ 待機情報カード: 米国で流行っているレシート風デザイン
    (白いカード + ドロップシャドウ + 各項目を点線で区切るスタイル) */
 .preview-form {
@@ -276,7 +283,9 @@ textarea {
   gap: 10px;
   margin-bottom: var(--space-5);
   padding: 10px 16px;
-  background: var(--color-surface-secondary, #f4f4f4);
+  /* ページ背景を薄いグレーに変更したため、それに埋もれないよう白背景のカードにする */
+  background: var(--color-card-background);
+  border: 1px solid rgba(0, 0, 0, 0.06);
   border-radius: var(--radius-lg);
   box-sizing: border-box;
   width: 100%;
