@@ -215,6 +215,19 @@ export function WaitingScreenProvider({ children }) {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [initialParams]);
 
+  /**
+   * サーバーのエラーレスポンスから実際のメッセージを抽出するヘルパー
+   * サーバーは JSON({message: "..."}) と text/plain (http.Error由来の平文) の
+   * 両方の形式でエラーを返しうるため、どちらのケースでも実際の理由を取りこぼさないようにする
+   * (以前はJSON形式のみを想定していたため、平文レスポンス時に本当の理由が握りつぶされ、
+   * ユーザーには常に汎用的な「通信エラー」としか表示されていなかった)
+   */
+  const extractErrorMessage = (data, err, fallback) => {
+    if (typeof data === 'string' && data.trim()) return data;
+    if (data && typeof data === 'object' && data.message) return data.message;
+    return err?.message || fallback;
+  };
+
   // サーバー通信関係
   const _performSubmit = async (payload) => {
     try {
@@ -236,7 +249,7 @@ export function WaitingScreenProvider({ children }) {
         // 登録失敗時にローカルストレージから削除
         localStorage.removeItem("waiting_id");
         localStorage.removeItem("store_id");
-        const errorMessage = res.data?.message || '登録に失敗しました';
+        const errorMessage = extractErrorMessage(res.data, null, '登録に失敗しました');
         alert("登録に失敗しました: " + errorMessage);
       }
     } catch (err) {
@@ -245,7 +258,7 @@ export function WaitingScreenProvider({ children }) {
       localStorage.removeItem("store_id");
       localStorage.removeItem("v_token");
       console.error("登録エラー:", err);
-      const errorMessage = err.response?.data?.message || err.message || '通信エラーが発生しました';
+      const errorMessage = extractErrorMessage(err.response?.data, err, '通信エラーが発生しました');
       alert("通信エラー: " + errorMessage);
     }
   };
@@ -383,7 +396,7 @@ export function WaitingScreenProvider({ children }) {
       }
     } catch (err) {
       console.error("キャンセルエラー:", err);
-      const errorMessage = err.response?.data?.message || err.message || 'キャンセルに失敗しました。';
+      const errorMessage = extractErrorMessage(err.response?.data, err, 'キャンセルに失敗しました。');
       alert("キャンセルエラー: " + errorMessage);
     }
   };
