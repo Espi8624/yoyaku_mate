@@ -3,6 +3,7 @@ import { useWaitingScreen } from '../WaitingScreenContext';
 import WaitingPlaceMap from '../waiting-screen/WaitingPlaceMap';
 import { getStoreInfo } from '../../../api/waitingService';
 import useTranslation from '../../../hook/useTranslation';
+import { MAP_CHATBOT_ENABLED } from '../../../constants/featureFlags';
 import styles from "./MapWindow.module.css";
 
 const HEADER_HEIGHT = 57; // px - header height
@@ -33,6 +34,8 @@ const MapWindow = () => {
         return () => { document.body.style.overflow = ''; };
     }, [isMapOpen]);
 
+    // 機能フラグが無効な間は非表示 (正式導入まで一時的に隠す)
+    if (!MAP_CHATBOT_ENABLED) return null;
     if (!isMapOpen) return null;
 
     const contentHeight = `calc(100vh - ${HEADER_HEIGHT}px)`;

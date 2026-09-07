@@ -4,6 +4,7 @@ import { getStoreAIContext } from '../../api/waitingService';
 // Gemini API は Go バックエンドのプロキシ経由で呼び出します (APIキーはサーバーサイド管理)
 import { generateSystemPrompt } from './SystemPrompt';
 import useTranslation from '../../hook/useTranslation';
+import { MAP_CHATBOT_ENABLED } from '../../constants/featureFlags';
 import styles from "./ChatWindow.module.css";
 
 // Note: Vercel Rewrite専用の相対パス"/api"分岐は廃止 (waitingService.js参照)
@@ -135,6 +136,8 @@ const ChatWindow = () => {
         setIsLoading(false);
     };
 
+    // 機能フラグが無効な間は非表示 (正式導入まで一時的に隠す)
+    if (!MAP_CHATBOT_ENABLED) return null;
     if (!isChatOpen) return null;
 
 
