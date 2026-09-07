@@ -113,27 +113,40 @@ function WaitingScreen() {
     osc.stop(startTime + 0.6);
   }, []);
 
-  // チャイム音をループ再生する関数 (「ピン」を2回鳴らして「ピンポン」のような音を作る)
+  // 実際にチャイムを鳴らす処理本体 (resumeが完了して running になった後に呼ぶ前提)
+  const playLoopChimeNow = useCallback((ctx) => {
+    const now = ctx.currentTime;
+    playOneChime(ctx, now);
+    playOneChime(ctx, now + 0.8);
+  }, [playOneChime]);
+
+  // チャイム音をループ再生する関数
+  // ★ Safari対策: resume()の完了(Promise解決)を待たずに再生予約すると、
+  // resumeが完了する前にscheduleされた音がSafariでは鳴らないことがあるため、
+  // 必ずPromiseの解決を待ってから再生する (Chromeは元々寛容だが同じ経路で統一する)
   const playLoopChime = useCallback(() => {
     try {
       const ctx = getOrCreateAudioContext();
       if (!ctx) return;
 
-      // ブラウザの自動再生ポリシーで Suspended になっている場合は再開を試みる
-      // (「音を有効化」ボタンで事前にアンロック済みなら通常はここで既に running)
       if (ctx.state === 'suspended') {
-        ctx.resume().catch(e => console.warn("AudioContext resume失敗:", e));
+        ctx.resume()
+          .then(() => playLoopChimeNow(ctx))
+          .catch(e => console.warn("AudioContext resume失敗 (チャイム):", e));
+      } else {
+        playLoopChimeNow(ctx);
       }
-
-      const now = ctx.currentTime;
-      playOneChime(ctx, now);
-      playOneChime(ctx, now + 0.8);
     } catch (e) {
       console.error("チャイム再生エラー:", e);
     }
-  }, [getOrCreateAudioContext, playOneChime]);
+  }, [getOrCreateAudioContext, playLoopChimeNow]);
 
   // 「音を有効化」ボタン押下時のハンドラ (ユーザー操作イベント内で同期的にアンロックする)
+  // ★ Safari対策: resume()のPromiseが解決する前にUIを「有効化済み」にしてしまうと、
+  // 実際にはcontextがsuspendedのまま残るケースがあり(その後の非同期な呼び出し通知時には
+  // ユーザー操作起因と見なされずresumeがブロックされる)、ユーザーには成功したように見えて
+  // 本番の呼び出し音が鳴らないという不具合になっていた。
+  // resumeの完了を待ってから確認音を鳴らし、soundEnabledをtrueにする。
   const handleEnableSound = () => {
     try {
       const ctx = getOrCreateAudioContext();
@@ -142,15 +155,25 @@ function WaitingScreen() {
         setSoundEnabled(true);
         return;
       }
+
+      const confirmEnabled = () => {
+        // 確認用に短いテスト音を1回鳴らす
+        playOneChime(ctx, ctx.currentTime);
+        setSoundEnabled(true);
+      };
+
       if (ctx.state === 'suspended') {
-        ctx.resume().catch(e => console.warn("AudioContext resume失敗:", e));
+        ctx.resume()
+          .then(confirmEnabled)
+          .catch(e => {
+            // resumeに失敗した場合はバナーを「有効化済み」にしない → ユーザーが再タップできる
+            console.error("サウンド有効化エラー (resume失敗):", e);
+          });
+      } else {
+        confirmEnabled();
       }
-      // 確認用に短いテスト音を1回鳴らす
-      playOneChime(ctx, ctx.currentTime);
-      setSoundEnabled(true);
     } catch (e) {
       console.error("サウンド有効化エラー:", e);
-      setSoundEnabled(true);
     }
   };
 
