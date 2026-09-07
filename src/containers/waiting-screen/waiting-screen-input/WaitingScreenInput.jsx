@@ -5,6 +5,7 @@ import FormField from "./FormField";
 import baseStyles from "../waiting-screen/WaitingScreen.module.css";
 import specificStyles from "./WaitingScreenInput.module.css";
 import ChatbotButton from "../../chat-bot/ChatbotButton";
+import { MAP_CHATBOT_ENABLED } from "../../../constants/featureFlags";
 import useTranslation from "../../../hook/useTranslation";
 
 const styles = { ...baseStyles, ...specificStyles };
@@ -43,11 +44,13 @@ function WaitingScreenInput() {
 
   return (
     <div className="page-container">
-      <div className="page-top-bar">
-        <div className="page-top-bar-right">
-          <ChatbotButton />
+      {MAP_CHATBOT_ENABLED && (
+        <div className="page-top-bar">
+          <div className="page-top-bar-right">
+            <ChatbotButton />
+          </div>
         </div>
-      </div>
+      )}
       <h1 className="page-title">{waitingScreenInput.input_label}</h1>
       <form className={styles["input-form"]} onSubmit={handleSubmit}>
 

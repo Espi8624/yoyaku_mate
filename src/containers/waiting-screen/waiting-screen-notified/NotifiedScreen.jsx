@@ -4,6 +4,7 @@ import { getWaitingDetails, subscribeToWaitingStatus } from "../../../api/waitin
 import { debugLog } from "../../../utils/debugLog";
 import useTranslation from "../../../hook/useTranslation";
 import ChatbotButton from "../../chat-bot/ChatbotButton";
+import { MAP_CHATBOT_ENABLED } from "../../../constants/featureFlags";
 import baseStyles from "../waiting-screen/WaitingScreen.module.css";
 import specificStyles from "./NotifiedScreen.module.css";
 const styles = { ...baseStyles, ...specificStyles };
@@ -68,11 +69,13 @@ function NotifiedScreen() {
 
   return (
     <div className="page-container">
-      <div className="page-top-bar">
-        <div className="page-top-bar-right">
-          <ChatbotButton />
+      {MAP_CHATBOT_ENABLED && (
+        <div className="page-top-bar">
+          <div className="page-top-bar-right">
+            <ChatbotButton />
+          </div>
         </div>
-      </div>
+      )}
       <div className={styles["notified-content"]}>
         <div className={styles["notified-icon"]}>✓</div>
         <h1 className={styles["notified-title"]}>{notifiedText.title}</h1>

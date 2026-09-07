@@ -6,6 +6,7 @@ import MenuDisplay from "./MenuDisplay";
 import CongestionPopup from "../waiting-screen-preview/CongestionPopup";
 import { getTranslatedText } from "../../../utils/i18nHelper";
 import { debugLog } from "../../../utils/debugLog";
+import { MAP_CHATBOT_ENABLED } from "../../../constants/featureFlags";
 import ChatbotButton from "../../chat-bot/ChatbotButton";
 import MapButton from '../map/MapButton';
 import useWaitingStatus from "./useWaitingStatus";
@@ -324,13 +325,15 @@ function WaitingScreen() {
 
   return (
     <div className="page-container">
-      {/* Top Action Bar (Map & Chatbot Buttons) */}
-      <div className="page-top-bar">
-        <div className="page-top-bar-right">
-          <MapButton />
-          <ChatbotButton />
+      {/* Top Action Bar (Map & Chatbot Buttons) - 機能フラグが無効な間はバー自体を描画しない (空の余白が残るのを防ぐ) */}
+      {MAP_CHATBOT_ENABLED && (
+        <div className="page-top-bar">
+          <div className="page-top-bar-right">
+            <MapButton />
+            <ChatbotButton />
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Store Name Banner (Full width below buttons to support any store name length) */}
       {storeInfo && storeInfo.store_name && (
