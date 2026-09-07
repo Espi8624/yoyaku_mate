@@ -3,6 +3,7 @@ import { useLocation } from 'react-router-dom';
 import nationalitiesData from '../../data/nationalities.json';
 import useTranslation from '../../hook/useTranslation';
 import { getWaitingStatus, submitWaiting as apiSubmitWaiting, cancelWaiting, getQRToken, getWaitingDetails } from '../../api/waitingService';
+import { debugLog } from '../../utils/debugLog';
 import styles from "./NetworkErrorPopup.module.css";  // CSSファイル名を変更
 
 // NetworkErrorPopupをインラインコンポーネントとして定義
@@ -359,7 +360,7 @@ export function WaitingScreenProvider({ children }) {
 
       // 2. ステータスが completed (入店完了) の場合はキャンセルさせない
       if (details && details.status === 'completed') {
-        console.log("既に入店完了済みのため、キャンセルを中断します");
+        debugLog("既に入店完了済みのため、キャンセルを中断します");
         // 画面遷移せず、ポップアップで通知のみ行う
         // setIsCancelled(true); // Removed
         // setCancellationReason('completed'); // Removed

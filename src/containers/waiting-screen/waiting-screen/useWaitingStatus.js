@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import { getWaitingDetails, getMenuList, subscribeToWaitingStatus } from "../../../api/waitingService";
+import { debugLog } from "../../../utils/debugLog";
 
 /**
  * 待機状況をポーリングで監視するカスタムフック。
@@ -88,7 +89,7 @@ function useWaitingStatus(storeId, waitingId, enabled) {
             storeId,
             waitingId,
             (updatedDetails) => {
-                console.log("[useWaitingStatus] SSE受信:", updatedDetails);
+                debugLog("[useWaitingStatus] SSE受信:", updatedDetails);
                 if (updatedDetails) {
                     setStatus(updatedDetails.status || null);
                     setDetails(updatedDetails);

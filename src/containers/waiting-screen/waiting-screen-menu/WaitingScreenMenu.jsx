@@ -34,13 +34,6 @@ function WaitingScreenMenu() {
         // Calculate total quantity
         const totalQuantity = selectedMenus.reduce((sum, item) => sum + item.quantity, 0);
 
-        console.log("Validation Debug:", {
-            requireOneMenuPerPerson,
-            partySize: Number(partySize),
-            totalQuantity,
-            condition: requireOneMenuPerPerson && totalQuantity < Number(partySize)
-        });
-
         // 1. Basic check: at least one item
         if (totalQuantity === 0) {
             setPopupMessage(menuText.select_at_least_one || "メニューを少なくとも1つ選択してください");

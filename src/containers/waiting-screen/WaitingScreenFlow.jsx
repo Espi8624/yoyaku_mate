@@ -10,6 +10,7 @@ import NotifiedScreen from "./waiting-screen-notified/NotifiedScreen";
 import CancelledScreen from "./waiting-screen-cancelled/CancelledScreen";
 import MapWindow from './map/MapWindow';
 import { getWaitingDetails } from "../../api/waitingService";
+import { debugLog } from "../../utils/debugLog";
 // Chatbot components
 import ChatWindow from "../chat-bot/ChatWindow";
 
@@ -53,7 +54,7 @@ function FlowController() {
             // それ以外（cancelled, no_showなど）はローカルストレージをクリア
             // ただし、cancelledの場合もユーザーが確認するまでは保持すべきかもしれないが、
             // 現状の仕様ではクリアしてトップへ戻るようになっている。
-            console.log(`[FlowController] ステータスが${details.status}のため、ローカルストレージをクリアします`);
+            debugLog(`[FlowController] ステータスが${details.status}のため、ローカルストレージをクリアします`);
             localStorage.removeItem("store_id");
             localStorage.removeItem("waiting_id");
             // step 1にリセット（新規登録可能な状態）
@@ -62,7 +63,7 @@ function FlowController() {
         } catch (err) {
           // 404エラー（データが存在しない）の場合もクリア
           if (err?.response?.status === 404 || err?.response?.status === 410) {
-            console.log('[FlowController] データが存在しないため、ローカルストレージをクリアします');
+            debugLog('[FlowController] データが存在しないため、ローカルストレージをクリアします');
             localStorage.removeItem("store_id");
             localStorage.removeItem("waiting_id");
             if (setStep) setStep(1);

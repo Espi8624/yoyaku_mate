@@ -5,6 +5,7 @@ import { getStoreInfo } from "../../../api/waitingService";
 import MenuDisplay from "./MenuDisplay";
 import CongestionPopup from "../waiting-screen-preview/CongestionPopup";
 import { getTranslatedText } from "../../../utils/i18nHelper";
+import { debugLog } from "../../../utils/debugLog";
 import ChatbotButton from "../../chat-bot/ChatbotButton";
 import MapButton from '../map/MapButton';
 import useWaitingStatus from "./useWaitingStatus";
@@ -233,7 +234,7 @@ function WaitingScreen() {
       }
       if (audioCtxRef.current && audioCtxRef.current.state === 'suspended') {
         audioCtxRef.current.resume().then(() => {
-          console.log("AudioContext: ユーザー操作により再開しました");
+          debugLog("AudioContext: ユーザー操作により再開しました");
         });
       }
       setSoundEnabled(true);
@@ -281,7 +282,7 @@ function WaitingScreen() {
       try {
         if ('wakeLock' in navigator) {
           wakeLock = await navigator.wakeLock.request('screen');
-          console.log('Wake Lock: 有効化しました');
+          debugLog('Wake Lock: 有効化しました');
         }
       } catch (err) {
         console.error(`Wake Lock 取得失敗: ${err.name}, ${err.message}`);
@@ -303,7 +304,7 @@ function WaitingScreen() {
       document.removeEventListener('visibilitychange', handleVisibilityChange);
       if (wakeLock !== null) {
         wakeLock.release()
-          .then(() => console.log('Wake Lock: 解放しました'))
+          .then(() => debugLog('Wake Lock: 解放しました'))
           .catch(err => console.error('Wake Lock 解放エラー:', err));
       }
     };

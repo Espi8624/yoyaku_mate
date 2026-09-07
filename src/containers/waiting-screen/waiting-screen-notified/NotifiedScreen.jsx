@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { useWaitingScreen } from "../WaitingScreenContext";
 import { getWaitingDetails, subscribeToWaitingStatus } from "../../../api/waitingService";
+import { debugLog } from "../../../utils/debugLog";
 import useTranslation from "../../../hook/useTranslation";
 import ChatbotButton from "../../chat-bot/ChatbotButton";
 import baseStyles from "../waiting-screen/WaitingScreen.module.css";
@@ -19,7 +20,7 @@ function NotifiedScreen() {
     if (!storeId || !waitingId) return;
 
     const handleCompletion = () => {
-      console.log('[NotifiedScreen] 入店完了のため、ローカルストレージをクリアします');
+      debugLog('[NotifiedScreen] 入店完了のため、ローカルストレージをクリアします');
       localStorage.removeItem("store_id");
       localStorage.removeItem("waiting_id");
 
@@ -32,7 +33,7 @@ function NotifiedScreen() {
     const checkStatus = async () => {
       try {
         const details = await getWaitingDetails(storeId, waitingId);
-        console.log('[NotifiedScreen] 初期ステータス:', details.status);
+        debugLog('[NotifiedScreen] 初期ステータス:', details.status);
 
         if (details.status === 'completed') {
           handleCompletion();
@@ -50,7 +51,7 @@ function NotifiedScreen() {
       storeId,
       waitingId,
       (updatedDetails) => {
-        console.log('[NotifiedScreen] SSE受信 status:', updatedDetails.status);
+        debugLog('[NotifiedScreen] SSE受信 status:', updatedDetails.status);
         if (updatedDetails.status === 'completed') {
           handleCompletion();
         }

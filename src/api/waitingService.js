@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { debugLog } from '../utils/debugLog';
 
 // Note: 以前はNODE_ENV==='production'時にVercel Rewrite経由の相対パス"/api"を
 // 使っていたが、Vercel以外へのデプロイでは中継が存在せず失敗するため廃止。
@@ -86,7 +87,7 @@ export const getWaitingList = async (storeId) => {
  * @returns {Promise<Response>}
  */
 export const submitWaiting = async (payload, vToken) => {
-  console.log('[API] submitWaiting called with vToken:', vToken);
+  debugLog('[API] submitWaiting called with vToken:', vToken);
   return axios.post(`${API_BASE_URL}/waiting-list`, payload, {
     params: { v_token: vToken }
   });
@@ -216,7 +217,7 @@ export const getMenuList = async (storeId) => {
  */
 export const getWaitingDetails = async (storeId, waitingId) => {
   try {
-    console.log('[getWaitingDetails] リクエスト:', { storeId, waitingId });
+    debugLog('[getWaitingDetails] リクエスト:', { storeId, waitingId });
 
     // 以前の方式（全リスト取得）に戻しつつ、予想時間計算ロジックをフロントエンドに残す
     // /api/waiting-list-user が404を返す問題があるため、確実な /api/waiting-list を使用
@@ -233,7 +234,7 @@ export const getWaitingDetails = async (storeId, waitingId) => {
     const waitingList = Array.isArray(listRes.data.data) ? listRes.data.data : (Array.isArray(listRes.data) ? listRes.data : []);
     const details = waitingList.find(item => item.waiting_id === waitingId);
 
-    console.log('[getWaitingDetails] 検索結果:', details);
+    debugLog('[getWaitingDetails] 検索結果:', details);
 
     if (!details) {
       // 見つからない場合はエラー (これによりローカルストレージクリア等のフローが動く)
@@ -298,7 +299,7 @@ export const cancelWaiting = async (storeId, waitingId) => {
         headers: { 'Content-Type': 'application/json' }
       }
     );
-    console.log('[cancelWaiting] 成功:', response.data);
+    debugLog('[cancelWaiting] 成功:', response.data);
     return response;
   } catch (error) {
     console.error('[cancelWaiting] エラー:', error);
