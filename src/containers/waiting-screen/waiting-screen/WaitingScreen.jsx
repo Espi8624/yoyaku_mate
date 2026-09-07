@@ -345,7 +345,15 @@ function WaitingScreen() {
       {/* ★ 呼び出し通知音バナー: ユーザー操作で AudioContext を確実にアンロックするための導線 */}
       <div className={styles["sound-banner"]}>
         {soundEnabled ? (
-          <span>🔔 {waitingScreenTexts.sound_banner?.enabled_message}</span>
+          <span>
+            🔔 {waitingScreenTexts.sound_banner?.enabled_message}
+            {waitingScreenTexts.sound_banner?.enabled_note && (
+              <>
+                <br />
+                {waitingScreenTexts.sound_banner.enabled_note}
+              </>
+            )}
+          </span>
         ) : (
           <>
             <span>🔕 {waitingScreenTexts.sound_banner?.message}</span>

@@ -77,7 +77,8 @@
         "sound_banner": {
             "message": "To receive the call notification sound, please turn on sound and keep this screen open.",
             "enable_btn": "Turn On Sound",
-            "enabled_message": "Sound on · Please keep this screen open (May not play depending on your device's silent/mute settings)"
+            "enabled_message": "Sound on · Please keep this screen open",
+            "enabled_note": "The alert sound may not play depending on your device settings."
         },
         "completed_screen": {
             "title": "Thank you for visiting!",

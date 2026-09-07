@@ -77,7 +77,8 @@
         "sound_banner": {
             "message": "Per ricevere il suono di chiamata, attiva l'audio e mantieni questa schermata aperta.",
             "enable_btn": "Attiva audio",
-            "enabled_message": "Audio attivo · Mantieni questa schermata aperta (Potrebbe non riprodursi in base alle impostazioni silenziose del dispositivo)"
+            "enabled_message": "Audio attivo · Mantieni questa schermata aperta",
+            "enabled_note": "Il suono di avviso potrebbe non riprodursi in base alle impostazioni del dispositivo."
         },
         "completed_screen": {
             "title": "Grazie per la visita!",

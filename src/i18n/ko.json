@@ -77,7 +77,8 @@
         "sound_banner": {
             "message": "호출 알림음을 받으려면 이 화면을 켜둔 상태에서 소리를 켜주세요.",
             "enable_btn": "소리 켜기",
-            "enabled_message": "알림음 켜짐 · 이 화면을 계속 켜두세요 (기기 설정(무음 모드 등)에 따라 울리지 않을 수 있어요)"
+            "enabled_message": "알림음 켜짐 · 이 화면을 계속 켜두세요",
+            "enabled_note": "기기 설정에 따라 알람이 울리지 않을 수 있습니다"
         },
         "completed_screen": {
             "title": "방문해 주셔서 감사합니다!",
