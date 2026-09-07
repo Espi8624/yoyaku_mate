@@ -5,7 +5,10 @@
 
 :root {
     /* === 基本パレット === */
-    --color-background: #F8F9FA;
+    /* Google製品でよく使われる薄いグレー (旧 #F8F9FA から変更)。
+       body背景と各画面のpage-container背景を同じ値にして、境目に色ズレが
+       出ないようにする */
+    --color-background: #F1F3F4;
     --color-primary-black: #161616;
     --color-card-background: #FFFFFF;
 

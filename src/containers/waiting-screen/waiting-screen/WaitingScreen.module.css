@@ -122,9 +122,11 @@ textarea {
    下の白いレシートカード(.preview-form)とのコントラストを出す。
    他の画面(登録フォーム等)のpage-containerには影響しない、この画面専用の上書き。
    page-containerはCSS Modules対象外のグローバルクラスなので :global() で囲む必要がある
-   (囲まないとハッシュ化されて実際のDOMクラスと一致せず、ルール自体が無効になる) */
+   (囲まないとハッシュ化されて実際のDOMクラスと一致せず、ルール自体が無効になる)。
+   値はbody(index.css)と同じ --color-background を使うこと — 別の色を指定すると
+   ページが100%埋まらない箇所(スクロールバウンス等)でbodyの色とズレて二重に見える */
 :global(.page-container).waiting-screen-page {
-  background: #F1F3F4;
+  background: var(--color-background);
 }
 
 /* ★ 待機情報カード: 米国で流行っているレシート風デザイン
