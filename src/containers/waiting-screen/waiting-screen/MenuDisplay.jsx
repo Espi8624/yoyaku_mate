@@ -17,6 +17,17 @@ function MenuDisplay({ menuList, texts, selectedLanguageCode }) {
     return Array.isArray(menuList) ? Array.from(new Set(menuList.map(item => item.category))) : [];
   }, [menuList]);
 
+  // カテゴリー名 → 翻訳マップ（同一カテゴリーの各アイテムは同じ値を持つ想定）
+  const categoryTranslations = useMemo(() => {
+    const map = {};
+    (menuList || []).forEach(item => {
+      if (item.category_translations && !map[item.category]) {
+        map[item.category] = item.category_translations;
+      }
+    });
+    return map;
+  }, [menuList]);
+
   // 初期カテゴリ設定
   React.useEffect(() => {
     if (categories.length > 0 && !activeCategory) {
@@ -75,7 +86,7 @@ function MenuDisplay({ menuList, texts, selectedLanguageCode }) {
                 className={`${styles["menu-category-tab"]} ${activeCategory === category ? styles["active"] : ''}`}
                 onClick={() => setActiveCategory(category)}
               >
-                {category}
+                {getTranslatedText(category, categoryTranslations[category], selectedLanguageCode)}
               </button>
             ))}
           </div>

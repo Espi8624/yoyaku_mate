@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useWaitingScreen } from '../waiting-screen/WaitingScreenContext';
-import { getStoreAIContext } from '../../api/waitingService';
-// Gemini API は Go バックエンドのプロキシ経由で呼び出します (APIキーはサーバーサイド管理)
-import { generateSystemPrompt } from './SystemPrompt';
+// Gemini API は Go バックエンドのプロキシ経由で呼び出します。
+// システムプロンプトの組み立ても店舗コンテキストの取得もサーバー側 (storeId のみ送信) で行う。
+// クライアントに任意のプロンプトを組み立てさせない = プロンプトインジェクション/APIキー乱用対策。
 import useTranslation from '../../hook/useTranslation';
 import { MAP_CHATBOT_ENABLED } from '../../constants/featureFlags';
 import styles from "./ChatWindow.module.css";
@@ -54,22 +54,18 @@ const ChatWindow = () => {
 
     const callGemini = async (userMessage) => {
         try {
-            // 1. リアルタイム店舗コンテキストを取得
-            let liveContext = {};
-            try {
-                liveContext = await getStoreAIContext(storeId);
-            } catch (e) {
-                console.error("Failed to fetch live context", e);
-            }
-
-            // 2. 動的プロンプトを構築 (SystemPrompt.jsから生成)
-            const systemPrompt = generateSystemPrompt(liveContext, selectedNationality, selectedLanguageCode, currentPage);
-
-            // 3. Go バックエンド経由で Gemini API を呼び出す (APIキーはサーバーサイドで管理)
+            // 店舗コンテキストの取得もシステムプロンプトの組み立てもサーバー側で行う。
+            // クライアントは「誰が(storeId)」「何を(userMessage)」「どの言語/画面か」だけを送る
             const response = await fetch(AI_CHAT_ENDPOINT, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ userMessage, systemPrompt }),
+                body: JSON.stringify({
+                    storeId,
+                    userMessage,
+                    nationality: selectedNationality,
+                    languageCode: selectedLanguageCode,
+                    currentPage,
+                }),
             });
 
             if (response.status === 429) {
