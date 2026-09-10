@@ -105,7 +105,9 @@ function MenuDisplay({ menuList, texts, selectedLanguageCode }) {
                 >
                   <div className={styles["menu-item-image"]}>
                     {item.menu_image_url ? (
-                      <img src={item.menu_image_url} alt={displayTitle} />
+                      // - メニュー一覧を開くと全アイテムの画像が一斉にダウンロード/デコードされ、
+                      //   スクロール中のカクつきや読み込み時のレイアウトジャンプの原因になっていた
+                      <img src={item.menu_image_url} alt={displayTitle} loading="lazy" decoding="async" />
                     ) : (
                       <div className={styles["menu-item-image-placeholder"]}>
                         <svg width="48" height="48" viewBox="0 0 24 24" fill="currentColor">
@@ -148,7 +150,7 @@ function MenuDisplay({ menuList, texts, selectedLanguageCode }) {
 
             <div className={styles["menu-detail-image-container"]}>
               {expandedItem.menu_image_url ? (
-                <img src={expandedItem.menu_image_url} alt={getTranslatedText(expandedItem.title, expandedItem.title_translations, selectedLanguageCode)} />
+                <img src={expandedItem.menu_image_url} alt={getTranslatedText(expandedItem.title, expandedItem.title_translations, selectedLanguageCode)} decoding="async" />
               ) : (
                 <div className={`${styles["menu-item-image-placeholder"]} ${styles["column-layout"]}`}>
                   <svg width="64" height="64" viewBox="0 0 24 24" fill="#999">

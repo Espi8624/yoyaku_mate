@@ -6,6 +6,36 @@ import { debugLog } from '../utils/debugLog';
 // 環境ごとにREACT_APP_API_URLで実際のバックエンドURLを直接指定する
 const API_BASE_URL = process.env.REACT_APP_API_URL || "http://localhost:8080/api";
 
+// - getWaitingStatus/getWaitingDetails/getWaitingList はいずれも同一の
+//   /waiting-list, /store_settings を叩いており、画面遷移時(復元判定→実画面マウント等)に
+//   数百ms以内で立て続けに呼ばれ重複リクエストになっていた。
+//   進行中/直近のPromiseを短時間キャッシュして合流させ、無駄なAPI呼び出しを減らす
+const SHORT_CACHE_TTL_MS = 3000;
+const waitingListRequestCache = new Map(); // storeId -> { promise, expiresAt }
+const storeSettingsRequestCache = new Map();
+
+function cachedRequest(cache, key, fetcher) {
+  const cached = cache.get(key);
+  if (cached && cached.expiresAt > Date.now()) {
+    return cached.promise;
+  }
+  const promise = fetcher();
+  cache.set(key, { promise, expiresAt: Date.now() + SHORT_CACHE_TTL_MS });
+  // 失敗時は即座に破棄し、次回呼び出しでリトライできるようにする(TTL分待たせない)
+  promise.catch(() => cache.delete(key));
+  return promise;
+}
+
+const fetchWaitingListCached = (storeId) =>
+  cachedRequest(waitingListRequestCache, storeId || '', () =>
+    axios.get(`${API_BASE_URL}/waiting-list`, { params: { store_id: storeId || '' } })
+  );
+
+const fetchStoreSettingsCached = (storeId) =>
+  cachedRequest(storeSettingsRequestCache, storeId || '', () =>
+    axios.get(`${API_BASE_URL}/store_settings`, { params: { store_id: storeId || '' } })
+  );
+
 /**
  * 現在待機状況と、店舗の待機制作を呼び出す
  * @param {string} storeId 
@@ -18,12 +48,8 @@ const API_BASE_URL = process.env.REACT_APP_API_URL || "http://localhost:8080/api
 export const getWaitingStatus = async (storeId) => {
   try {
     const [waitingRes, settingsRes] = await Promise.all([
-      axios.get(`${API_BASE_URL}/waiting-list`, {
-        params: { store_id: storeId }
-      }),
-      axios.get(`${API_BASE_URL}/store_settings`, {
-        params: { store_id: storeId }
-      })
+      fetchWaitingListCached(storeId),
+      fetchStoreSettingsCached(storeId),
     ]);
 
     const waitingList = Array.isArray(waitingRes.data.data) ? waitingRes.data.data : [];
@@ -53,9 +79,7 @@ export const getWaitingStatus = async (storeId) => {
  */
 export const getStoreSettings = async (storeId) => {
   try {
-    const response = await axios.get(`${API_BASE_URL}/store_settings`, {
-      params: { store_id: storeId }
-    });
+    const response = await fetchStoreSettingsCached(storeId);
     return response.data?.data?.settings || {};
   } catch (error) {
     console.error('[getStoreSettings] Error:', error);
@@ -70,9 +94,7 @@ export const getStoreSettings = async (storeId) => {
  */
 export const getWaitingList = async (storeId) => {
   try {
-    const response = await axios.get(`${API_BASE_URL}/waiting-list`, {
-      params: { store_id: storeId || '' }
-    });
+    const response = await fetchWaitingListCached(storeId);
     return Array.isArray(response.data.data) ? response.data.data : [];
   } catch (error) {
     console.error('[getWaitingList] エラー:', error);
@@ -163,15 +185,16 @@ export const subscribeToWaitingStatus = (storeId, waitingId, onMessage, onError)
 /**
  * 店舗のQRトークンを取得 (Board用)
  * @param {string} storeId
+ * @param {string} boardKey - 点主アプリが発行した店舗別シークレット。サーバー側で検証される
  * @returns {Promise<{v_token: string, date: string}>}
  */
-export const getQRToken = async (storeId) => {
+export const getQRToken = async (storeId, boardKey) => {
   try {
-    // 認証不要に変更された endpoint
     const response = await axios.get(`${API_BASE_URL}/waiting-list`, {
       params: {
         action: 'qr_token',
-        store_id: storeId
+        store_id: storeId,
+        board_key: boardKey
       }
     });
     return response.data.data;
@@ -222,12 +245,8 @@ export const getWaitingDetails = async (storeId, waitingId) => {
     // 以前の方式（全リスト取得）に戻しつつ、予想時間計算ロジックをフロントエンドに残す
     // /api/waiting-list-user が404を返す問題があるため、確実な /api/waiting-list を使用
     const [listRes, settingsRes] = await Promise.all([
-      axios.get(`${API_BASE_URL}/waiting-list`, {
-        params: { store_id: storeId || '' }
-      }),
-      axios.get(`${API_BASE_URL}/store_settings`, {
-        params: { store_id: storeId || '' }
-      })
+      fetchWaitingListCached(storeId),
+      fetchStoreSettingsCached(storeId),
     ]);
 
     // 1. リストから該当データを検索

@@ -7,6 +7,7 @@ import styles from "./Board.module.css";
 function Board() {
     const [searchParams] = useSearchParams();
     const storeId = searchParams.get('store_id');
+    const boardKey = searchParams.get('board_key'); // QRトークン発行の検証用店舗別シークレット
 
     const [waitingList, setWaitingList] = useState([]);
     const [storeName, setStoreName] = useState('');
@@ -35,10 +36,10 @@ function Board() {
 
     // QRトークン取得 (1時間ごとに更新)
     useEffect(() => {
-        if (!storeId) return;
+        if (!storeId || !boardKey) return;
 
         const fetchQR = () => {
-            getQRToken(storeId)
+            getQRToken(storeId, boardKey)
                 .then(data => {
                     // console.log('QR Token updated:', data);
                     setQrData(data);
@@ -50,7 +51,7 @@ function Board() {
         // 1時間(3600000ms)ごとに更新して、日またぎに対応
         const interval = setInterval(fetchQR, 60 * 60 * 1000);
         return () => clearInterval(interval);
-    }, [storeId]);
+    }, [storeId, boardKey]);
 
     // 待機リスト (初期取得 + SSE)
     useEffect(() => {
@@ -99,53 +100,58 @@ function Board() {
         }
     }, [qrData, storeId]);
 
-    if (!storeId) return <div className={styles["board-error"]}>Store ID is missing.</div>;
-    if (loading && waitingList.length === 0) return <div className={styles["board-loading"]}>Loading...</div>;
-
-    const notifiedItems = waitingList
+    // - filter/sortはuseMemoなしだと毎レンダー(storeName取得・1時間毎のQR更新など
+    //   waitingListと無関係な状態変化でも)再計算されていた。常時表示の掲示板でwaitingList自体は
+    //   頻繁にSSE更新されるため、無関係な再計算を避けるためwaitingList変化時のみに限定する
+    const notifiedItems = useMemo(() => waitingList
         .filter(item => item.status === 'notified')
         .sort((a, b) => {
             const timeA = a.called_time ? new Date(a.called_time).getTime() : 0;
             const timeB = b.called_time ? new Date(b.called_time).getTime() : 0;
             return timeB - timeA; // Descending: Latest first
-        });
-    const waitingItems = waitingList
+        }), [waitingList]);
+    const waitingItems = useMemo(() => waitingList
         .filter(item => item.status === 'waiting')
-        .sort((a, b) => a.queue_number - b.queue_number);
+        .sort((a, b) => a.queue_number - b.queue_number), [waitingList]);
+
+    if (!storeId) return <div className={styles["board-error"]}>Store ID is missing.</div>;
+    if (loading && waitingList.length === 0) return <div className={styles["board-loading"]}>Loading...</div>;
 
     return (
         <div className={styles["board-container"]}>
             <div className={styles["background-mesh"]}></div>
 
-            <header className={`${styles["board-header"]} ${styles["glass-panel"]}`}>
-                <h1>{storeName || 'Wait Board'}</h1>
-                <div className={styles["board-clock"]}>{/* Digital Clock Placeholder */}</div>
-            </header>
-
             <main className={styles["bento-grid"]}>
-                {/* LEFT: HERO SECTION (Now Calling) */}
-                <section className={`${styles["bento-item"]} ${styles["hero-section"]} ${styles["glass-panel"]}`}>
-                    <div className={styles["section-header"]}>
-                        <h2>現在お呼び出し中 <span className={styles["en-sub"]}>NOW CALLING</span></h2>
-                        <span className={styles["live-indicator"]}>LIVE</span>
-                    </div>
+                {/* LEFT: 店名ヘッダー + HERO SECTION (Now Calling) — ヘッダーは左カラム幅のみに縮小 */}
+                <div className={styles["left-column"]}>
+                    <header className={styles["board-header"]}>
+                        <h1>{storeName || 'Wait Board'}</h1>
+                        <div className={styles["board-clock"]}>{/* Digital Clock Placeholder */}</div>
+                    </header>
 
-                    <div className={styles["hero-content"]}>
-                        {notifiedItems.length === 0 ? (
-                            <div className={styles["empty-state-hero"]}>
-                                <p>お呼び出し中のお客様はいません</p>
-                            </div>
-                        ) : (
-                            <div className={styles["hero-cards"]}>
-                                {notifiedItems.map(item => (
-                                    <div key={item.waiting_id} className={styles["hero-card"]}>
-                                        <span className={styles["hero-number"]}>#{item.queue_number}</span>
-                                    </div>
-                                ))}
-                            </div>
-                        )}
-                    </div>
-                </section>
+                    <section className={`${styles["bento-item"]} ${styles["hero-section"]} ${styles["glass-panel"]}`}>
+                        <div className={styles["section-header"]}>
+                            <h2>現在お呼び出し中 <span className={styles["en-sub"]}>NOW CALLING</span></h2>
+                            <span className={styles["live-indicator"]}>LIVE</span>
+                        </div>
+
+                        <div className={styles["hero-content"]}>
+                            {notifiedItems.length === 0 ? (
+                                <div className={styles["empty-state-hero"]}>
+                                    <p>お呼び出し中のお客様はいません</p>
+                                </div>
+                            ) : (
+                                <div className={styles["hero-cards"]}>
+                                    {notifiedItems.map(item => (
+                                        <div key={item.waiting_id} className={styles["hero-card"]}>
+                                            <span className={styles["hero-number"]}>#{item.queue_number}</span>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+                    </section>
+                </div>
 
                 {/* RIGHT COLUMN */}
                 <div className={styles["bento-column"]}>
@@ -159,7 +165,9 @@ function Board() {
 
                         <div className={`${styles["list-content"]} ${styles["custom-scroll"]}`}>
                             {waitingItems.length === 0 ? (
-                                <p className={styles["empty-message-small"]}>現在お待ちのお客様はいません</p>
+                                <div className={styles["empty-state-list"]}>
+                                    <p>現在お待ちのお客様はいません</p>
+                                </div>
                             ) : (
                                 <div className={styles["waiting-list-grid"]}>
                                     {waitingItems.map(item => (
@@ -206,7 +214,7 @@ function Board() {
             </main>
 
             <footer className={styles["board-footer"]}>
-                <p>Powered by ルスイ</p>
+                <p>Powered by oboro</p>
             </footer>
         </div>
     );

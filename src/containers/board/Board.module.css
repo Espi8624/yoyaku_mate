@@ -11,6 +11,8 @@
     --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
     --text-primary: #1a1a1a;
     --text-secondary: #666;
+    --text-placeholder: #aaa;
+    /* 空状態など、あえて存在感を弱めたい文言用 */
     --accent-color: #FF6B6B;
     /* Coral Red/Orange for calling */
     --accent-bg: #FFF0F0;
@@ -100,9 +102,10 @@ html {
 }
 
 /* --- Header --- */
+/* 店名ヘッダーは左カラム(Hero側)幅のみに収める。右カラムはヘッダー分の高さをそのまま獲得する */
 .board-header {
     height: 56px;
-    margin: 1rem 1.5rem 0.25rem;
+    margin: 0 0 0.75rem;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -125,9 +128,16 @@ html {
     grid-template-columns: 1.4fr 1fr;
     /* Hero takes slightly more */
     gap: 1.5rem;
-    padding: 1rem 1.5rem 1.5rem;
+    padding: 1.5rem 1.5rem 0.5rem;
+    /* footerは通常フロー(下に別枠)。ここは箱とfooter文字の間の見た目の余白のみ担当 */
     min-height: 0;
     /* Important for scroll */
+}
+
+.left-column {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
 }
 
 .bento-column {
@@ -163,6 +173,8 @@ html {
 
 /* --- Left: Hero Section (Now Calling) --- */
 .hero-section {
+    flex: 1;
+    /* ヘッダー分を除いた左カラムの残り高さを占める */
     position: relative;
     background: rgba(255, 255, 255, 0.75);
     /* Slightly more opaque */
@@ -235,7 +247,7 @@ html {
 }
 
 .empty-state-hero {
-    color: var(--text-secondary);
+    color: var(--text-placeholder);
     font-size: 1.5rem;
     font-weight: 500;
 }
@@ -290,10 +302,22 @@ html {
     color: var(--text-primary);
 }
 
-.empty-message-small {
-    color: #999;
+.empty-state-list {
+    /* 空状態の色・太さ・中央揃えを空呼び出し(empty-state-hero)と統一。
+       文字サイズだけはリスト枠の大きさに合わせて縮小 */
+    flex: 1;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-placeholder);
+    font-size: 1.1rem;
+    font-weight: 500;
     text-align: center;
-    margin-top: 2rem;
+}
+
+.empty-state-list p {
+    margin: 0;
 }
 
 /* --- Right Bottom: Info & QR --- */
@@ -380,12 +404,21 @@ html {
 }
 
 /* --- Footer --- */
+/* 通常フロー(絶対配置ではない)で配置し、重なりが原理的に起きないようにする。
+   bento-gridの下部パディングを0にした分、この自身の余白で下側の間隔を作る */
 .board-footer {
+    flex-shrink: 0;
+    padding: 5px 10px 14px;
+    /* 画面最下端とのゆとりを確保するため、下だけ少し多めに */
     text-align: center;
-    padding: 10px;
     font-size: 0.75rem;
     color: var(--text-secondary);
     opacity: 0.7;
+}
+
+.board-footer p {
+    /* pタグのブラウザ標準マージン(上下 約1em)を除去。これが無いとfooterが想定より大きく膨らむ */
+    margin: 0;
 }
 
 /* --- Utilities & Animation --- */

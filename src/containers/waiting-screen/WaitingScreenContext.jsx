@@ -1,4 +1,4 @@
-import React, { createContext, useState, useContext, useMemo, useEffect } from 'react';
+import React, { createContext, useState, useContext, useMemo, useCallback, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import nationalitiesData from '../../data/nationalities.json';
 import useTranslation from '../../hook/useTranslation';
@@ -17,6 +17,51 @@ const NetworkErrorPopup = ({ isOffline }) => {
       </span>
     </div>
   );
+};
+
+/**
+ * サーバーのエラーレスポンスから実際のメッセージを抽出するヘルパー
+ * サーバーは JSON({message: "..."}) と text/plain (http.Error由来の平文) の
+ * 両方の形式でエラーを返しうるため、どちらのケースでも実際の理由を取りこぼさないようにする
+ * (以前はJSON形式のみを想定していたため、平文レスポンス時に本当の理由が握りつぶされ、
+ * ユーザーには常に汎用的な「通信エラー」としか表示されていなかった)
+ * ・状態に依存しない純粋関数のためコンポーネント外に定義(毎レンダー再生成を回避)
+ */
+const extractErrorMessage = (data, err, fallback) => {
+  if (typeof data === 'string' && data.trim()) return data;
+  if (data && typeof data === 'object' && data.message) return data.message;
+  return err?.message || fallback;
+};
+
+/**
+ * JST (UTC+9) 基準のユニークな待機IDと登録時間を生成するヘルパー関数
+ * 冪等性の確保およびオフライン復帰時の時間整合性のために使用
+ * ・状態に依存しない純粋関数のためコンポーネント外に定義(毎レンダー再生成を回避)
+ * @returns {{ waitingId: string, registrationTime: string }}
+ */
+const getJSTDateStrings = () => {
+  const now = new Date();
+  const jstOffset = 9 * 60 * 60 * 1000; // 日本時間のオフセット (9時間)
+  const jstTime = new Date(now.getTime() + jstOffset); // JST時間に変換
+
+  const year = jstTime.getUTCFullYear();
+  const month = String(jstTime.getUTCMonth() + 1).padStart(2, '0');
+  const day = String(jstTime.getUTCDate()).padStart(2, '0');
+  const hour = String(jstTime.getUTCHours()).padStart(2, '0');
+  const minute = String(jstTime.getUTCMinutes()).padStart(2, '0');
+  const second = String(jstTime.getUTCSeconds()).padStart(2, '0');
+  const ms = String(jstTime.getUTCMilliseconds()).padStart(3, '0');
+  const randomSuffix = String(Math.floor(100 + Math.random() * 900)); // 重複防止用の3桁の乱数
+
+  const dateStr = `${year}${month}${day}`;
+  const timeStr = `${hour}${minute}${second}`;
+
+  return {
+    // 冪等キーとなる時間ベースのユニークID (フォーマット: YYYYMMDD-HHmmss-SSS-Random)
+    waitingId: `${dateStr}-${timeStr}-${ms}-${randomSuffix}`,
+    // 顧客が登録ボタンを押した実際の時刻 (ISO 8601 フォーマット)
+    registrationTime: `${year}-${month}-${day}T${hour}:${minute}:${second}.${ms}+09:00`
+  };
 };
 
 // Context Object生成
@@ -162,7 +207,7 @@ export function WaitingScreenProvider({ children }) {
 
   // チャットボット状態
   const [isChatOpen, setIsChatOpen] = useState(false);
-  const toggleChat = () => setIsChatOpen(prev => !prev);
+  const toggleChat = useCallback(() => setIsChatOpen(prev => !prev), []);
 
   // Map state
   const [isMapOpen, setIsMapOpen] = useState(false);
@@ -216,21 +261,9 @@ export function WaitingScreenProvider({ children }) {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [initialParams]);
 
-  /**
-   * サーバーのエラーレスポンスから実際のメッセージを抽出するヘルパー
-   * サーバーは JSON({message: "..."}) と text/plain (http.Error由来の平文) の
-   * 両方の形式でエラーを返しうるため、どちらのケースでも実際の理由を取りこぼさないようにする
-   * (以前はJSON形式のみを想定していたため、平文レスポンス時に本当の理由が握りつぶされ、
-   * ユーザーには常に汎用的な「通信エラー」としか表示されていなかった)
-   */
-  const extractErrorMessage = (data, err, fallback) => {
-    if (typeof data === 'string' && data.trim()) return data;
-    if (data && typeof data === 'object' && data.message) return data.message;
-    return err?.message || fallback;
-  };
-
   // サーバー通信関係
-  const _performSubmit = async (payload) => {
+  // ・useCallbackでラップし、無関係な状態(partySize等)の変化のたびに再生成されるのを防ぐ
+  const _performSubmit = useCallback(async (payload) => {
     try {
       const res = await apiSubmitWaiting(payload, vToken);
       // axiosは成功時に200-299のstatusを返す
@@ -262,39 +295,10 @@ export function WaitingScreenProvider({ children }) {
       const errorMessage = extractErrorMessage(err.response?.data, err, '通信エラーが発生しました');
       alert("通信エラー: " + errorMessage);
     }
-  };
+  }, [vToken, storeId, t]);
 
-  /**
-   * JST (UTC+9) 基準のユニークな待機IDと登録時間を生成するヘルパー関数
-   * 冪等性の確保およびオフライン復帰時の時間整合性のために使用
-   * @returns {{ waitingId: string, registrationTime: string }}
-   */
-  const getJSTDateStrings = () => {
-    const now = new Date();
-    const jstOffset = 9 * 60 * 60 * 1000; // 日本時間のオフセット (9時間)
-    const jstTime = new Date(now.getTime() + jstOffset); // JST時間に変換
-
-    const year = jstTime.getUTCFullYear();
-    const month = String(jstTime.getUTCMonth() + 1).padStart(2, '0');
-    const day = String(jstTime.getUTCDate()).padStart(2, '0');
-    const hour = String(jstTime.getUTCHours()).padStart(2, '0');
-    const minute = String(jstTime.getUTCMinutes()).padStart(2, '0');
-    const second = String(jstTime.getUTCSeconds()).padStart(2, '0');
-    const ms = String(jstTime.getUTCMilliseconds()).padStart(3, '0');
-    const randomSuffix = String(Math.floor(100 + Math.random() * 900)); // 重複防止用の3桁の乱数
-
-    const dateStr = `${year}${month}${day}`;
-    const timeStr = `${hour}${minute}${second}`;
-
-    return {
-      // 冪等キーとなる時間ベースのユニークID (フォーマット: YYYYMMDD-HHmmss-SSS-Random)
-      waitingId: `${dateStr}-${timeStr}-${ms}-${randomSuffix}`,
-      // 顧客が登録ボタンを押した実際の時刻 (ISO 8601 フォーマット)
-      registrationTime: `${year}-${month}-${day}T${hour}:${minute}:${second}.${ms}+09:00`
-    };
-  };
-
-  const handleSubmitWaiting = async () => {
+  // ・useCallbackでラップし、無関係な状態変化での再生成を防ぐ
+  const handleSubmitWaiting = useCallback(async () => {
     try {
       const { waitingPartySum, estimatedWaitingCount, maxWaitingCount } = await getWaitingStatus(storeId);
       const currentWaitingCount = waitingPartySum + Number(partySize);
@@ -336,9 +340,10 @@ export function WaitingScreenProvider({ children }) {
       console.error("待機状況確認エラー:", error);
       alert("通信エラーが発生しました。もう一度お試しください。");
     }
-  };
+  }, [storeId, partySize, selectedNationality, contact, notes, selectedMenus, _performSubmit]);
 
-  const handleCancel = async () => {
+  // ・useCallbackでラップし、無関係な状態変化での再生成を防ぐ
+  const handleCancel = useCallback(async () => {
     try {
       // 1. キャンセル前に最新ステータスを確認
       // catchブロックでエラーハンドリングするため、ここで try-catch は不要(外側のcatchに任せる)
@@ -400,9 +405,9 @@ export function WaitingScreenProvider({ children }) {
       const errorMessage = extractErrorMessage(err.response?.data, err, 'キャンセルに失敗しました。');
       alert("キャンセルエラー: " + errorMessage);
     }
-  };
+  }, [storeId, waitingId, t]);
 
-  const closePopupAndProceed = async () => {
+  const closePopupAndProceed = useCallback(async () => {
     setPopupVisible(false);
     if (popupInfo.mode === "congestion" && pendingPayload) {
       await _performSubmit(pendingPayload);
@@ -414,12 +419,12 @@ export function WaitingScreenProvider({ children }) {
       // 何もしない（閉じるだけ）
     }
     setPendingPayload(null);
-  };
+  }, [popupInfo, pendingPayload, _performSubmit]);
 
-  const closePopupOnly = () => {
+  const closePopupOnly = useCallback(() => {
     setPopupVisible(false);
     setPendingPayload(null);
-  };
+  }, []);
 
   // 通信状態の監視
   useEffect(() => {
@@ -436,7 +441,7 @@ export function WaitingScreenProvider({ children }) {
   }, []);
 
   // アプリケーション初期化（ログアウト/リセット）
-  const resetApp = () => {
+  const resetApp = useCallback(() => {
     localStorage.removeItem("waiting_id");
     localStorage.removeItem("store_id");
     localStorage.removeItem("v_token");
@@ -448,10 +453,33 @@ export function WaitingScreenProvider({ children }) {
     setNotes('');
     setPopupVisible(false);
     setPopupInfo({ message: '', mode: '' });
-  };
+  }, []);
+
+  const setCancellationReasonAndCancel = useCallback((reason) => {
+    setIsCancelled(true);
+    setCancellationReason(reason);
+  }, []);
+
+  const goToNextStep = useCallback(() => setStep(prev => prev + 1), []);
+  const goToPrevStep = useCallback(() => setStep(prev => prev - 1), []);
+  const toggleMap = useCallback(() => setIsMapOpen(prev => !prev), []);
+
+  const goBackToInputStep = useCallback((inputInfo) => {
+    if (inputInfo) {
+      setPartySize(inputInfo.partySize ?? "");
+      setContact(inputInfo.contact ?? "");
+      setNotes(inputInfo.notes ?? "");
+      setSelectedNationality(inputInfo.selectedNationality ?? "");
+      setSelectedLanguageCode(inputInfo.selectedLanguageCode ?? "");
+    }
+    setStep(1);
+  }, []);
 
   // Providerかchildに伝達する値
-  const value = {
+  // ・useMemoでラップし、無関係な状態変化(入力文字など)での全Consumer再レンダーを防ぐ
+  //   (setXxxはuseStateのsetterで参照が不変なため依存配列に含める必要はないが、
+  //    exhaustive-depsの意図を明確にするため関数値のみを依存配列に列挙する)
+  const value = useMemo(() => ({
     // ステータス値
     step,
     isCancelled,
@@ -482,36 +510,31 @@ export function WaitingScreenProvider({ children }) {
     setContact,
     setNotes,
     setStep,
-    setCancellationReason: (reason) => {
-      setIsCancelled(true);
-      setCancellationReason(reason);
-    },
+    setCancellationReason: setCancellationReasonAndCancel,
     cancellationReason,
     requireOneMenuPerPerson, // expose new setting
 
     // Action/Page転換関数
-    goToNextStep: () => setStep(prev => prev + 1),
-    goToPrevStep: () => setStep(prev => prev - 1),
+    goToNextStep,
+    goToPrevStep,
     handleSubmitWaiting,
     closePopupAndProceed,
     closePopupOnly,
     isChatOpen,
     toggleChat,
     isMapOpen, // Added
-    toggleMap: () => setIsMapOpen(prev => !prev), // Added
+    toggleMap, // Added
     currentPage, // Added currentPage
-    goBackToInputStep: (inputInfo) => {
-      if (inputInfo) {
-        setPartySize(inputInfo.partySize ?? "");
-        setContact(inputInfo.contact ?? "");
-        setNotes(inputInfo.notes ?? "");
-        setSelectedNationality(inputInfo.selectedNationality ?? "");
-        setSelectedLanguageCode(inputInfo.selectedLanguageCode ?? "");
-      }
-      setStep(1);
-    },
+    goBackToInputStep,
     resetApp, // Expose resetApp
-  };
+  }), [
+    step, isCancelled, handleCancel, storeId, selectedNationality, selectedLanguageCode,
+    partySize, contact, notes, waitingId, isPopupVisible, popupInfo, t, isOffline,
+    enableMenuSelection, selectedMenus, cancellationReason, requireOneMenuPerPerson,
+    setCancellationReasonAndCancel, goToNextStep, goToPrevStep, handleSubmitWaiting,
+    closePopupAndProceed, closePopupOnly, isChatOpen, toggleChat, isMapOpen, toggleMap,
+    currentPage, goBackToInputStep, resetApp,
+  ]);
 
   return (
     <WaitingScreenContext.Provider value={value}>
