@@ -322,8 +322,8 @@ html {
 
 /* --- Right Bottom: Info & QR --- */
 .info-section {
-    flex: 0.8;
-    /* Slightly shorter than list */
+    flex: 0.55;
+    /* リストより短めに。上下の余白が広すぎたため縮小 */
     background: #1a1a1a;
     /* Dark theme for contrast */
     color: white;

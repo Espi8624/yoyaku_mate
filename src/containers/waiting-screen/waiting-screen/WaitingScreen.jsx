@@ -460,7 +460,10 @@ function WaitingScreen() {
             </div>
           )}
 
-          <MenuDisplay menuList={menuList} texts={waitingScreenTexts} selectedLanguageCode={selectedLanguageCode} />
+          {/* メニュー表示設定がONで、かつメニューが1件以上登録されている場合のみ表示 */}
+          {context.showMenu && menuList.length > 0 && (
+            <MenuDisplay menuList={menuList} texts={waitingScreenTexts} selectedLanguageCode={selectedLanguageCode} />
+          )}
 
           <button className={`${styles["confirmation-btn"]} ${styles["cancel-btn"]}`} onClick={() => setShowCancelPopup(true)}>
             {waitingScreenTexts.cancel_reservation}

@@ -219,6 +219,8 @@ export function WaitingScreenProvider({ children }) {
   const [enableMenuSelection, setEnableMenuSelection] = useState(false);
   const [requireOneMenuPerPerson, setRequireOneMenuPerPerson] = useState(false);
   const [selectedMenus, setSelectedMenus] = useState([]); // Array of { menuId, name, quantity, price }
+  // 待機画面(QRページ)でのメニュー閲覧表示可否。未取得時はデフォルトtrue(表示)
+  const [showMenu, setShowMenu] = useState(true);
 
   // 店舗設定（メニュー選択機能有効化など）を取得
   useEffect(() => {
@@ -226,6 +228,7 @@ export function WaitingScreenProvider({ children }) {
       getWaitingStatus(storeId).then(status => {
         setEnableMenuSelection(status.enableMenuSelection);
         setRequireOneMenuPerPerson(status.requireOneMenuPerPerson);
+        setShowMenu(status.showMenu);
       }).catch(err => {
         console.error("店舗設定取得エラー:", err);
       });
@@ -502,6 +505,7 @@ export function WaitingScreenProvider({ children }) {
     enableMenuSelection,
     selectedMenus,
     setSelectedMenus,
+    showMenu, // 待機画面でのメニュー閲覧表示可否
 
     // ステータス変更関数
     setSelectedNationality,
@@ -530,7 +534,7 @@ export function WaitingScreenProvider({ children }) {
   }), [
     step, isCancelled, handleCancel, storeId, selectedNationality, selectedLanguageCode,
     partySize, contact, notes, waitingId, isPopupVisible, popupInfo, t, isOffline,
-    enableMenuSelection, selectedMenus, cancellationReason, requireOneMenuPerPerson,
+    enableMenuSelection, selectedMenus, cancellationReason, requireOneMenuPerPerson, showMenu,
     setCancellationReasonAndCancel, goToNextStep, goToPrevStep, handleSubmitWaiting,
     closePopupAndProceed, closePopupOnly, isChatOpen, toggleChat, isMapOpen, toggleMap,
     currentPage, goBackToInputStep, resetApp,

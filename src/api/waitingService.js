@@ -65,6 +65,7 @@ export const getWaitingStatus = async (storeId) => {
       maxWaitingCount: waitingPolicy?.max_waiting_count ?? null,
       enableMenuSelection: waitingPolicy?.enable_menu_selection ?? false,
       requireOneMenuPerPerson: waitingPolicy?.require_one_menu_per_person ?? false,
+      showMenu: waitingPolicy?.show_menu ?? true,
     };
   } catch (error) {
     console.error("待機状況の取得に失敗しました:", error);
