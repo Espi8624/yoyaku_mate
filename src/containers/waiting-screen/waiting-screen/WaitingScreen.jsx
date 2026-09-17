@@ -9,7 +9,6 @@ import { debugLog } from "../../../utils/debugLog";
 import { MAP_CHATBOT_ENABLED } from "../../../constants/featureFlags";
 import ChatbotButton from "../../chat-bot/ChatbotButton";
 import MapButton from '../map/MapButton';
-import useWaitingStatus from "./useWaitingStatus";
 import styles from "./WaitingScreen.module.css";
 
 /**
@@ -27,26 +26,16 @@ const NOTIFICATION_STATE = {
 function WaitingScreen() {
   const context = useWaitingScreen();
 
-  // ローカルストレージからstoreId, waitingIdを復元し、復元完了を通知するフラグ
-  const [restored, setRestored] = useState(false);
-
-  useEffect(() => {
-    if (!context.storeId || !context.waitingId) {
-      const storedStoreId = localStorage.getItem("store_id");
-      const storedWaitingId = localStorage.getItem("waiting_id");
-      if (storedStoreId && storedWaitingId) {
-        context.setStoreId && context.setStoreId(storedStoreId);
-        context.setWaitingId && context.setWaitingId(storedWaitingId);
-      }
-    }
-    setRestored(true);
-  }, [context]);
-
   const {
     storeId,
-    waitingId,
     selectedLanguageCode,
     handleCancel,
+    // ★ 待機ステータスの購読は WaitingScreenProvider が一括で行う。
+    //   この画面は結果を受け取って描画するだけ (以前はここでも別途取得していた)
+    waitingDetails,
+    menuList,
+    waitingStatus: status,
+    waitingError: error,
   } = context;
 
   const t = useTranslation(selectedLanguageCode);
@@ -55,21 +44,11 @@ function WaitingScreen() {
   // 店舗情報 (初回のみ取得)
   const [storeInfo, setStoreInfo] = useState(null);
   useEffect(() => {
-    if (!storeId || !restored) return;
+    if (!storeId) return;
     getStoreInfo(storeId)
       .then(info => setStoreInfo(info || null))
       .catch(err => console.error("店舗情報の取得に失敗:", err));
-  }, [storeId, restored]);
-
-  // -------------------------------------------------------
-  // ★ カスタムフックでポーリング (責務分離)
-  // restored=true になってからポーリングを開始する
-  // -------------------------------------------------------
-  const { details: waitingDetails, menuList, status, error } = useWaitingStatus(
-    storeId,
-    waitingId,
-    restored  // 復元完了後にポーリング開始
-  );
+  }, [storeId]);
 
   // -------------------------------------------------------
   // ★ 通知状態管理 (enum パターン)

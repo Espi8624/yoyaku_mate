@@ -4,6 +4,7 @@ import nationalitiesData from '../../data/nationalities.json';
 import useTranslation from '../../hook/useTranslation';
 import { getWaitingStatus, getStoreSettings, submitWaiting as apiSubmitWaiting, cancelWaiting, getQRToken, getWaitingDetails } from '../../api/waitingService';
 import { debugLog } from '../../utils/debugLog';
+import useWaitingStatus from './useWaitingStatus';
 import styles from "./NetworkErrorPopup.module.css";  // CSSファイル名を変更
 
 // NetworkErrorPopupをインラインコンポーネントとして定義
@@ -187,7 +188,10 @@ export function WaitingScreenProvider({ children }) {
 
   // ステータス管理
   const [step, setStep] = useState(initialStep);
-  const [storeId, setStoreId] = useState(initialParams.storeId);
+  // 保存済みIDからの復元はここ(同期)で完結させる。
+  // ・以前は FlowController がマウント後に非同期で復元していたため、
+  //   「復元待ちフラグ」や重複したステータス取得が必要になっていた
+  const [storeId, setStoreId] = useState(initialParams.storeId || localStorage.getItem("store_id") || "");
   const [selectedNationality, setSelectedNationality] = useState(initialParams.nationality);
   const [selectedLanguageCode, setSelectedLanguageCode] = useState(initialParams.languageCode);
   const [partySize, setPartySize] = useState("");
@@ -197,6 +201,28 @@ export function WaitingScreenProvider({ children }) {
   const [vToken, setVToken] = useState(initialParams.vToken || "");
   const [isCancelled, setIsCancelled] = useState(false);
   const [cancellationReason, setCancellationReason] = useState(null); // 'user', 'store', 'absence'
+
+  // ★ サーバー上の待機ステータス監視 (初回取得 + SSE購読)
+  // ・Provider側で1回だけ購読し、結果をContextで配る。
+  //   以前は WaitingScreen と FlowController がそれぞれ getWaitingDetails を叩いており、
+  //   画面に入るたびに同じデータを2回取得していた
+  // ・IDが揃っていない間(登録前)は購読しない
+  const {
+    details: waitingDetails,
+    menuList,
+    status: waitingStatus,
+    error: waitingError,
+  } = useWaitingStatus(storeId, waitingId, Boolean(storeId && waitingId));
+
+  // サーバー上で待機が終了(取消/不在)した場合、復元用の保存データだけを破棄する
+  // ・画面は取消完了画面を出したままにしたいので、stateやURLはここでは触らない
+  //   (次回アクセス時に古い待機番号で復元されるのを防ぐのが目的)
+  useEffect(() => {
+    if (waitingStatus === 'cancelled' || waitingStatus === 'no_show') {
+      localStorage.removeItem("waiting_id");
+      localStorage.removeItem("store_id");
+    }
+  }, [waitingStatus]);
 
   // ポップアップステータス管理
   const [isPopupVisible, setPopupVisible] = useState(false);
@@ -246,7 +272,8 @@ export function WaitingScreenProvider({ children }) {
   // URLパラメータが変更される時、ステータスを更新
   useEffect(() => {
     // 値が実際に変わった時のみsetStateを呼び出す → 不要な再レンダリング及びメニュー重複fetchを防止
-    if (initialParams.storeId !== storeId) {
+    // ・URLにstore_idが無い場合は上書きしない (localStorageから復元した値を消さないため)
+    if (initialParams.storeId && initialParams.storeId !== storeId) {
       setStoreId(initialParams.storeId);
     }
     if (initialParams.vToken) {
@@ -494,8 +521,6 @@ export function WaitingScreenProvider({ children }) {
     setCancellationReason(reason);
   }, []);
 
-  const goToNextStep = useCallback(() => setStep(prev => prev + 1), []);
-  const goToPrevStep = useCallback(() => setStep(prev => prev - 1), []);
   const toggleMap = useCallback(() => setIsMapOpen(prev => !prev), []);
 
   const goBackToInputStep = useCallback((inputInfo) => {
@@ -532,6 +557,12 @@ export function WaitingScreenProvider({ children }) {
     t, // 多国語データ
     isOffline, // コンテキストに追加
 
+    // サーバー上の待機ステータス (useWaitingStatus の結果をそのまま配る)
+    waitingDetails,
+    menuList,
+    waitingStatus,
+    waitingError,
+
     // メニュー選択関連
     enableMenuSelection,
     selectedMenus,
@@ -550,8 +581,6 @@ export function WaitingScreenProvider({ children }) {
     requireOneMenuPerPerson, // expose new setting
 
     // Action/Page転換関数
-    goToNextStep,
-    goToPrevStep,
     handleSubmitWaiting,
     closePopupAndProceed,
     closePopupOnly,
@@ -565,8 +594,9 @@ export function WaitingScreenProvider({ children }) {
   }), [
     step, isCancelled, handleCancel, storeId, selectedNationality, selectedLanguageCode,
     partySize, contact, notes, waitingId, isPopupVisible, popupInfo, t, isOffline,
+    waitingDetails, menuList, waitingStatus, waitingError,
     enableMenuSelection, selectedMenus, cancellationReason, requireOneMenuPerPerson, showMenu,
-    setCancellationReasonAndCancel, goToNextStep, goToPrevStep, handleSubmitWaiting,
+    setCancellationReasonAndCancel, handleSubmitWaiting,
     closePopupAndProceed, closePopupOnly, isChatOpen, toggleChat, isMapOpen, toggleMap,
     currentPage, goBackToInputStep, resetApp,
   ]);
