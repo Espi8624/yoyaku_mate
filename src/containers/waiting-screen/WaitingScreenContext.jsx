@@ -1,5 +1,5 @@
 import React, { createContext, useState, useContext, useMemo, useCallback, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import nationalitiesData from '../../data/nationalities.json';
 import useTranslation from '../../hook/useTranslation';
 import { getWaitingStatus, getStoreSettings, submitWaiting as apiSubmitWaiting, cancelWaiting, getQRToken, getWaitingDetails } from '../../api/waitingService';
@@ -77,6 +77,7 @@ export function useWaitingScreen() {
 
 export function WaitingScreenProvider({ children }) {
   const location = useLocation();
+  const navigate = useNavigate();
 
   // --- Helper Functions ---
   const getNationalityFromLanguage = (language) => {
@@ -349,6 +350,47 @@ export function WaitingScreenProvider({ children }) {
     }
   }, [storeId, partySize, selectedNationality, contact, notes, selectedMenus, _performSubmit]);
 
+  /**
+   * 現在の待機(identity)を破棄し、新規登録できる白紙状態に戻す
+   *
+   * 待機の身元は「URLのwaiting_id」「localStorage」「Reactのstate」の3箇所に
+   * 同時に存在する。どれか1つでも消し忘れると復活してしまうため、
+   * 消す処理は必ずこの関数1箇所に集約する
+   * ・特にURLは見落としやすい: 点主アプリのQRは waiting_id 付きで発行されるため、
+   *   localStorageだけ消しても、リロードすると initialStep がURLを見て
+   *   step3(待機番号画面)と誤判定し、初期化がなかったことになる
+   * ・取消フラグ(isCancelled/cancellationReason)もここでクリアする。
+   *   取消完了画面は step より優先で表示されるため、残っていると step1 に戻せない
+   */
+  const clearWaitingIdentity = useCallback(() => {
+    // 1. 永続化領域
+    localStorage.removeItem("waiting_id");
+    localStorage.removeItem("store_id");
+    localStorage.removeItem("v_token");
+
+    // 2. URL (store_id や v_token は再登録に必要なので waiting_id だけを取り除く)
+    const params = new URLSearchParams(location.search);
+    if (params.has("waiting_id")) {
+      params.delete("waiting_id");
+      const nextSearch = params.toString();
+      navigate(
+        { pathname: location.pathname, search: nextSearch ? `?${nextSearch}` : "" },
+        { replace: true }
+      );
+    }
+
+    // 3. 画面状態
+    setWaitingId("");
+    setIsCancelled(false);
+    setCancellationReason(null);
+    setSelectedMenus([]);
+    setPartySize("");
+    setContact("");
+    setNotes("");
+    setPopupVisible(false);
+    setPopupInfo({ message: "", mode: "" });
+  }, [location.pathname, location.search, navigate]);
+
   // ・useCallbackでラップし、無関係な状態変化での再生成を防ぐ
   const handleCancel = useCallback(async () => {
     try {
@@ -390,20 +432,13 @@ export function WaitingScreenProvider({ children }) {
       const res = await cancelWaiting(storeId, waitingId);
       // axiosは成功時に例外をスローしないので、status codeで判定
       if (res.status >= 200 && res.status < 300) {
-        // 成功時、isCancelled状態をtrueに変更
+        // 待機の身元を破棄して白紙状態に戻す
+        clearWaitingIdentity();
+        setStep(1);
+        setSelectedNationality('その他');
+        // ★ clearWaitingIdentity が取消フラグもクリアするため、必ずその後に立てる
         setIsCancelled(true);
         setCancellationReason('user');
-        // ローカルストレージからwaiting_idとstore_idを削除
-        localStorage.removeItem("waiting_id");
-        localStorage.removeItem("store_id");
-        // 初期状態に戻す
-        setStep(1);
-        setPartySize('');
-        setSelectedNationality('その他');
-        setContact('');
-        setNotes('');
-        setWaitingId(null);
-        setPopupInfo({ message: '', mode: '' });
       } else {
         throw new Error(res.data?.message || 'サーバーエラーが発生しました。');
       }
@@ -412,7 +447,7 @@ export function WaitingScreenProvider({ children }) {
       const errorMessage = extractErrorMessage(err.response?.data, err, 'キャンセルに失敗しました。');
       alert("キャンセルエラー: " + errorMessage);
     }
-  }, [storeId, waitingId, t]);
+  }, [storeId, waitingId, t, clearWaitingIdentity]);
 
   const closePopupAndProceed = useCallback(async () => {
     setPopupVisible(false);
@@ -447,20 +482,12 @@ export function WaitingScreenProvider({ children }) {
     };
   }, []);
 
-  // アプリケーション初期化（ログアウト/リセット）
+  // アプリケーション初期化（入店完了後などに新規登録できる状態へ戻す）
   const resetApp = useCallback(() => {
-    localStorage.removeItem("waiting_id");
-    localStorage.removeItem("store_id");
-    localStorage.removeItem("v_token");
-    setWaitingId(null);
+    clearWaitingIdentity();
     setStep(1);
-    setPartySize('');
     setSelectedNationality('その他');
-    setContact('');
-    setNotes('');
-    setPopupVisible(false);
-    setPopupInfo({ message: '', mode: '' });
-  }, []);
+  }, [clearWaitingIdentity]);
 
   const setCancellationReasonAndCancel = useCallback((reason) => {
     setIsCancelled(true);
