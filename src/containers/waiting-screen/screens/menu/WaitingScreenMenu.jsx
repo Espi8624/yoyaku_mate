@@ -1,14 +1,12 @@
 import React, { useEffect, useState, useRef, useCallback } from "react";
-import { useWaitingScreen } from "../WaitingScreenContext";
-import useTranslation from "../../../hook/useTranslation";
-import { getTranslatedText } from "../../../utils/i18nHelper";
-import { getMenuList } from "../../../api/waitingService";
-import CommonPopup from "../../../components/CommonPopup";
-import BackButton from "../../../components/BackButton";
-import ChatbotButton from "../../chat-bot/ChatbotButton";
-import baseStyles from "../waiting-screen/WaitingScreen.module.css";
-import specificStyles from "./WaitingScreenMenu.module.css";
-const styles = { ...baseStyles, ...specificStyles };
+import { useWaitingScreen } from "../../WaitingScreenContext";
+import useTranslation from "../../../../hook/useTranslation";
+import { getTranslatedText } from "../../../../utils/i18nHelper";
+import { getMenuList } from "../../../../api/waitingService";
+import CommonPopup from "../../../../components/CommonPopup";
+import BackButton from "../../../../components/BackButton";
+import ChatbotButton from "../../../chat-bot/ChatbotButton";
+import styles from "./WaitingScreenMenu.module.css";
 
 function WaitingScreenMenu() {
     const {

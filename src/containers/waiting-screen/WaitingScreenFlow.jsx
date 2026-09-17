@@ -1,12 +1,12 @@
 import React from "react";
 
 import { WaitingScreenProvider, useWaitingScreen } from "./WaitingScreenContext";
-import WaitingScreenInput from "./waiting-screen-input/WaitingScreenInput";
-import WaitingScreenMenu from "./waiting-screen-menu/WaitingScreenMenu";
-import WaitingScreenPreview from "./waiting-screen-preview/WaitingScreenPreview";
+import WaitingScreenInput from "./screens/input/WaitingScreenInput";
+import WaitingScreenMenu from "./screens/menu/WaitingScreenMenu";
+import WaitingScreenPreview from "./screens/preview/WaitingScreenPreview";
 // WaitingScreenFlow renders WaitingScreen, which renders content.
-import WaitingScreen from "./waiting-screen/WaitingScreen";
-import CancelledScreen from "./waiting-screen-cancelled/CancelledScreen";
+import WaitingScreen from "./screens/waiting/WaitingScreen";
+import CancelledScreen from "./screens/cancelled/CancelledScreen";
 import MapWindow from './map/MapWindow';
 // Chatbot components
 import ChatWindow from "../chat-bot/ChatWindow";

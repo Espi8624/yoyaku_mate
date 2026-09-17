@@ -124,23 +124,10 @@
     margin-top: 2px;
 }
 
-.menu-item-info {
-    display: none;
-    /* No longer used */
-}
-
 .menu-item-price {
     font-size: 15px;
     font-weight: bold;
     color: #333;
-}
-
-.menu-item-quantity-control {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-left: 12px;
-    /* Ensure space from text */
 }
 
 .quantity-btn {
@@ -181,13 +168,6 @@
     font-weight: 500;
     min-width: 24px;
     text-align: center;
-}
-
-.menu-actions {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    margin-top: 24px;
 }
 
 .menu-loading,

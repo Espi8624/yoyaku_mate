@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useWaitingScreen } from '../WaitingScreenContext';
-import WaitingPlaceMap from '../waiting-screen/WaitingPlaceMap';
+import WaitingPlaceMap from './WaitingPlaceMap';
 import { getStoreInfo } from '../../../api/waitingService';
 import useTranslation from '../../../hook/useTranslation';
 import { MAP_CHATBOT_ENABLED } from '../../../constants/featureFlags';

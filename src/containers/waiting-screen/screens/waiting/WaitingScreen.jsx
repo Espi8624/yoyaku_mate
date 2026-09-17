@@ -1,14 +1,14 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
-import { useWaitingScreen } from "../WaitingScreenContext";
-import useTranslation from "../../../hook/useTranslation";
-import { getStoreInfo } from "../../../api/waitingService";
+import { useWaitingScreen } from "../../WaitingScreenContext";
+import useTranslation from "../../../../hook/useTranslation";
+import { getStoreInfo } from "../../../../api/waitingService";
 import MenuDisplay from "./MenuDisplay";
-import CongestionPopup from "../waiting-screen-preview/CongestionPopup";
-import { getTranslatedText } from "../../../utils/i18nHelper";
-import { debugLog } from "../../../utils/debugLog";
-import { MAP_CHATBOT_ENABLED } from "../../../constants/featureFlags";
-import ChatbotButton from "../../chat-bot/ChatbotButton";
-import MapButton from '../map/MapButton';
+import CongestionPopup from "../../components/CongestionPopup";
+import { getTranslatedText } from "../../../../utils/i18nHelper";
+import { debugLog } from "../../../../utils/debugLog";
+import { MAP_CHATBOT_ENABLED } from "../../../../constants/featureFlags";
+import ChatbotButton from "../../../chat-bot/ChatbotButton";
+import MapButton from '../../map/MapButton';
 import styles from "./WaitingScreen.module.css";
 
 /**

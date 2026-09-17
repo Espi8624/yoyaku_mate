@@ -5,7 +5,7 @@ import useTranslation from '../../hook/useTranslation';
 import { getWaitingStatus, getStoreSettings, submitWaiting as apiSubmitWaiting, cancelWaiting, getQRToken, getWaitingDetails } from '../../api/waitingService';
 import { debugLog } from '../../utils/debugLog';
 import useWaitingStatus from './useWaitingStatus';
-import styles from "./NetworkErrorPopup.module.css";  // CSSファイル名を変更
+import styles from "./components/NetworkErrorPopup.module.css";
 
 // NetworkErrorPopupをインラインコンポーネントとして定義
 const NetworkErrorPopup = ({ isOffline }) => {

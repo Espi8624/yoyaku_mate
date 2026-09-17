@@ -1,14 +1,11 @@
 import React from "react";
 
-import { useWaitingScreen } from "../WaitingScreenContext";
+import { useWaitingScreen } from "../../WaitingScreenContext";
 import FormField from "./FormField";
-import baseStyles from "../waiting-screen/WaitingScreen.module.css";
-import specificStyles from "./WaitingScreenInput.module.css";
-import ChatbotButton from "../../chat-bot/ChatbotButton";
-import { MAP_CHATBOT_ENABLED } from "../../../constants/featureFlags";
-import useTranslation from "../../../hook/useTranslation";
-
-const styles = { ...baseStyles, ...specificStyles };
+import styles from "./WaitingScreenInput.module.css";
+import ChatbotButton from "../../../chat-bot/ChatbotButton";
+import { MAP_CHATBOT_ENABLED } from "../../../../constants/featureFlags";
+import useTranslation from "../../../../hook/useTranslation";
 
 function WaitingScreenInput() {
   // Contextから必要なものを持ってくる

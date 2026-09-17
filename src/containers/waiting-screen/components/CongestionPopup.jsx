@@ -1,8 +1,15 @@
 import React from "react";
 import { useWaitingScreen } from "../WaitingScreenContext";
 import CommonPopup from "../../../components/CommonPopup";
-import styles from "./WaitingScreenPreview.module.css";
 
+/**
+ * 待機登録まわりの共通ポップアップ (混雑/最大人数超過/登録完了/入店完了)。
+ *
+ * ・確認画面(step2)と待機画面(step3)の両方から使う共通部品のため、
+ *   特定の画面のCSSモジュールには依存させず、グローバルの .btn-primary を使う。
+ *   以前は preview 側のモジュールから .confirmation-btn を借りていたため、
+ *   同名クラスが画面ごとに別定義となり、呼び出し元によってボタンの見た目が変わっていた
+ */
 function CongestionPopup() {
   // Contextから必要なものを持ってくる
   const {
@@ -18,7 +25,7 @@ function CongestionPopup() {
 
   let actions = (
     <button
-      className={styles["confirmation-btn"]}
+      className="btn-primary"
       onClick={closePopupAndProceed}
     >
       {/* 「最大人員超過」時、戻るボタン、その外確認ボタンを表示 */}
@@ -30,7 +37,7 @@ function CongestionPopup() {
   if (popupInfo.mode === "registration_complete") {
     actions = (
       <button
-        className={styles["confirmation-btn"]}
+        className="btn-primary"
         onClick={closePopupAndProceed}
         style={{ width: '100%', margin: 0 }}
       >
@@ -45,7 +52,7 @@ function CongestionPopup() {
       <>
         {/* 1. 閉じるボタン (メインアクション: 画面維持) */}
         <button
-          className={styles["confirmation-btn"]}
+          className="btn-primary"
           onClick={closePopupOnly}
           style={{ width: '100%', margin: 0 }}
         >
@@ -62,7 +69,7 @@ function CongestionPopup() {
           </span>
 
           <button
-            className={styles["confirmation-btn"]}
+            className="btn-primary"
             onClick={resetApp}
             style={{ width: '100%', backgroundColor: '#dc3545', margin: 0, border: 'none', fontSize: '1em' }}
           >

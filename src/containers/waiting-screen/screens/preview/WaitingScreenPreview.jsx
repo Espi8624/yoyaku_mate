@@ -1,10 +1,10 @@
 import React from "react";
-import { useWaitingScreen } from "../WaitingScreenContext";
-import useTranslation from "../../../hook/useTranslation";
-import CongestionPopup from "./CongestionPopup";
-import BackButton from "../../../components/BackButton";
-import { getTranslatedText } from "../../../utils/i18nHelper";
-import ChatbotButton from "../../chat-bot/ChatbotButton";
+import { useWaitingScreen } from "../../WaitingScreenContext";
+import useTranslation from "../../../../hook/useTranslation";
+import CongestionPopup from "../../components/CongestionPopup";
+import BackButton from "../../../../components/BackButton";
+import { getTranslatedText } from "../../../../utils/i18nHelper";
+import ChatbotButton from "../../../chat-bot/ChatbotButton";
 import styles from "./WaitingScreenPreview.module.css";
 
 function WaitingScreenPreview() {

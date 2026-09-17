@@ -1,8 +1,8 @@
 import React from "react";
-import ChatbotButton from "../../chat-bot/ChatbotButton";
-import { MAP_CHATBOT_ENABLED } from "../../../constants/featureFlags";
-import { useWaitingScreen } from "../WaitingScreenContext";
-import useTranslation from "../../../hook/useTranslation";
+import ChatbotButton from "../../../chat-bot/ChatbotButton";
+import { MAP_CHATBOT_ENABLED } from "../../../../constants/featureFlags";
+import { useWaitingScreen } from "../../WaitingScreenContext";
+import useTranslation from "../../../../hook/useTranslation";
 
 const CancelledScreen = ({ reason }) => {
     const { selectedLanguageCode } = useWaitingScreen();

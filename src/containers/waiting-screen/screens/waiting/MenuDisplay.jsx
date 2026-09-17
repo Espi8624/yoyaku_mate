@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from "react";
 import styles from "./MenuDisplay.module.css";
 
-import { getTranslatedText } from "../../../utils/i18nHelper";
+import { getTranslatedText } from "../../../../utils/i18nHelper";
 
 function MenuDisplay({ menuList, texts, selectedLanguageCode }) {
   // メニュー全体の表示/非表示を管理
