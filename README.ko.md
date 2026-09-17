@@ -41,7 +41,11 @@ npm start
 |---|---|---|---|
 | `npm start` | `.env.development` | `localhost:8080` | 로컬 개발 |
 | `npm run start:dev` / `npm run build:dev` | `.env.dev` | `rusui-dev.fly.dev` | 공유 개발 서버. 실기기(스마트폰 등)에서 QR코드로 접근할 때 `localhost`는 그 기기 자신을 가리켜 통신 에러가 나므로 이 티어를 사용 |
-| `npm run deploy:dev` | 〃 | 〃 | `build:dev` 후 Cloudflare Workers(`yoyaku-mate-dev`)에 배포 |
+| `npm run deploy:dev` | 〃 | 〃 | `build:dev` 후 Cloudflare Workers(`yoyaku-mate-dev`)에 수동 배포 |
+
+`develop`에 push하면 Cloudflare Workers Builds(Git 연동)로 **자동 배포**된다.
+이 설정은 Cloudflare 대시보드 쪽에 있어 저장소 안의 파일에는 나타나지 않는다.
+`npm run deploy:dev`는 자동 배포를 기다리지 않고 즉시 반영하고 싶을 때 쓰는 수동 경로.
 | `npm run build` / `npm run build:prod` | `.env.production` | `rusui-prod.fly.dev` | 프로덕션 빌드 (둘은 동일. `react-scripts build`는 항상 production 모드로 동작하기 때문) |
 
 `yoyaku_mate_provider` 쪽은 `--dart-define=APP_ENV=dev`로 실행하면 이 dev 티어에 연결된다.

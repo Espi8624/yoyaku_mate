@@ -41,7 +41,11 @@ npm start
 |---|---|---|---|
 | `npm start` | `.env.development` | `localhost:8080` | ローカル開発 |
 | `npm run start:dev` / `npm run build:dev` | `.env.dev` | `rusui-dev.fly.dev` | 共有の開発用サーバー。実機(スマートフォン等)からQRコード経由でアクセスする場合、`localhost`は端末自身を指してしまい通信エラーになるため、このティアを使う |
-| `npm run deploy:dev` | 〃 | 〃 | `build:dev` 後、Cloudflare Workers (`yoyaku-mate-dev`) へデプロイ |
+| `npm run deploy:dev` | 〃 | 〃 | `build:dev` 後、Cloudflare Workers (`yoyaku-mate-dev`) へ手動デプロイ |
+
+`develop` への push 時は Cloudflare Workers Builds (Git連携) により**自動デプロイ**される。
+この設定は Cloudflare のダッシュボード側にあり、リポジトリ内のファイルには現れない。
+`npm run deploy:dev` は自動デプロイを待たず即座に反映したい場合の手動経路。
 | `npm run build` / `npm run build:prod` | `.env.production` | `rusui-prod.fly.dev` | 本番ビルド (両者は同一。`react-scripts build` は常にproductionモードで動くため) |
 
 `yoyaku_mate_provider` 側は `--dart-define=APP_ENV=dev` で起動すると、このdevティアに接続する。
