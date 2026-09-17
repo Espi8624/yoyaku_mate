@@ -6,43 +6,11 @@ import { debugLog } from '../utils/debugLog';
 // 環境ごとにREACT_APP_API_URLで実際のバックエンドURLを直接指定する
 const API_BASE_URL = process.env.REACT_APP_API_URL || "http://localhost:8080/api";
 
-// - getWaitingStatus/getWaitingDetails/getWaitingList はいずれも同一の
-//   /waiting-list, /store_settings を叩いており、画面遷移時(復元判定→実画面マウント等)に
-//   数百ms以内で立て続けに呼ばれ重複リクエストになっていた。
-//   進行中/直近のPromiseを短時間キャッシュして合流させ、無駄なAPI呼び出しを減らす
-const SHORT_CACHE_TTL_MS = 3000;
-const waitingListRequestCache = new Map(); // storeId -> { promise, expiresAt }
-const storeSettingsRequestCache = new Map();
+const fetchWaitingList = (storeId) =>
+  axios.get(`${API_BASE_URL}/waiting-list`, { params: { store_id: storeId || '' } });
 
-function cachedRequest(cache, key, fetcher) {
-  const cached = cache.get(key);
-  if (cached && cached.expiresAt > Date.now()) {
-    return cached.promise;
-  }
-  const promise = fetcher();
-  cache.set(key, { promise, expiresAt: Date.now() + SHORT_CACHE_TTL_MS });
-  // 失敗時は即座に破棄し、次回呼び出しでリトライできるようにする(TTL分待たせない)
-  promise.catch(() => cache.delete(key));
-  return promise;
-}
-
-const fetchWaitingListCached = (storeId) =>
-  cachedRequest(waitingListRequestCache, storeId || '', () =>
-    axios.get(`${API_BASE_URL}/waiting-list`, { params: { store_id: storeId || '' } })
-  );
-
-// 待機リストを変更するAPI(登録/キャンセル)の直後に、この店舗のキャッシュを捨てる。
-// - 登録直前に getWaitingStatus がリストをキャッシュするため、無効化しないと
-//   登録直後の getWaitingDetails が「自分がまだ載っていない古いリスト」を掴み、
-//   該当データなし=404扱い → キャンセル画面に飛ばされる
-const invalidateWaitingListCache = (storeId) => {
-  waitingListRequestCache.delete(storeId || '');
-};
-
-const fetchStoreSettingsCached = (storeId) =>
-  cachedRequest(storeSettingsRequestCache, storeId || '', () =>
-    axios.get(`${API_BASE_URL}/store_settings`, { params: { store_id: storeId || '' } })
-  );
+const fetchStoreSettings = (storeId) =>
+  axios.get(`${API_BASE_URL}/store_settings`, { params: { store_id: storeId || '' } });
 
 /**
  * 現在待機状況と、店舗の待機制作を呼び出す
@@ -56,8 +24,8 @@ const fetchStoreSettingsCached = (storeId) =>
 export const getWaitingStatus = async (storeId) => {
   try {
     const [waitingRes, settingsRes] = await Promise.all([
-      fetchWaitingListCached(storeId),
-      fetchStoreSettingsCached(storeId),
+      fetchWaitingList(storeId),
+      fetchStoreSettings(storeId),
     ]);
 
     const waitingList = Array.isArray(waitingRes.data.data) ? waitingRes.data.data : [];
@@ -67,13 +35,12 @@ export const getWaitingStatus = async (storeId) => {
 
     const waitingPolicy = settingsRes.data?.data?.settings?.waiting_policy;
 
+    // 混雑判定に必要な値のみ返す。
+    // メニュー選択可否などの設定値は待機リストを必要としないため getStoreSettings 側で扱う
     return {
       waitingPartySum,
       estimatedWaitingCount: waitingPolicy?.estimated_waiting_count ?? null,
       maxWaitingCount: waitingPolicy?.max_waiting_count ?? null,
-      enableMenuSelection: waitingPolicy?.enable_menu_selection ?? false,
-      requireOneMenuPerPerson: waitingPolicy?.require_one_menu_per_person ?? false,
-      showMenu: waitingPolicy?.show_menu ?? true,
     };
   } catch (error) {
     console.error("待機状況の取得に失敗しました:", error);
@@ -88,7 +55,7 @@ export const getWaitingStatus = async (storeId) => {
  */
 export const getStoreSettings = async (storeId) => {
   try {
-    const response = await fetchStoreSettingsCached(storeId);
+    const response = await fetchStoreSettings(storeId);
     return response.data?.data?.settings || {};
   } catch (error) {
     console.error('[getStoreSettings] Error:', error);
@@ -103,7 +70,7 @@ export const getStoreSettings = async (storeId) => {
  */
 export const getWaitingList = async (storeId) => {
   try {
-    const response = await fetchWaitingListCached(storeId);
+    const response = await fetchWaitingList(storeId);
     return Array.isArray(response.data.data) ? response.data.data : [];
   } catch (error) {
     console.error('[getWaitingList] エラー:', error);
@@ -119,12 +86,9 @@ export const getWaitingList = async (storeId) => {
  */
 export const submitWaiting = async (payload, vToken) => {
   debugLog('[API] submitWaiting called with vToken:', vToken);
-  const response = await axios.post(`${API_BASE_URL}/waiting-list`, payload, {
+  return axios.post(`${API_BASE_URL}/waiting-list`, payload, {
     params: { v_token: vToken }
   });
-  // 登録で待機リストの内容が変わるため、古いリストを掴まないよう必ず捨てる
-  invalidateWaitingListCache(payload?.store_id);
-  return response;
 };
 
 /**
@@ -295,8 +259,6 @@ export const cancelWaiting = async (storeId, waitingId) => {
       }
     );
     debugLog('[cancelWaiting] 成功:', response.data);
-    // キャンセルでも待機リストの内容が変わるため、キャッシュを捨てる
-    invalidateWaitingListCache(storeId);
     return response;
   } catch (error) {
     console.error('[cancelWaiting] エラー:', error);

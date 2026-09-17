@@ -2,7 +2,7 @@ import React, { createContext, useState, useContext, useMemo, useCallback, useEf
 import { useLocation } from 'react-router-dom';
 import nationalitiesData from '../../data/nationalities.json';
 import useTranslation from '../../hook/useTranslation';
-import { getWaitingStatus, submitWaiting as apiSubmitWaiting, cancelWaiting, getQRToken, getWaitingDetails } from '../../api/waitingService';
+import { getWaitingStatus, getStoreSettings, submitWaiting as apiSubmitWaiting, cancelWaiting, getQRToken, getWaitingDetails } from '../../api/waitingService';
 import { debugLog } from '../../utils/debugLog';
 import styles from "./NetworkErrorPopup.module.css";  // CSSファイル名を変更
 
@@ -223,12 +223,16 @@ export function WaitingScreenProvider({ children }) {
   const [showMenu, setShowMenu] = useState(true);
 
   // 店舗設定（メニュー選択機能有効化など）を取得
+  // - ここで必要なのは設定値だけなので、待機リストも一緒に取得する
+  //   getWaitingStatus ではなく getStoreSettings を使う。
+  //   以前は画面に入るたびに使いもしない待機リスト全件を取得していた
   useEffect(() => {
     if (storeId) {
-      getWaitingStatus(storeId).then(status => {
-        setEnableMenuSelection(status.enableMenuSelection);
-        setRequireOneMenuPerPerson(status.requireOneMenuPerPerson);
-        setShowMenu(status.showMenu);
+      getStoreSettings(storeId).then(settings => {
+        const policy = settings?.waiting_policy;
+        setEnableMenuSelection(policy?.enable_menu_selection ?? false);
+        setRequireOneMenuPerPerson(policy?.require_one_menu_per_person ?? false);
+        setShowMenu(policy?.show_menu ?? true);
       }).catch(err => {
         console.error("店舗設定取得エラー:", err);
       });
