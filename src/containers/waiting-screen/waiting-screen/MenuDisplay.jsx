@@ -18,11 +18,14 @@ function MenuDisplay({ menuList, texts, selectedLanguageCode }) {
   }, [menuList]);
 
   // カテゴリー名 → 翻訳マップ（同一カテゴリーの各アイテムは同じ値を持つ想定）
+  // - 空オブジェクト {} もJSではtruthyなため、翻訳を持たないアイテムが先頭に来ると
+  //   そのカテゴリーが未翻訳のまま固定されてしまっていた。中身のあるものだけ採用する
   const categoryTranslations = useMemo(() => {
     const map = {};
     (menuList || []).forEach(item => {
-      if (item.category_translations && !map[item.category]) {
-        map[item.category] = item.category_translations;
+      const translations = item.category_translations;
+      if (translations && Object.keys(translations).length > 0 && !map[item.category]) {
+        map[item.category] = translations;
       }
     });
     return map;
