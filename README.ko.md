@@ -33,15 +33,18 @@ npm start
 
 브라우저에서 `http://localhost:3000` 으로 접근합니다.
 
-### 환경 티어 (local / remote-dev / prod)
+### 환경 티어 (local / dev / prod)
+
+접미사 없음=로컬, `:dev`=공유 개발 서버, `:prod`=프로덕션. `yoyaku_mate_admin`과 동일한 명명 규칙으로 맞춰져 있다.
 
 | 명령어 | 환경 파일 | 연결 백엔드 | 용도 |
 |---|---|---|---|
-| `npm start` / `npm run build` | `.env.development` / `.env.production` | `localhost:8080` / `rusui-prod.fly.dev` | 로컬 개발 / 프로덕션 |
-| `npm run start:remote-dev` / `npm run build:remote-dev` | `.env.remote-dev` | `rusui-dev.fly.dev` | 공유 개발 서버. 실기기(스마트폰 등)에서 QR코드로 접근할 때 `localhost`는 그 기기 자신을 가리켜 통신 에러가 나므로 이 티어를 사용 |
-| `npm run deploy:remote-dev` | 〃 | 〃 | `build:remote-dev` 후 Cloudflare Workers(`yoyaku-mate-dev`)에 배포 |
+| `npm start` | `.env.development` | `localhost:8080` | 로컬 개발 |
+| `npm run start:dev` / `npm run build:dev` | `.env.dev` | `rusui-dev.fly.dev` | 공유 개발 서버. 실기기(스마트폰 등)에서 QR코드로 접근할 때 `localhost`는 그 기기 자신을 가리켜 통신 에러가 나므로 이 티어를 사용 |
+| `npm run deploy:dev` | 〃 | 〃 | `build:dev` 후 Cloudflare Workers(`yoyaku-mate-dev`)에 배포 |
+| `npm run build` / `npm run build:prod` | `.env.production` | `rusui-prod.fly.dev` | 프로덕션 빌드 (둘은 동일. `react-scripts build`는 항상 production 모드로 동작하기 때문) |
 
-`yoyaku_mate_provider` 쪽은 `--dart-define=APP_ENV=dev`로 실행하면 이 remote-dev 티어에 연결된다.
+`yoyaku_mate_provider` 쪽은 `--dart-define=APP_ENV=dev`로 실행하면 이 dev 티어에 연결된다.
 
 ### 환경 변수
 

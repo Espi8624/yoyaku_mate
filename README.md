@@ -33,15 +33,18 @@ npm start
 
 ブラウザから `http://localhost:3000` へアクセスします。
 
-### 環境ティア (local / remote-dev / prod)
+### 環境ティア (local / dev / prod)
+
+サフィックス無し=ローカル、`:dev`=共有開発サーバー、`:prod`=本番。`yoyaku_mate_admin` と同じ命名規則に揃えてある。
 
 | コマンド | 環境ファイル | 接続先バックエンド | 用途 |
 |---|---|---|---|
-| `npm start` / `npm run build` | `.env.development` / `.env.production` | `localhost:8080` / `rusui-prod.fly.dev` | ローカル開発 / 本番 |
-| `npm run start:remote-dev` / `npm run build:remote-dev` | `.env.remote-dev` | `rusui-dev.fly.dev` | 共有の開発用サーバー。実機(スマートフォン等)からQRコード経由でアクセスする場合、`localhost`は端末自身を指してしまい通信エラーになるため、このティアを使う |
-| `npm run deploy:remote-dev` | 〃 | 〃 | `build:remote-dev` 後、Cloudflare Workers (`yoyaku-mate-dev`) へデプロイ |
+| `npm start` | `.env.development` | `localhost:8080` | ローカル開発 |
+| `npm run start:dev` / `npm run build:dev` | `.env.dev` | `rusui-dev.fly.dev` | 共有の開発用サーバー。実機(スマートフォン等)からQRコード経由でアクセスする場合、`localhost`は端末自身を指してしまい通信エラーになるため、このティアを使う |
+| `npm run deploy:dev` | 〃 | 〃 | `build:dev` 後、Cloudflare Workers (`yoyaku-mate-dev`) へデプロイ |
+| `npm run build` / `npm run build:prod` | `.env.production` | `rusui-prod.fly.dev` | 本番ビルド (両者は同一。`react-scripts build` は常にproductionモードで動くため) |
 
-`yoyaku_mate_provider` 側は `--dart-define=APP_ENV=dev` で起動すると、このremote-devティアに接続する。
+`yoyaku_mate_provider` 側は `--dart-define=APP_ENV=dev` で起動すると、このdevティアに接続する。
 
 ### 環境変数
 
