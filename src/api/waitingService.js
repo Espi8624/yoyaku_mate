@@ -31,6 +31,14 @@ const fetchWaitingListCached = (storeId) =>
     axios.get(`${API_BASE_URL}/waiting-list`, { params: { store_id: storeId || '' } })
   );
 
+// 待機リストを変更するAPI(登録/キャンセル)の直後に、この店舗のキャッシュを捨てる。
+// - 登録直前に getWaitingStatus がリストをキャッシュするため、無効化しないと
+//   登録直後の getWaitingDetails が「自分がまだ載っていない古いリスト」を掴み、
+//   該当データなし=404扱い → キャンセル画面に飛ばされる
+const invalidateWaitingListCache = (storeId) => {
+  waitingListRequestCache.delete(storeId || '');
+};
+
 const fetchStoreSettingsCached = (storeId) =>
   cachedRequest(storeSettingsRequestCache, storeId || '', () =>
     axios.get(`${API_BASE_URL}/store_settings`, { params: { store_id: storeId || '' } })
@@ -111,9 +119,12 @@ export const getWaitingList = async (storeId) => {
  */
 export const submitWaiting = async (payload, vToken) => {
   debugLog('[API] submitWaiting called with vToken:', vToken);
-  return axios.post(`${API_BASE_URL}/waiting-list`, payload, {
+  const response = await axios.post(`${API_BASE_URL}/waiting-list`, payload, {
     params: { v_token: vToken }
   });
+  // 登録で待機リストの内容が変わるため、古いリストを掴まないよう必ず捨てる
+  invalidateWaitingListCache(payload?.store_id);
+  return response;
 };
 
 /**
@@ -320,6 +331,8 @@ export const cancelWaiting = async (storeId, waitingId) => {
       }
     );
     debugLog('[cancelWaiting] 成功:', response.data);
+    // キャンセルでも待機リストの内容が変わるため、キャッシュを捨てる
+    invalidateWaitingListCache(storeId);
     return response;
   } catch (error) {
     console.error('[cancelWaiting] エラー:', error);
