@@ -254,57 +254,21 @@ export const getWaitingDetails = async (storeId, waitingId) => {
   try {
     debugLog('[getWaitingDetails] リクエスト:', { storeId, waitingId });
 
-    // 以前の方式（全リスト取得）に戻しつつ、予想時間計算ロジックをフロントエンドに残す
-    // /api/waiting-list-user が404を返す問題があるため、確実な /api/waiting-list を使用
-    const [listRes, settingsRes] = await Promise.all([
-      fetchWaitingListCached(storeId),
-      fetchStoreSettingsCached(storeId),
-    ]);
+    // 自分1件分だけをサーバーから取得する。待ち順・目安時間もサーバーが計算済み。
+    // - 以前は待機リスト全件を取得してクライアント側で自分を探していた。
+    //   待っている客の人数分だけ転送量が増え、他の客のnotesやmenu_itemsまで
+    //   受け取っていたうえ、リストを3秒キャッシュしていたため「登録直後に
+    //   自分がまだ載っていないリスト」を掴んでキャンセル画面へ飛ぶ事故があった
+    // - SSE(subscribeToWaitingStatus)と同じ応答形式なので、初期取得と
+    //   リアルタイム更新で同じ形のデータが流れる
+    const res = await axios.get(`${API_BASE_URL}/waiting-list/user`, {
+      params: { store_id: storeId || '', waiting_id: waitingId },
+    });
 
-    // 1. リストから該当データを検索
-    const waitingList = Array.isArray(listRes.data.data) ? listRes.data.data : (Array.isArray(listRes.data) ? listRes.data : []);
-    const details = waitingList.find(item => item.waiting_id === waitingId);
+    debugLog('[getWaitingDetails] 取得結果:', res.data);
 
-    debugLog('[getWaitingDetails] 検索結果:', details);
-
-    if (!details) {
-      // 見つからない場合はエラー (これによりローカルストレージクリア等のフローが動く)
-      const error = new Error('指定されたwaiting_idのデータが見つかりません');
-      error.response = { status: 404 };
-      throw error;
-    }
-
-    // 2. 待機数を計算 (自分より前の waiting/notified の数)
-    // リストは通常古い順になっているはずだが、queue_numberで確実にソートしてカウント
-    const activeItems = waitingList
-      .filter(item => item.status === 'waiting' || item.status === 'notified')
-      .sort((a, b) => a.queue_number - b.queue_number);
-
-    // 自分より前の人数をカウント
-    let waitingCount = 0;
-    for (let i = 0; i < activeItems.length; i++) {
-      if (activeItems[i].waiting_id === waitingId) {
-        waitingCount = i; // 0-indexed count implies number of people ahead
-        break;
-      }
-    }
-
-    // 全体の待機数 (表示用)
-    const currentWaitingCount = activeItems.length;
-
-    // 3. 設定からチームあたりの時間を取得
-    const waitingPolicy = settingsRes.data?.data?.settings?.waiting_policy;
-    const minutesPerTeam = waitingPolicy?.estimated_wait_time > 0 ? waitingPolicy.estimated_wait_time : 10;
-
-    // 4. 時間計算
-    const totalEstimatedMinutes = waitingCount * minutesPerTeam;
-    const estimatedWaitingTime = totalEstimatedMinutes > 0 ? `${totalEstimatedMinutes} mins` : "0 mins";
-
-    return {
-      ...details,
-      waiting_count: currentWaitingCount,
-      estimated_waiting_time: estimatedWaitingTime,
-    };
+    // 見つからない場合はサーバーが404を返す (呼び出し元のローカルストレージ整理等が動く)
+    return res.data?.data ?? res.data;
   } catch (error) {
     console.error('[getWaitingDetails] エラー:', error);
     throw error;
