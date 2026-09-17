@@ -199,6 +199,12 @@ export function WaitingScreenProvider({ children }) {
   const [notes, setNotes] = useState("");
   const [waitingId, setWaitingId] = useState(initialParams.waitingId || localStorage.getItem("waiting_id") || "");
   const [vToken, setVToken] = useState(initialParams.vToken || "");
+  // 取消完了画面の表示制御。
+  // ★ これらはサーバーの status から派生させず、意図的にローカルの状態として持つ。
+  //   status から派生させると「取消後にリロードしても取消画面のまま」になり、
+  //   客が自力で新規登録へ戻れなくなる。今の仕様は「取消画面は1回見せて終わり、
+  //   リロードすれば初期画面に戻る」であり、そのほうが客の操作が少ないと判断している
+  //   (この方針を変えるなら CancelledScreen に「再登録」導線が必須になる)
   const [isCancelled, setIsCancelled] = useState(false);
   const [cancellationReason, setCancellationReason] = useState(null); // 'user', 'store', 'absence'
 
