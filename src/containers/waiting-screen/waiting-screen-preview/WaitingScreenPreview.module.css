@@ -154,8 +154,3 @@ textarea {
   opacity: 0.9;
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
 }
-
-.confirmation-btn.secondary {
-  background-color: #e0e0e0;
-  color: #333;
-}

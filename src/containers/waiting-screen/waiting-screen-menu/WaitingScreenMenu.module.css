@@ -237,8 +237,3 @@
 .quantity-btn svg {
     display: block;
 }
-
-.confirmation-btn.secondary {
-    background-color: #e0e0e0;
-    color: #333;
-}

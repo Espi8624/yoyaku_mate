@@ -450,8 +450,12 @@ function WaitingPlaceMap({ storeInfo, texts, isFullScreen = false, selectedLangu
                 onClose={() => setPendingUrl(null)}
                 message={t?.google_map_popup?.message || "Google Mapを開きますか？"}
                 actions={
+                    // このモジュールには.confirmation-btnの定義が無く、
+                    // styles経由だとclassNameがundefinedになっていた。
+                    // ボタンはglobals.cssの共通クラスを使う
                     <button
-                        className={styles["confirmation-btn"]}
+                        type="button"
+                        className="btn-primary"
                         onClick={() => {
                             if (pendingUrl) {
                                 window.open(pendingUrl, '_blank');

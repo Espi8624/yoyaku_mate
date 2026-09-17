@@ -240,8 +240,11 @@ function WaitingScreenMenu() {
                 onClose={() => setShowErrorPopup(false)}
                 message={popupMessage}
                 actions={
+                    // ボタンはglobals.cssの共通クラスを使う。
+                    // CSS Modulesのstylesから引くと、モジュール側の定義漏れや
+                    // キーの上書きでスタイルが当たらない事故が起きるため
                     <button
-                        className={styles["confirmation-btn"]}
+                        className="btn-primary"
                         onClick={() => setShowErrorPopup(false)}
                         type="button"
                     >

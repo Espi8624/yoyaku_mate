@@ -62,7 +62,7 @@ function CongestionPopup() {
           </span>
 
           <button
-            className={`${styles["confirmation-btn"]} ${styles["secondary-btn"]}`}
+            className={styles["confirmation-btn"]}
             onClick={resetApp}
             style={{ width: '100%', backgroundColor: '#dc3545', margin: 0, border: 'none', fontSize: '1em' }}
           >
