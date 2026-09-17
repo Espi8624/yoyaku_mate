@@ -150,7 +150,7 @@ function WaitingScreen() {
         )}
       </div>
 
-      <div className={styles["preview-label"]}>
+      <div>
         {notificationState !== NOTIFICATION_STATE.IDLE
           ? waitingScreenTexts.notified_label_1 || waitingScreenTexts.label_1
           : waitingScreenTexts.label_1}
@@ -210,8 +210,8 @@ function WaitingScreen() {
 
           {/* 事前注文済みメニューの表示 */}
           {waitingDetails.menu_items && waitingDetails.menu_items.length > 0 && (
-            <div className={styles["menu-container"]} style={{ marginBottom: '24px' }}>
-              <div className={styles["preview-label"]} style={{ fontSize: '1.1em', marginBottom: '12px' }}>{waitingScreenTexts.pre_order}</div>
+            <div style={{ marginBottom: '24px' }}>
+              <div style={{ fontSize: '1.1em', marginBottom: '12px' }}>{waitingScreenTexts.pre_order}</div>
               <div className={styles["preview-menu-list"]}>
                 {waitingDetails.menu_items.map((item, index) => {
                   const fullMenu = menuList.find(m => m.menu_id === item.menu_id);
