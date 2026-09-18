@@ -28,6 +28,7 @@ docs/
 |------|------|
 | [architecture.md](./implementation/architecture.md) | プロジェクト構造およびデータフロー |
 | [sse-client.md](./implementation/sse-client.md) | SSE購読クライアントの実装 |
+| [idempotency.md](./implementation/idempotency.md) | 登録の冪等性 — waiting_id を「登録1件」ごとに発行し再試行で再利用する |
 
 ---
 

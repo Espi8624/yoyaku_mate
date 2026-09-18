@@ -1,4 +1,4 @@
-import React, { createContext, useState, useContext, useMemo, useCallback, useEffect } from 'react';
+import React, { createContext, useState, useContext, useMemo, useCallback, useEffect, useRef } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import nationalitiesData from '../../data/nationalities.json';
 import useTranslation from '../../hook/useTranslation';
@@ -235,6 +235,20 @@ export function WaitingScreenProvider({ children }) {
   const [popupInfo, setPopupInfo] = useState({ message: "", mode: "congestion" });
   const [pendingPayload, setPendingPayload] = useState(null);
 
+  /**
+   * 進行中の登録1件に対する冪等キー (waiting_id)
+   *
+   * ・サーバーは (store_id, waiting_id) が同じ要求を「同じ登録の再送」とみなして
+   *   既存レコードを返す。つまりキーが押下ごとに変わると、通信失敗のあとに
+   *   お客様がもう一度押した際、サーバーからは別の登録に見えて整理券が2枚出る
+   * ・そのため「押下ごと」ではなく「登録1件ごと」に発行し、成功するまで再利用する
+   * ・stateではなくrefにする。再レンダーを起こす必要が無い上、stateだと更新が
+   *   非同期のため、連打時に前の値のまま2回送ってしまう可能性がある
+   * ・成功時とclearWaitingIdentity時にnullへ戻す。戻し忘れると、次に別の登録を
+   *   しようとしたときに前回のレコードが返ってきてしまう
+   */
+  const pendingWaitingIdRef = useRef(null);
+
   // オフライン状態の管理を追加
   const [isOffline, setIsOffline] = useState(!navigator.onLine);
 
@@ -310,6 +324,10 @@ export function WaitingScreenProvider({ children }) {
       // axiosは成功時に200-299のstatusを返す
       if (res.status >= 200 && res.status < 300) {
 
+        // - 登録が確定したので冪等キーを手放す。次の登録は新しいキーで始める。
+        //   ここで消さないと、後で別の登録をしたときに前回のレコードが返ってくる
+        pendingWaitingIdRef.current = null;
+
         // サーバーから返却されたwaiting_idを取得して保存
         const serverWaitingId = res.data?.data?.waiting_id;
         if (serverWaitingId) {
@@ -343,7 +361,16 @@ export function WaitingScreenProvider({ children }) {
     try {
       const { waitingPartySum, estimatedWaitingCount, maxWaitingCount } = await getWaitingStatus(storeId);
       const currentWaitingCount = waitingPartySum + Number(partySize);
-      const { waitingId: clientWaitingId, registrationTime: clientRegistrationTime } = getJSTDateStrings();
+      const { waitingId: freshWaitingId, registrationTime: clientRegistrationTime } = getJSTDateStrings();
+
+      // - 冪等キーは「登録1件」につき1つ。既に発行済み(=前回の送信が失敗した)なら
+      //   それを再利用する。作り直すとサーバーからは別の登録に見え、二重登録になる
+      // - 一方 registration_time は毎回更新する。キーと一緒に固定すると、しばらく
+      //   経ってから再試行した場合に古い時刻で登録され、待ち順がずれる
+      if (!pendingWaitingIdRef.current) {
+        pendingWaitingIdRef.current = freshWaitingId;
+      }
+      const clientWaitingId = pendingWaitingIdRef.current;
 
       const payload = {
         store_id: storeId,
@@ -396,6 +423,12 @@ export function WaitingScreenProvider({ children }) {
    *   取消完了画面は step より優先で表示されるため、残っていると step1 に戻せない
    */
   const clearWaitingIdentity = useCallback(() => {
+    // 0. 進行中の冪等キー
+    //    ・白紙に戻す = これから登録するのは「別の登録」なので、前回のキーを
+    //      持ち越してはいけない。持ち越すと、前回の登録が実は成功していた場合に
+    //      新規登録のつもりで前回のレコードが返ってくる
+    pendingWaitingIdRef.current = null;
+
     // 1. 永続化領域
     localStorage.removeItem("waiting_id");
     localStorage.removeItem("store_id");
