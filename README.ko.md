@@ -19,10 +19,10 @@ QR 코드 기반 실시간 대기열 관리 및 AI 점포 안내 챗봇을 제�
 | Framework | React 19 |
 | Router | React Router DOM 7 |
 | HTTP / Stream | Axios, EventSource (SSE) |
-| Maps | Google Maps API |
-| AI | Gemini API |
+| Maps | Google Maps API (현재 `MAP_CHATBOT_ENABLED = false`로 비표시) |
+| AI | Gemini API (백엔드 경유. API 키를 클라이언트에 두지 않음) |
 | i18n | 자체 구현 (ja / ko / en / zh / th / vi) |
-| Deployment | Vercel (프로덕션) / Cloudflare Workers Static Assets (개발) |
+| Deployment | Cloudflare Workers Static Assets (개발: `yoyaku-mate-dev` / 프로덕션: `yoyaku-mate-prod`) |
 
 ## Getting Started
 
@@ -42,11 +42,14 @@ npm start
 | `npm start` | `.env.development` | `localhost:8080` | 로컬 개발 |
 | `npm run start:dev` / `npm run build:dev` | `.env.dev` | `rusui-dev.fly.dev` | 공유 개발 서버. 실기기(스마트폰 등)에서 QR코드로 접근할 때 `localhost`는 그 기기 자신을 가리켜 통신 에러가 나므로 이 티어를 사용 |
 | `npm run deploy:dev` | 〃 | 〃 | `build:dev` 후 Cloudflare Workers(`yoyaku-mate-dev`)에 수동 배포 |
+| `npm run build` / `npm run build:prod` | `.env.production` | `rusui-prod.fly.dev` | 프로덕션 빌드 (둘은 동일. `react-scripts build`는 항상 production 모드로 동작하기 때문) |
+| `npm run deploy:prod` | 〃 | 〃 | `build:prod` 후 Cloudflare Workers(`yoyaku-mate-prod`)에 수동 배포 (`wrangler deploy --env production`) |
 
-`develop`에 push하면 Cloudflare Workers Builds(Git 연동)로 **자동 배포**된다.
+`develop`에 push하면 Cloudflare Workers Builds(Git 연동)로 개발용에 **자동 배포**된다.
 이 설정은 Cloudflare 대시보드 쪽에 있어 저장소 안의 파일에는 나타나지 않는다.
 `npm run deploy:dev`는 자동 배포를 기다리지 않고 즉시 반영하고 싶을 때 쓰는 수동 경로.
-| `npm run build` / `npm run build:prod` | `.env.production` | `rusui-prod.fly.dev` | 프로덕션 빌드 (둘은 동일. `react-scripts build`는 항상 production 모드로 동작하기 때문) |
+
+`--env production`을 붙이지 않은 `wrangler deploy`는 항상 개발용(`yoyaku-mate-dev`)으로 배포된다.
 
 `yoyaku_mate_provider` 쪽은 `--dart-define=APP_ENV=dev`로 실행하면 이 dev 티어에 연결된다.
 
@@ -55,8 +58,9 @@ npm start
 ```env
 REACT_APP_API_URL=http://localhost:8080/api
 REACT_APP_GOOGLE_MAPS_API_KEY=your_google_maps_api_key
-REACT_APP_GEMINI_API_KEY=your_gemini_api_key
 ```
+
+- Gemini API 키는 여기에 두지 않는다. `REACT_APP_*`는 빌드 시 공개 JS 번들에 박혀 누구나 읽을 수 있기 때문. 챗봇·번역은 백엔드(`yoyaku_mate_server`)가 대신 호출한다
 
 ## Architecture
 
@@ -77,7 +81,7 @@ src/
 graph LR
     Browser["브라우저"] -->|"REACT_APP_API_URL (CORS)"| Server["Backend (fly.io)"]
     Server -->|"SSE Stream"| Browser
-    Browser -->|"AI Prompt"| Gemini["Gemini API"]
+    Server -->|"AI Prompt"| Gemini["Gemini API"]
 ```
 
 → 상세 구조: [`docs/implementation/architecture.ko.md`](./docs/implementation/architecture.ko.md)
