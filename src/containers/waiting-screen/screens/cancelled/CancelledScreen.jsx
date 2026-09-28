@@ -1,10 +1,8 @@
 import React from "react";
-import baseStyles from "../waiting-screen/WaitingScreen.module.css";
-import specificStyles from "../ErrorScreen.module.css";
-const styles = { ...baseStyles, ...specificStyles };
-import ChatbotButton from "../../chat-bot/ChatbotButton";
-import { useWaitingScreen } from "../WaitingScreenContext";
-import useTranslation from "../../../hook/useTranslation";
+import ChatbotButton from "../../../chat-bot/ChatbotButton";
+import { MAP_CHATBOT_ENABLED } from "../../../../constants/featureFlags";
+import { useWaitingScreen } from "../../WaitingScreenContext";
+import useTranslation from "../../../../hook/useTranslation";
 
 const CancelledScreen = ({ reason }) => {
     const { selectedLanguageCode } = useWaitingScreen();
@@ -34,11 +32,13 @@ const CancelledScreen = ({ reason }) => {
         };
         return (
             <div className="page-container">
-                <div className="page-top-bar">
-                    <div className="page-top-bar-right">
-                        <ChatbotButton />
+                {MAP_CHATBOT_ENABLED && (
+                    <div className="page-top-bar">
+                        <div className="page-top-bar-right">
+                            <ChatbotButton />
+                        </div>
                     </div>
-                </div>
+                )}
                 <h2>{completedInfo.title}</h2>
                 <p>{completedInfo.message}</p>
             </div>
@@ -49,11 +49,13 @@ const CancelledScreen = ({ reason }) => {
 
     return (
         <div className="page-container">
-            <div className="page-top-bar">
-                <div className="page-top-bar-right">
-                    <ChatbotButton />
+            {MAP_CHATBOT_ENABLED && (
+                <div className="page-top-bar">
+                    <div className="page-top-bar-right">
+                        <ChatbotButton />
+                    </div>
                 </div>
-            </div>
+            )}
             <h2>{info.title}</h2>
             <p>{info.body}</p>
         </div>

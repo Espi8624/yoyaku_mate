@@ -1,6 +1,6 @@
 # アーキテクチャの概要
 
-> 最終更新: 2026-08-16
+> 最終更新: 2026-09-06
 
 ## Tech Stack
 
@@ -13,7 +13,7 @@
 | マップ | Google Maps API (`@react-google-maps/api`) |
 | AI | Gemini API |
 | i18n | 自主実装 (ja/en/ko/fr/de/ru/vi/th/zh/id/ar/es/it/pt) |
-| デプロイ | Vercel (Edge Rewrite Proxy) |
+| デプロイ | Vercel (本番) / Cloudflare Workers Static Assets (開発) |
 
 ---
 
@@ -52,11 +52,7 @@ src/
 ```
 ブラウザ
     │
-    │  /api/* リクエスト
-    ▼
-Vercel Rewrite Proxy         ← CORS回避、エンドポイントの隠蔽
-    │
-    │  転送
+    │  REACT_APP_API_URL宛の直接リクエスト (CORS)
     ▼
 Backend Server (fly.io)
     │
@@ -84,9 +80,9 @@ Gemini API (直接呼び出し)
 ## 環境別のAPI URL
 
 ```javascript
-const API_BASE_URL = process.env.NODE_ENV === 'production'
-  ? "/api"                                           // Vercel Proxy 経由
-  : (process.env.REACT_APP_API_URL || "http://localhost:8080/api");  // ローカル直接
+// デプロイ先プラットフォームに関わらず、REACT_APP_API_URLで実際の
+// バックエンドURLを直接指定する (Vercel Rewriteのような中継は使用しない)
+const API_BASE_URL = process.env.REACT_APP_API_URL || "http://localhost:8080/api";
 ```
 
 ---
@@ -95,4 +91,5 @@ const API_BASE_URL = process.env.NODE_ENV === 'production'
 
 - [お客様用待機画面の機能仕様](../features/waiting-screen.md)
 - [SSEクライアント実装](./sse-client.md)
-- [Vercelプロキシ採用決定根拠](../decisions/ADR-001-vercel-proxy.md)
+- [Vercelプロキシ採用決定根拠 (廃止済み)](../decisions/ADR-001-vercel-proxy.md)
+- [Vercelプロキシ廃止の経緯](../decisions/ADR-002-remove-vercel-proxy.md)

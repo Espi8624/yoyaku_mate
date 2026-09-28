@@ -1,6 +1,6 @@
 # 아키텍처 개요
 
-> 최종 수정: 2026-08-16
+> 최종 수정: 2026-09-06
 
 ## 기술 스택
 
@@ -13,7 +13,7 @@
 | 지도 | Google Maps API (`@react-google-maps/api`) |
 | AI | Gemini API |
 | i18n | 자체 구현 (ja/en/ko/fr/de/ru/vi/th/zh/id/ar/es/it/pt) |
-| 배포 | Vercel (Edge Rewrite Proxy) |
+| 배포 | Vercel (프로덕션) / Cloudflare Workers Static Assets (개발) |
 
 ---
 
@@ -52,11 +52,7 @@ src/
 ```
 브라우저
     │
-    │  /api/* 요청
-    ▼
-Vercel Rewrite Proxy         ← CORS 우회, 엔드포인트 숨김
-    │
-    │  Forward
+    │  REACT_APP_API_URL로 직접 요청 (CORS)
     ▼
 Backend Server (fly.io)
     │
@@ -84,9 +80,9 @@ Gemini API (직접 호출)
 ## 환경별 API URL
 
 ```javascript
-const API_BASE_URL = process.env.NODE_ENV === 'production'
-  ? "/api"                                           // Vercel Proxy 경유
-  : (process.env.REACT_APP_API_URL || "http://localhost:8080/api");  // 로컬 직접
+// 배포 플랫폼과 무관하게 REACT_APP_API_URL로 실제 백엔드 URL을 직접 지정한다
+// (Vercel Rewrite 같은 중계는 더 이상 사용하지 않음)
+const API_BASE_URL = process.env.REACT_APP_API_URL || "http://localhost:8080/api";
 ```
 
 ---
@@ -95,4 +91,5 @@ const API_BASE_URL = process.env.NODE_ENV === 'production'
 
 - [손님 대기 화면 기능 사양](../features/waiting-screen.ko.md)
 - [SSE 클라이언트 구현](./sse-client.ko.md)
-- [Vercel 프록시 선택 근거](../decisions/ADR-001-vercel-proxy.ko.md)
+- [Vercel 프록시 선택 근거 (폐기됨)](../decisions/ADR-001-vercel-proxy.ko.md)
+- [Vercel 프록시 폐기 경위](../decisions/ADR-002-remove-vercel-proxy.ko.md)

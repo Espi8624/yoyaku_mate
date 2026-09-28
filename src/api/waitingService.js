@@ -1,8 +1,16 @@
 import axios from 'axios';
+import { debugLog } from '../utils/debugLog';
 
-const API_BASE_URL = process.env.NODE_ENV === 'production'
-  ? "/api"
-  : (process.env.REACT_APP_API_URL || "http://localhost:8080/api");
+// Note: 以前はNODE_ENV==='production'時にVercel Rewrite経由の相対パス"/api"を
+// 使っていたが、Vercel以外へのデプロイでは中継が存在せず失敗するため廃止。
+// 環境ごとにREACT_APP_API_URLで実際のバックエンドURLを直接指定する
+const API_BASE_URL = process.env.REACT_APP_API_URL || "http://localhost:8080/api";
+
+const fetchWaitingList = (storeId) =>
+  axios.get(`${API_BASE_URL}/waiting-list`, { params: { store_id: storeId || '' } });
+
+const fetchStoreSettings = (storeId) =>
+  axios.get(`${API_BASE_URL}/store_settings`, { params: { store_id: storeId || '' } });
 
 /**
  * 現在待機状況と、店舗の待機制作を呼び出す
@@ -16,12 +24,8 @@ const API_BASE_URL = process.env.NODE_ENV === 'production'
 export const getWaitingStatus = async (storeId) => {
   try {
     const [waitingRes, settingsRes] = await Promise.all([
-      axios.get(`${API_BASE_URL}/waiting-list`, {
-        params: { store_id: storeId }
-      }),
-      axios.get(`${API_BASE_URL}/store_settings`, {
-        params: { store_id: storeId }
-      })
+      fetchWaitingList(storeId),
+      fetchStoreSettings(storeId),
     ]);
 
     const waitingList = Array.isArray(waitingRes.data.data) ? waitingRes.data.data : [];
@@ -31,12 +35,12 @@ export const getWaitingStatus = async (storeId) => {
 
     const waitingPolicy = settingsRes.data?.data?.settings?.waiting_policy;
 
+    // 混雑判定に必要な値のみ返す。
+    // メニュー選択可否などの設定値は待機リストを必要としないため getStoreSettings 側で扱う
     return {
       waitingPartySum,
       estimatedWaitingCount: waitingPolicy?.estimated_waiting_count ?? null,
       maxWaitingCount: waitingPolicy?.max_waiting_count ?? null,
-      enableMenuSelection: waitingPolicy?.enable_menu_selection ?? false,
-      requireOneMenuPerPerson: waitingPolicy?.require_one_menu_per_person ?? false,
     };
   } catch (error) {
     console.error("待機状況の取得に失敗しました:", error);
@@ -51,9 +55,7 @@ export const getWaitingStatus = async (storeId) => {
  */
 export const getStoreSettings = async (storeId) => {
   try {
-    const response = await axios.get(`${API_BASE_URL}/store_settings`, {
-      params: { store_id: storeId }
-    });
+    const response = await fetchStoreSettings(storeId);
     return response.data?.data?.settings || {};
   } catch (error) {
     console.error('[getStoreSettings] Error:', error);
@@ -68,9 +70,7 @@ export const getStoreSettings = async (storeId) => {
  */
 export const getWaitingList = async (storeId) => {
   try {
-    const response = await axios.get(`${API_BASE_URL}/waiting-list`, {
-      params: { store_id: storeId || '' }
-    });
+    const response = await fetchWaitingList(storeId);
     return Array.isArray(response.data.data) ? response.data.data : [];
   } catch (error) {
     console.error('[getWaitingList] エラー:', error);
@@ -85,7 +85,7 @@ export const getWaitingList = async (storeId) => {
  * @returns {Promise<Response>}
  */
 export const submitWaiting = async (payload, vToken) => {
-  console.log('[API] submitWaiting called with vToken:', vToken);
+  debugLog('[API] submitWaiting called with vToken:', vToken);
   return axios.post(`${API_BASE_URL}/waiting-list`, payload, {
     params: { v_token: vToken }
   });
@@ -161,15 +161,16 @@ export const subscribeToWaitingStatus = (storeId, waitingId, onMessage, onError)
 /**
  * 店舗のQRトークンを取得 (Board用)
  * @param {string} storeId
+ * @param {string} boardKey - 点主アプリが発行した店舗別シークレット。サーバー側で検証される
  * @returns {Promise<{v_token: string, date: string}>}
  */
-export const getQRToken = async (storeId) => {
+export const getQRToken = async (storeId, boardKey) => {
   try {
-    // 認証不要に変更された endpoint
     const response = await axios.get(`${API_BASE_URL}/waiting-list`, {
       params: {
         action: 'qr_token',
-        store_id: storeId
+        store_id: storeId,
+        board_key: boardKey
       }
     });
     return response.data.data;
@@ -215,63 +216,23 @@ export const getMenuList = async (storeId) => {
  */
 export const getWaitingDetails = async (storeId, waitingId) => {
   try {
-    console.log('[getWaitingDetails] リクエスト:', { storeId, waitingId });
+    debugLog('[getWaitingDetails] リクエスト:', { storeId, waitingId });
 
-    // 以前の方式（全リスト取得）に戻しつつ、予想時間計算ロジックをフロントエンドに残す
-    // /api/waiting-list-user が404を返す問題があるため、確実な /api/waiting-list を使用
-    const [listRes, settingsRes] = await Promise.all([
-      axios.get(`${API_BASE_URL}/waiting-list`, {
-        params: { store_id: storeId || '' }
-      }),
-      axios.get(`${API_BASE_URL}/store_settings`, {
-        params: { store_id: storeId || '' }
-      })
-    ]);
+    // 自分1件分だけをサーバーから取得する。待ち順・目安時間もサーバーが計算済み。
+    // - 以前は待機リスト全件を取得してクライアント側で自分を探していた。
+    //   待っている客の人数分だけ転送量が増え、他の客のnotesやmenu_itemsまで
+    //   受け取っていたうえ、リストを3秒キャッシュしていたため「登録直後に
+    //   自分がまだ載っていないリスト」を掴んでキャンセル画面へ飛ぶ事故があった
+    // - SSE(subscribeToWaitingStatus)と同じ応答形式なので、初期取得と
+    //   リアルタイム更新で同じ形のデータが流れる
+    const res = await axios.get(`${API_BASE_URL}/waiting-list/user`, {
+      params: { store_id: storeId || '', waiting_id: waitingId },
+    });
 
-    // 1. リストから該当データを検索
-    const waitingList = Array.isArray(listRes.data.data) ? listRes.data.data : (Array.isArray(listRes.data) ? listRes.data : []);
-    const details = waitingList.find(item => item.waiting_id === waitingId);
+    debugLog('[getWaitingDetails] 取得結果:', res.data);
 
-    console.log('[getWaitingDetails] 検索結果:', details);
-
-    if (!details) {
-      // 見つからない場合はエラー (これによりローカルストレージクリア等のフローが動く)
-      const error = new Error('指定されたwaiting_idのデータが見つかりません');
-      error.response = { status: 404 };
-      throw error;
-    }
-
-    // 2. 待機数を計算 (自分より前の waiting/notified の数)
-    // リストは通常古い順になっているはずだが、queue_numberで確実にソートしてカウント
-    const activeItems = waitingList
-      .filter(item => item.status === 'waiting' || item.status === 'notified')
-      .sort((a, b) => a.queue_number - b.queue_number);
-
-    // 自分より前の人数をカウント
-    let waitingCount = 0;
-    for (let i = 0; i < activeItems.length; i++) {
-      if (activeItems[i].waiting_id === waitingId) {
-        waitingCount = i; // 0-indexed count implies number of people ahead
-        break;
-      }
-    }
-
-    // 全体の待機数 (表示用)
-    const currentWaitingCount = activeItems.length;
-
-    // 3. 設定からチームあたりの時間を取得
-    const waitingPolicy = settingsRes.data?.data?.settings?.waiting_policy;
-    const minutesPerTeam = waitingPolicy?.estimated_wait_time > 0 ? waitingPolicy.estimated_wait_time : 10;
-
-    // 4. 時間計算
-    const totalEstimatedMinutes = waitingCount * minutesPerTeam;
-    const estimatedWaitingTime = totalEstimatedMinutes > 0 ? `${totalEstimatedMinutes} mins` : "0 mins";
-
-    return {
-      ...details,
-      waiting_count: currentWaitingCount,
-      estimated_waiting_time: estimatedWaitingTime,
-    };
+    // 見つからない場合はサーバーが404を返す (呼び出し元のローカルストレージ整理等が動く)
+    return res.data?.data ?? res.data;
   } catch (error) {
     console.error('[getWaitingDetails] エラー:', error);
     throw error;
@@ -297,7 +258,7 @@ export const cancelWaiting = async (storeId, waitingId) => {
         headers: { 'Content-Type': 'application/json' }
       }
     );
-    console.log('[cancelWaiting] 成功:', response.data);
+    debugLog('[cancelWaiting] 成功:', response.data);
     return response;
   } catch (error) {
     console.error('[cancelWaiting] エラー:', error);

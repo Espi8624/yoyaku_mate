@@ -1,9 +1,11 @@
-import React, { createContext, useState, useContext, useMemo, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import React, { createContext, useState, useContext, useMemo, useCallback, useEffect, useRef } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import nationalitiesData from '../../data/nationalities.json';
 import useTranslation from '../../hook/useTranslation';
-import { getWaitingStatus, submitWaiting as apiSubmitWaiting, cancelWaiting, getQRToken, getWaitingDetails } from '../../api/waitingService';
-import styles from "./NetworkErrorPopup.module.css";  // CSSファイル名を変更
+import { getWaitingStatus, getStoreSettings, submitWaiting as apiSubmitWaiting, cancelWaiting, getQRToken, getWaitingDetails } from '../../api/waitingService';
+import { debugLog } from '../../utils/debugLog';
+import useWaitingStatus from './useWaitingStatus';
+import styles from "./components/NetworkErrorPopup.module.css";
 
 // NetworkErrorPopupをインラインコンポーネントとして定義
 const NetworkErrorPopup = ({ isOffline }) => {
@@ -16,6 +18,51 @@ const NetworkErrorPopup = ({ isOffline }) => {
       </span>
     </div>
   );
+};
+
+/**
+ * サーバーのエラーレスポンスから実際のメッセージを抽出するヘルパー
+ * サーバーは JSON({message: "..."}) と text/plain (http.Error由来の平文) の
+ * 両方の形式でエラーを返しうるため、どちらのケースでも実際の理由を取りこぼさないようにする
+ * (以前はJSON形式のみを想定していたため、平文レスポンス時に本当の理由が握りつぶされ、
+ * ユーザーには常に汎用的な「通信エラー」としか表示されていなかった)
+ * ・状態に依存しない純粋関数のためコンポーネント外に定義(毎レンダー再生成を回避)
+ */
+const extractErrorMessage = (data, err, fallback) => {
+  if (typeof data === 'string' && data.trim()) return data;
+  if (data && typeof data === 'object' && data.message) return data.message;
+  return err?.message || fallback;
+};
+
+/**
+ * JST (UTC+9) 基準のユニークな待機IDと登録時間を生成するヘルパー関数
+ * 冪等性の確保およびオフライン復帰時の時間整合性のために使用
+ * ・状態に依存しない純粋関数のためコンポーネント外に定義(毎レンダー再生成を回避)
+ * @returns {{ waitingId: string, registrationTime: string }}
+ */
+const getJSTDateStrings = () => {
+  const now = new Date();
+  const jstOffset = 9 * 60 * 60 * 1000; // 日本時間のオフセット (9時間)
+  const jstTime = new Date(now.getTime() + jstOffset); // JST時間に変換
+
+  const year = jstTime.getUTCFullYear();
+  const month = String(jstTime.getUTCMonth() + 1).padStart(2, '0');
+  const day = String(jstTime.getUTCDate()).padStart(2, '0');
+  const hour = String(jstTime.getUTCHours()).padStart(2, '0');
+  const minute = String(jstTime.getUTCMinutes()).padStart(2, '0');
+  const second = String(jstTime.getUTCSeconds()).padStart(2, '0');
+  const ms = String(jstTime.getUTCMilliseconds()).padStart(3, '0');
+  const randomSuffix = String(Math.floor(100 + Math.random() * 900)); // 重複防止用の3桁の乱数
+
+  const dateStr = `${year}${month}${day}`;
+  const timeStr = `${hour}${minute}${second}`;
+
+  return {
+    // 冪等キーとなる時間ベースのユニークID (フォーマット: YYYYMMDD-HHmmss-SSS-Random)
+    waitingId: `${dateStr}-${timeStr}-${ms}-${randomSuffix}`,
+    // 顧客が登録ボタンを押した実際の時刻 (ISO 8601 フォーマット)
+    registrationTime: `${year}-${month}-${day}T${hour}:${minute}:${second}.${ms}+09:00`
+  };
 };
 
 // Context Object生成
@@ -31,6 +78,7 @@ export function useWaitingScreen() {
 
 export function WaitingScreenProvider({ children }) {
   const location = useLocation();
+  const navigate = useNavigate();
 
   // --- Helper Functions ---
   const getNationalityFromLanguage = (language) => {
@@ -140,7 +188,10 @@ export function WaitingScreenProvider({ children }) {
 
   // ステータス管理
   const [step, setStep] = useState(initialStep);
-  const [storeId, setStoreId] = useState(initialParams.storeId);
+  // 保存済みIDからの復元はここ(同期)で完結させる。
+  // ・以前は FlowController がマウント後に非同期で復元していたため、
+  //   「復元待ちフラグ」や重複したステータス取得が必要になっていた
+  const [storeId, setStoreId] = useState(initialParams.storeId || localStorage.getItem("store_id") || "");
   const [selectedNationality, setSelectedNationality] = useState(initialParams.nationality);
   const [selectedLanguageCode, setSelectedLanguageCode] = useState(initialParams.languageCode);
   const [partySize, setPartySize] = useState("");
@@ -148,20 +199,62 @@ export function WaitingScreenProvider({ children }) {
   const [notes, setNotes] = useState("");
   const [waitingId, setWaitingId] = useState(initialParams.waitingId || localStorage.getItem("waiting_id") || "");
   const [vToken, setVToken] = useState(initialParams.vToken || "");
+  // 取消完了画面の表示制御。
+  // ★ これらはサーバーの status から派生させず、意図的にローカルの状態として持つ。
+  //   status から派生させると「取消後にリロードしても取消画面のまま」になり、
+  //   客が自力で新規登録へ戻れなくなる。今の仕様は「取消画面は1回見せて終わり、
+  //   リロードすれば初期画面に戻る」であり、そのほうが客の操作が少ないと判断している
+  //   (この方針を変えるなら CancelledScreen に「再登録」導線が必須になる)
   const [isCancelled, setIsCancelled] = useState(false);
   const [cancellationReason, setCancellationReason] = useState(null); // 'user', 'store', 'absence'
+
+  // ★ サーバー上の待機ステータス監視 (初回取得 + SSE購読)
+  // ・Provider側で1回だけ購読し、結果をContextで配る。
+  //   以前は WaitingScreen と FlowController がそれぞれ getWaitingDetails を叩いており、
+  //   画面に入るたびに同じデータを2回取得していた
+  // ・IDが揃っていない間(登録前)は購読しない
+  const {
+    details: waitingDetails,
+    menuList,
+    status: waitingStatus,
+    error: waitingError,
+  } = useWaitingStatus(storeId, waitingId, Boolean(storeId && waitingId));
+
+  // サーバー上で待機が終了(取消/不在)した場合、復元用の保存データだけを破棄する
+  // ・画面は取消完了画面を出したままにしたいので、stateやURLはここでは触らない
+  //   (次回アクセス時に古い待機番号で復元されるのを防ぐのが目的)
+  useEffect(() => {
+    if (waitingStatus === 'cancelled' || waitingStatus === 'no_show') {
+      localStorage.removeItem("waiting_id");
+      localStorage.removeItem("store_id");
+    }
+  }, [waitingStatus]);
 
   // ポップアップステータス管理
   const [isPopupVisible, setPopupVisible] = useState(false);
   const [popupInfo, setPopupInfo] = useState({ message: "", mode: "congestion" });
   const [pendingPayload, setPendingPayload] = useState(null);
 
+  /**
+   * 進行中の登録1件に対する冪等キー (waiting_id)
+   *
+   * ・サーバーは (store_id, waiting_id) が同じ要求を「同じ登録の再送」とみなして
+   *   既存レコードを返す。つまりキーが押下ごとに変わると、通信失敗のあとに
+   *   お客様がもう一度押した際、サーバーからは別の登録に見えて整理券が2枚出る
+   * ・そのため「押下ごと」ではなく「登録1件ごと」に発行し、成功するまで再利用する
+   * ・stateではなくrefにする。再レンダーを起こす必要が無い上、stateだと更新が
+   *   非同期のため、連打時に前の値のまま2回送ってしまう可能性がある
+   * ・成功時とclearWaitingIdentity時にnullへ戻す。戻し忘れると、次に別の登録を
+   *   しようとしたときに前回のレコードが返ってきてしまう
+   */
+  const pendingWaitingIdRef = useRef(null);
+
   // オフライン状態の管理を追加
   const [isOffline, setIsOffline] = useState(!navigator.onLine);
 
   // チャットボット状態
   const [isChatOpen, setIsChatOpen] = useState(false);
-  const toggleChat = () => setIsChatOpen(prev => !prev);
+  const toggleChat = useCallback(() => setIsChatOpen(prev => !prev), []);
 
   // Map state
   const [isMapOpen, setIsMapOpen] = useState(false);
@@ -173,13 +266,20 @@ export function WaitingScreenProvider({ children }) {
   const [enableMenuSelection, setEnableMenuSelection] = useState(false);
   const [requireOneMenuPerPerson, setRequireOneMenuPerPerson] = useState(false);
   const [selectedMenus, setSelectedMenus] = useState([]); // Array of { menuId, name, quantity, price }
+  // 待機画面(QRページ)でのメニュー閲覧表示可否。未取得時はデフォルトtrue(表示)
+  const [showMenu, setShowMenu] = useState(true);
 
   // 店舗設定（メニュー選択機能有効化など）を取得
+  // - ここで必要なのは設定値だけなので、待機リストも一緒に取得する
+  //   getWaitingStatus ではなく getStoreSettings を使う。
+  //   以前は画面に入るたびに使いもしない待機リスト全件を取得していた
   useEffect(() => {
     if (storeId) {
-      getWaitingStatus(storeId).then(status => {
-        setEnableMenuSelection(status.enableMenuSelection);
-        setRequireOneMenuPerPerson(status.requireOneMenuPerPerson);
+      getStoreSettings(storeId).then(settings => {
+        const policy = settings?.waiting_policy;
+        setEnableMenuSelection(policy?.enable_menu_selection ?? false);
+        setRequireOneMenuPerPerson(policy?.require_one_menu_per_person ?? false);
+        setShowMenu(policy?.show_menu ?? true);
       }).catch(err => {
         console.error("店舗設定取得エラー:", err);
       });
@@ -192,7 +292,8 @@ export function WaitingScreenProvider({ children }) {
   // URLパラメータが変更される時、ステータスを更新
   useEffect(() => {
     // 値が実際に変わった時のみsetStateを呼び出す → 不要な再レンダリング及びメニュー重複fetchを防止
-    if (initialParams.storeId !== storeId) {
+    // ・URLにstore_idが無い場合は上書きしない (localStorageから復元した値を消さないため)
+    if (initialParams.storeId && initialParams.storeId !== storeId) {
       setStoreId(initialParams.storeId);
     }
     if (initialParams.vToken) {
@@ -216,11 +317,16 @@ export function WaitingScreenProvider({ children }) {
   }, [initialParams]);
 
   // サーバー通信関係
-  const _performSubmit = async (payload) => {
+  // ・useCallbackでラップし、無関係な状態(partySize等)の変化のたびに再生成されるのを防ぐ
+  const _performSubmit = useCallback(async (payload) => {
     try {
       const res = await apiSubmitWaiting(payload, vToken);
       // axiosは成功時に200-299のstatusを返す
       if (res.status >= 200 && res.status < 300) {
+
+        // - 登録が確定したので冪等キーを手放す。次の登録は新しいキーで始める。
+        //   ここで消さないと、後で別の登録をしたときに前回のレコードが返ってくる
+        pendingWaitingIdRef.current = null;
 
         // サーバーから返却されたwaiting_idを取得して保存
         const serverWaitingId = res.data?.data?.waiting_id;
@@ -236,7 +342,7 @@ export function WaitingScreenProvider({ children }) {
         // 登録失敗時にローカルストレージから削除
         localStorage.removeItem("waiting_id");
         localStorage.removeItem("store_id");
-        const errorMessage = res.data?.message || '登録に失敗しました';
+        const errorMessage = extractErrorMessage(res.data, null, '登録に失敗しました');
         alert("登録に失敗しました: " + errorMessage);
       }
     } catch (err) {
@@ -245,46 +351,26 @@ export function WaitingScreenProvider({ children }) {
       localStorage.removeItem("store_id");
       localStorage.removeItem("v_token");
       console.error("登録エラー:", err);
-      const errorMessage = err.response?.data?.message || err.message || '通信エラーが発生しました';
+      const errorMessage = extractErrorMessage(err.response?.data, err, '通信エラーが発生しました');
       alert("通信エラー: " + errorMessage);
     }
-  };
+  }, [vToken, storeId, t]);
 
-  /**
-   * JST (UTC+9) 基準のユニークな待機IDと登録時間を生成するヘルパー関数
-   * 冪等性の確保およびオフライン復帰時の時間整合性のために使用
-   * @returns {{ waitingId: string, registrationTime: string }}
-   */
-  const getJSTDateStrings = () => {
-    const now = new Date();
-    const jstOffset = 9 * 60 * 60 * 1000; // 日本時間のオフセット (9時間)
-    const jstTime = new Date(now.getTime() + jstOffset); // JST時間に変換
-
-    const year = jstTime.getUTCFullYear();
-    const month = String(jstTime.getUTCMonth() + 1).padStart(2, '0');
-    const day = String(jstTime.getUTCDate()).padStart(2, '0');
-    const hour = String(jstTime.getUTCHours()).padStart(2, '0');
-    const minute = String(jstTime.getUTCMinutes()).padStart(2, '0');
-    const second = String(jstTime.getUTCSeconds()).padStart(2, '0');
-    const ms = String(jstTime.getUTCMilliseconds()).padStart(3, '0');
-    const randomSuffix = String(Math.floor(100 + Math.random() * 900)); // 重複防止用の3桁の乱数
-
-    const dateStr = `${year}${month}${day}`;
-    const timeStr = `${hour}${minute}${second}`;
-
-    return {
-      // 冪等キーとなる時間ベースのユニークID (フォーマット: YYYYMMDD-HHmmss-SSS-Random)
-      waitingId: `${dateStr}-${timeStr}-${ms}-${randomSuffix}`,
-      // 顧客が登録ボタンを押した実際の時刻 (ISO 8601 フォーマット)
-      registrationTime: `${year}-${month}-${day}T${hour}:${minute}:${second}.${ms}+09:00`
-    };
-  };
-
-  const handleSubmitWaiting = async () => {
+  // ・useCallbackでラップし、無関係な状態変化での再生成を防ぐ
+  const handleSubmitWaiting = useCallback(async () => {
     try {
       const { waitingPartySum, estimatedWaitingCount, maxWaitingCount } = await getWaitingStatus(storeId);
       const currentWaitingCount = waitingPartySum + Number(partySize);
-      const { waitingId: clientWaitingId, registrationTime: clientRegistrationTime } = getJSTDateStrings();
+      const { waitingId: freshWaitingId, registrationTime: clientRegistrationTime } = getJSTDateStrings();
+
+      // - 冪等キーは「登録1件」につき1つ。既に発行済み(=前回の送信が失敗した)なら
+      //   それを再利用する。作り直すとサーバーからは別の登録に見え、二重登録になる
+      // - 一方 registration_time は毎回更新する。キーと一緒に固定すると、しばらく
+      //   経ってから再試行した場合に古い時刻で登録され、待ち順がずれる
+      if (!pendingWaitingIdRef.current) {
+        pendingWaitingIdRef.current = freshWaitingId;
+      }
+      const clientWaitingId = pendingWaitingIdRef.current;
 
       const payload = {
         store_id: storeId,
@@ -322,9 +408,57 @@ export function WaitingScreenProvider({ children }) {
       console.error("待機状況確認エラー:", error);
       alert("通信エラーが発生しました。もう一度お試しください。");
     }
-  };
+  }, [storeId, partySize, selectedNationality, contact, notes, selectedMenus, _performSubmit]);
 
-  const handleCancel = async () => {
+  /**
+   * 現在の待機(identity)を破棄し、新規登録できる白紙状態に戻す
+   *
+   * 待機の身元は「URLのwaiting_id」「localStorage」「Reactのstate」の3箇所に
+   * 同時に存在する。どれか1つでも消し忘れると復活してしまうため、
+   * 消す処理は必ずこの関数1箇所に集約する
+   * ・特にURLは見落としやすい: 点主アプリのQRは waiting_id 付きで発行されるため、
+   *   localStorageだけ消しても、リロードすると initialStep がURLを見て
+   *   step3(待機番号画面)と誤判定し、初期化がなかったことになる
+   * ・取消フラグ(isCancelled/cancellationReason)もここでクリアする。
+   *   取消完了画面は step より優先で表示されるため、残っていると step1 に戻せない
+   */
+  const clearWaitingIdentity = useCallback(() => {
+    // 0. 進行中の冪等キー
+    //    ・白紙に戻す = これから登録するのは「別の登録」なので、前回のキーを
+    //      持ち越してはいけない。持ち越すと、前回の登録が実は成功していた場合に
+    //      新規登録のつもりで前回のレコードが返ってくる
+    pendingWaitingIdRef.current = null;
+
+    // 1. 永続化領域
+    localStorage.removeItem("waiting_id");
+    localStorage.removeItem("store_id");
+    localStorage.removeItem("v_token");
+
+    // 2. URL (store_id や v_token は再登録に必要なので waiting_id だけを取り除く)
+    const params = new URLSearchParams(location.search);
+    if (params.has("waiting_id")) {
+      params.delete("waiting_id");
+      const nextSearch = params.toString();
+      navigate(
+        { pathname: location.pathname, search: nextSearch ? `?${nextSearch}` : "" },
+        { replace: true }
+      );
+    }
+
+    // 3. 画面状態
+    setWaitingId("");
+    setIsCancelled(false);
+    setCancellationReason(null);
+    setSelectedMenus([]);
+    setPartySize("");
+    setContact("");
+    setNotes("");
+    setPopupVisible(false);
+    setPopupInfo({ message: "", mode: "" });
+  }, [location.pathname, location.search, navigate]);
+
+  // ・useCallbackでラップし、無関係な状態変化での再生成を防ぐ
+  const handleCancel = useCallback(async () => {
     try {
       // 1. キャンセル前に最新ステータスを確認
       // catchブロックでエラーハンドリングするため、ここで try-catch は不要(外側のcatchに任せる)
@@ -346,7 +480,7 @@ export function WaitingScreenProvider({ children }) {
 
       // 2. ステータスが completed (入店完了) の場合はキャンセルさせない
       if (details && details.status === 'completed') {
-        console.log("既に入店完了済みのため、キャンセルを中断します");
+        debugLog("既に入店完了済みのため、キャンセルを中断します");
         // 画面遷移せず、ポップアップで通知のみ行う
         // setIsCancelled(true); // Removed
         // setCancellationReason('completed'); // Removed
@@ -364,31 +498,24 @@ export function WaitingScreenProvider({ children }) {
       const res = await cancelWaiting(storeId, waitingId);
       // axiosは成功時に例外をスローしないので、status codeで判定
       if (res.status >= 200 && res.status < 300) {
-        // 成功時、isCancelled状態をtrueに変更
+        // 待機の身元を破棄して白紙状態に戻す
+        clearWaitingIdentity();
+        setStep(1);
+        setSelectedNationality('その他');
+        // ★ clearWaitingIdentity が取消フラグもクリアするため、必ずその後に立てる
         setIsCancelled(true);
         setCancellationReason('user');
-        // ローカルストレージからwaiting_idとstore_idを削除
-        localStorage.removeItem("waiting_id");
-        localStorage.removeItem("store_id");
-        // 初期状態に戻す
-        setStep(1);
-        setPartySize('');
-        setSelectedNationality('その他');
-        setContact('');
-        setNotes('');
-        setWaitingId(null);
-        setPopupInfo({ message: '', mode: '' });
       } else {
         throw new Error(res.data?.message || 'サーバーエラーが発生しました。');
       }
     } catch (err) {
       console.error("キャンセルエラー:", err);
-      const errorMessage = err.response?.data?.message || err.message || 'キャンセルに失敗しました。';
+      const errorMessage = extractErrorMessage(err.response?.data, err, 'キャンセルに失敗しました。');
       alert("キャンセルエラー: " + errorMessage);
     }
-  };
+  }, [storeId, waitingId, t, clearWaitingIdentity]);
 
-  const closePopupAndProceed = async () => {
+  const closePopupAndProceed = useCallback(async () => {
     setPopupVisible(false);
     if (popupInfo.mode === "congestion" && pendingPayload) {
       await _performSubmit(pendingPayload);
@@ -400,12 +527,12 @@ export function WaitingScreenProvider({ children }) {
       // 何もしない（閉じるだけ）
     }
     setPendingPayload(null);
-  };
+  }, [popupInfo, pendingPayload, _performSubmit]);
 
-  const closePopupOnly = () => {
+  const closePopupOnly = useCallback(() => {
     setPopupVisible(false);
     setPendingPayload(null);
-  };
+  }, []);
 
   // 通信状態の監視
   useEffect(() => {
@@ -421,23 +548,36 @@ export function WaitingScreenProvider({ children }) {
     };
   }, []);
 
-  // アプリケーション初期化（ログアウト/リセット）
-  const resetApp = () => {
-    localStorage.removeItem("waiting_id");
-    localStorage.removeItem("store_id");
-    localStorage.removeItem("v_token");
-    setWaitingId(null);
+  // アプリケーション初期化（入店完了後などに新規登録できる状態へ戻す）
+  const resetApp = useCallback(() => {
+    clearWaitingIdentity();
     setStep(1);
-    setPartySize('');
     setSelectedNationality('その他');
-    setContact('');
-    setNotes('');
-    setPopupVisible(false);
-    setPopupInfo({ message: '', mode: '' });
-  };
+  }, [clearWaitingIdentity]);
+
+  const setCancellationReasonAndCancel = useCallback((reason) => {
+    setIsCancelled(true);
+    setCancellationReason(reason);
+  }, []);
+
+  const toggleMap = useCallback(() => setIsMapOpen(prev => !prev), []);
+
+  const goBackToInputStep = useCallback((inputInfo) => {
+    if (inputInfo) {
+      setPartySize(inputInfo.partySize ?? "");
+      setContact(inputInfo.contact ?? "");
+      setNotes(inputInfo.notes ?? "");
+      setSelectedNationality(inputInfo.selectedNationality ?? "");
+      setSelectedLanguageCode(inputInfo.selectedLanguageCode ?? "");
+    }
+    setStep(1);
+  }, []);
 
   // Providerかchildに伝達する値
-  const value = {
+  // ・useMemoでラップし、無関係な状態変化(入力文字など)での全Consumer再レンダーを防ぐ
+  //   (setXxxはuseStateのsetterで参照が不変なため依存配列に含める必要はないが、
+  //    exhaustive-depsの意図を明確にするため関数値のみを依存配列に列挙する)
+  const value = useMemo(() => ({
     // ステータス値
     step,
     isCancelled,
@@ -456,10 +596,17 @@ export function WaitingScreenProvider({ children }) {
     t, // 多国語データ
     isOffline, // コンテキストに追加
 
+    // サーバー上の待機ステータス (useWaitingStatus の結果をそのまま配る)
+    waitingDetails,
+    menuList,
+    waitingStatus,
+    waitingError,
+
     // メニュー選択関連
     enableMenuSelection,
     selectedMenus,
     setSelectedMenus,
+    showMenu, // 待機画面でのメニュー閲覧表示可否
 
     // ステータス変更関数
     setSelectedNationality,
@@ -468,36 +615,30 @@ export function WaitingScreenProvider({ children }) {
     setContact,
     setNotes,
     setStep,
-    setCancellationReason: (reason) => {
-      setIsCancelled(true);
-      setCancellationReason(reason);
-    },
+    setCancellationReason: setCancellationReasonAndCancel,
     cancellationReason,
     requireOneMenuPerPerson, // expose new setting
 
     // Action/Page転換関数
-    goToNextStep: () => setStep(prev => prev + 1),
-    goToPrevStep: () => setStep(prev => prev - 1),
     handleSubmitWaiting,
     closePopupAndProceed,
     closePopupOnly,
     isChatOpen,
     toggleChat,
     isMapOpen, // Added
-    toggleMap: () => setIsMapOpen(prev => !prev), // Added
+    toggleMap, // Added
     currentPage, // Added currentPage
-    goBackToInputStep: (inputInfo) => {
-      if (inputInfo) {
-        setPartySize(inputInfo.partySize ?? "");
-        setContact(inputInfo.contact ?? "");
-        setNotes(inputInfo.notes ?? "");
-        setSelectedNationality(inputInfo.selectedNationality ?? "");
-        setSelectedLanguageCode(inputInfo.selectedLanguageCode ?? "");
-      }
-      setStep(1);
-    },
+    goBackToInputStep,
     resetApp, // Expose resetApp
-  };
+  }), [
+    step, isCancelled, handleCancel, storeId, selectedNationality, selectedLanguageCode,
+    partySize, contact, notes, waitingId, isPopupVisible, popupInfo, t, isOffline,
+    waitingDetails, menuList, waitingStatus, waitingError,
+    enableMenuSelection, selectedMenus, cancellationReason, requireOneMenuPerPerson, showMenu,
+    setCancellationReasonAndCancel, handleSubmitWaiting,
+    closePopupAndProceed, closePopupOnly, isChatOpen, toggleChat, isMapOpen, toggleMap,
+    currentPage, goBackToInputStep, resetApp,
+  ]);
 
   return (
     <WaitingScreenContext.Provider value={value}>

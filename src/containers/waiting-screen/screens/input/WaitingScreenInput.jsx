@@ -1,12 +1,11 @@
 import React from "react";
 
-import { useWaitingScreen } from "../WaitingScreenContext";
+import { useWaitingScreen } from "../../WaitingScreenContext";
 import FormField from "./FormField";
-import baseStyles from "../waiting-screen/WaitingScreen.module.css";
-import specificStyles from "./WaitingScreenInput.module.css";
-const styles = { ...baseStyles, ...specificStyles };
-import ChatbotButton from "../../chat-bot/ChatbotButton";
-import useTranslation from "../../../hook/useTranslation";
+import styles from "./WaitingScreenInput.module.css";
+import ChatbotButton from "../../../chat-bot/ChatbotButton";
+import { MAP_CHATBOT_ENABLED } from "../../../../constants/featureFlags";
+import useTranslation from "../../../../hook/useTranslation";
 
 function WaitingScreenInput() {
   // Contextから必要なものを持ってくる
@@ -42,11 +41,13 @@ function WaitingScreenInput() {
 
   return (
     <div className="page-container">
-      <div className="page-top-bar">
-        <div className="page-top-bar-right">
-          <ChatbotButton />
+      {MAP_CHATBOT_ENABLED && (
+        <div className="page-top-bar">
+          <div className="page-top-bar-right">
+            <ChatbotButton />
+          </div>
         </div>
-      </div>
+      )}
       <h1 className="page-title">{waitingScreenInput.input_label}</h1>
       <form className={styles["input-form"]} onSubmit={handleSubmit}>
 

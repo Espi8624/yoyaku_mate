@@ -1,8 +1,14 @@
 import { useWaitingScreen } from '../WaitingScreenContext';
+import { MAP_CHATBOT_ENABLED } from '../../../constants/featureFlags';
 import styles from "./MapButton.module.css";
 
 const MapButton = () => {
     const { storeId, toggleMap } = useWaitingScreen();
+
+    // 機能フラグが無効な間は非表示 (正式導入まで一時的に隠す)
+    if (!MAP_CHATBOT_ENABLED) {
+        return null;
+    }
 
     // storeIdがない場合（不正アクセスなど）は表示しない
     if (!storeId) {

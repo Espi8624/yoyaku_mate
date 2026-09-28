@@ -1,13 +1,15 @@
-import React, { useState, useEffect, useRef } from "react";
-import { useWaitingScreen } from "../WaitingScreenContext";
-import useTranslation from "../../../hook/useTranslation";
-import { getStoreInfo } from "../../../api/waitingService";
+import React, { useState, useEffect } from "react";
+import { useWaitingScreen } from "../../WaitingScreenContext";
+import useTranslation from "../../../../hook/useTranslation";
+import { getStoreInfo } from "../../../../api/waitingService";
 import MenuDisplay from "./MenuDisplay";
-import CongestionPopup from "../waiting-screen-preview/CongestionPopup";
-import { getTranslatedText } from "../../../utils/i18nHelper";
-import ChatbotButton from "../../chat-bot/ChatbotButton";
-import MapButton from '../map/MapButton';
-import useWaitingStatus from "./useWaitingStatus";
+import CongestionPopup from "../../components/CongestionPopup";
+import { getTranslatedText } from "../../../../utils/i18nHelper";
+import { MAP_CHATBOT_ENABLED } from "../../../../constants/featureFlags";
+import ChatbotButton from "../../../chat-bot/ChatbotButton";
+import MapButton from '../../map/MapButton';
+import useCallChime from "./useCallChime";
+import useScreenWakeLock from "./useScreenWakeLock";
 import styles from "./WaitingScreen.module.css";
 
 /**
@@ -25,26 +27,16 @@ const NOTIFICATION_STATE = {
 function WaitingScreen() {
   const context = useWaitingScreen();
 
-  // ローカルストレージからstoreId, waitingIdを復元し、復元完了を通知するフラグ
-  const [restored, setRestored] = useState(false);
-
-  useEffect(() => {
-    if (!context.storeId || !context.waitingId) {
-      const storedStoreId = localStorage.getItem("store_id");
-      const storedWaitingId = localStorage.getItem("waiting_id");
-      if (storedStoreId && storedWaitingId) {
-        context.setStoreId && context.setStoreId(storedStoreId);
-        context.setWaitingId && context.setWaitingId(storedWaitingId);
-      }
-    }
-    setRestored(true);
-  }, [context]);
-
   const {
     storeId,
-    waitingId,
     selectedLanguageCode,
     handleCancel,
+    // ★ 待機ステータスの購読は WaitingScreenProvider が一括で行う。
+    //   この画面は結果を受け取って描画するだけ (以前はここでも別途取得していた)
+    waitingDetails,
+    menuList,
+    waitingStatus: status,
+    waitingError: error,
   } = context;
 
   const t = useTranslation(selectedLanguageCode);
@@ -53,31 +45,22 @@ function WaitingScreen() {
   // 店舗情報 (初回のみ取得)
   const [storeInfo, setStoreInfo] = useState(null);
   useEffect(() => {
-    if (!storeId || !restored) return;
+    if (!storeId) return;
     getStoreInfo(storeId)
       .then(info => setStoreInfo(info || null))
       .catch(err => console.error("店舗情報の取得に失敗:", err));
-  }, [storeId, restored]);
-
-  // -------------------------------------------------------
-  // ★ カスタムフックでポーリング (責務分離)
-  // restored=true になってからポーリングを開始する
-  // -------------------------------------------------------
-  const { details: waitingDetails, menuList, status, error } = useWaitingStatus(
-    storeId,
-    waitingId,
-    restored  // 復元完了後にポーリング開始
-  );
+  }, [storeId]);
 
   // -------------------------------------------------------
   // ★ 通知状態管理 (enum パターン)
   // status が 'notified' に変わったタイミングで once だけ通知を起動する
   // -------------------------------------------------------
   const [notificationState, setNotificationState] = useState(NOTIFICATION_STATE.IDLE);
-  const chimeIntervalRef = useRef(null);
 
-  // Audio Unlock ref (ユーザーのタップでAudioContextを初期化・再開する)
-  const audioCtxRef = useRef(null);
+  // 呼び出しチャイム(AudioContextのアンロック含む)と画面常時ONは、
+  // この画面の表示ロジックとは独立したブラウザ都合の処理のためフックに切り出している
+  const { soundEnabled, enableSound, startChime, stopChime } = useCallChime();
+  useScreenWakeLock();
 
   // status 変化を監視して通知を制御
   useEffect(() => {
@@ -90,51 +73,8 @@ function WaitingScreen() {
         if (navigator.vibrate) navigator.vibrate([1000, 500, 1000, 500, 3000]);
       } catch (e) { /* バイブレーション非対応端末は無視 */ }
 
-      // 2. チャイム音をループ再生する関数
-      const playLoopChime = () => {
-        try {
-          const AudioContextClass = window.AudioContext || window.webkitAudioContext;
-          if (!AudioContextClass) return;
-
-          // Audio Unlock 済みの Context を優先使用
-          let ctx = audioCtxRef.current;
-          if (!ctx) ctx = new AudioContextClass();
-
-          // ブラウザの自動再生ポリシーで Suspended になっている場合は再開を試みる
-          if (ctx.state === 'suspended') {
-            ctx.resume().catch(e => console.warn("AudioContext resume失敗:", e));
-          }
-
-          // 「ピン」を2回鳴らして「ピンポン」のような音を作る
-          const playOneChime = (startTime) => {
-            const osc = ctx.createOscillator();
-            const gain = ctx.createGain();
-            osc.connect(gain);
-            gain.connect(ctx.destination);
-
-            osc.type = 'sine';
-            osc.frequency.setValueAtTime(880, startTime);        // A5
-            osc.frequency.exponentialRampToValueAtTime(440, startTime + 0.6); // A4へ下降
-
-            gain.gain.setValueAtTime(0.3, startTime);
-            gain.gain.exponentialRampToValueAtTime(0.001, startTime + 0.6);
-
-            osc.start(startTime);
-            osc.stop(startTime + 0.6);
-          };
-
-          const now = ctx.currentTime;
-          playOneChime(now);
-          playOneChime(now + 0.8);
-        } catch (e) {
-          console.error("チャイム再生エラー:", e);
-        }
-      };
-
-      // 初回再生し、以降3秒ごとに繰り返す
-      playLoopChime();
-      if (chimeIntervalRef.current) clearInterval(chimeIntervalRef.current);
-      chimeIntervalRef.current = setInterval(playLoopChime, 3000);
+      // 2. 初回再生し、以降3秒ごとに繰り返す
+      startChime();
 
     } else if (status === 'cancelled' && context.cancellationReason === null) {
       // 呼び出し済み（notificationState !== IDLE）の状態でキャンセルされた場合は不在扱い
@@ -144,7 +84,7 @@ function WaitingScreen() {
       // サーバー側のno_showステータスも不在扱い
       context.setCancellationReason && context.setCancellationReason('absence');
     }
-  }, [status, notificationState, context]);
+  }, [status, notificationState, context, startChime]);
 
   // 404エラー時は CancelledScreen に遷移
   useEffect(() => {
@@ -152,85 +92,6 @@ function WaitingScreen() {
       context.setCancellationReason && context.setCancellationReason('store');
     }
   }, [error, context]);
-
-  // コンポーネントのアンマウント時にチャイムを停止
-  useEffect(() => {
-    return () => {
-      if (chimeIntervalRef.current) clearInterval(chimeIntervalRef.current);
-    };
-  }, []);
-
-  // -------------------------------------------------------
-  // ★ Audio Context Unlock (ユーザーの最初のタップで初期化)
-  // -------------------------------------------------------
-  useEffect(() => {
-    const unlockAudio = () => {
-      if (!audioCtxRef.current) {
-        const AudioContextClass = window.AudioContext || window.webkitAudioContext;
-        if (AudioContextClass) {
-          audioCtxRef.current = new AudioContextClass();
-        }
-      }
-      if (audioCtxRef.current && audioCtxRef.current.state === 'suspended') {
-        audioCtxRef.current.resume().then(() => {
-          console.log("AudioContext: ユーザー操作により再開しました");
-        });
-      }
-      // 一度アンロックしたらリスナーを削除
-      document.removeEventListener('click', unlockAudio);
-      document.removeEventListener('touchstart', unlockAudio);
-    };
-
-    document.addEventListener('click', unlockAudio);
-    document.addEventListener('touchstart', unlockAudio);
-
-    return () => {
-      document.removeEventListener('click', unlockAudio);
-      document.removeEventListener('touchstart', unlockAudio);
-      if (audioCtxRef.current) {
-        audioCtxRef.current.close();
-        audioCtxRef.current = null;
-      }
-    };
-  }, []);
-
-  // -------------------------------------------------------
-  // ★ Screen Wake Lock (画面を常時ON に保つ)
-  // -------------------------------------------------------
-  useEffect(() => {
-    let wakeLock = null;
-
-    const requestWakeLock = async () => {
-      try {
-        if ('wakeLock' in navigator) {
-          wakeLock = await navigator.wakeLock.request('screen');
-          console.log('Wake Lock: 有効化しました');
-        }
-      } catch (err) {
-        console.error(`Wake Lock 取得失敗: ${err.name}, ${err.message}`);
-      }
-    };
-
-    requestWakeLock();
-
-    // タブが非表示になった後に可視状態へ戻ったときに再取得する
-    const handleVisibilityChange = async () => {
-      if (wakeLock !== null && document.visibilityState === 'visible') {
-        await requestWakeLock();
-      }
-    };
-
-    document.addEventListener('visibilitychange', handleVisibilityChange);
-
-    return () => {
-      document.removeEventListener('visibilitychange', handleVisibilityChange);
-      if (wakeLock !== null) {
-        wakeLock.release()
-          .then(() => console.log('Wake Lock: 解放しました'))
-          .catch(err => console.error('Wake Lock 解放エラー:', err));
-      }
-    };
-  }, []);
 
   // UI 用の派生値
   const [showCancelPopup, setShowCancelPopup] = useState(false);
@@ -240,19 +101,21 @@ function WaitingScreen() {
   // 確認ボタン押下時: チャイムを止め、通知状態を「確認済み」にする
   // -------------------------------------------------------
   const handleNotificationConfirm = () => {
-    if (chimeIntervalRef.current) clearInterval(chimeIntervalRef.current);
+    stopChime();
     setNotificationState(NOTIFICATION_STATE.ACCEPTED);
   };
 
   return (
-    <div className="page-container">
-      {/* Top Action Bar (Map & Chatbot Buttons) */}
-      <div className="page-top-bar">
-        <div className="page-top-bar-right">
-          <MapButton />
-          <ChatbotButton />
+    <div className={`page-container ${styles["waiting-screen-page"]}`}>
+      {/* Top Action Bar (Map & Chatbot Buttons) - 機能フラグが無効な間はバー自体を描画しない (空の余白が残るのを防ぐ) */}
+      {MAP_CHATBOT_ENABLED && (
+        <div className="page-top-bar">
+          <div className="page-top-bar-right">
+            <MapButton />
+            <ChatbotButton />
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Store Name Banner (Full width below buttons to support any store name length) */}
       {storeInfo && storeInfo.store_name && (
@@ -261,7 +124,33 @@ function WaitingScreen() {
         </div>
       )}
 
-      <div className={styles["preview-label"]}>
+      {/* ★ 呼び出し通知音バナー: ユーザー操作で AudioContext を確実にアンロックするための導線 */}
+      <div className={styles["sound-banner"]}>
+        {soundEnabled ? (
+          <span>
+            🔔 {waitingScreenTexts.sound_banner?.enabled_message}
+            {waitingScreenTexts.sound_banner?.enabled_note && (
+              <>
+                <br />
+                {waitingScreenTexts.sound_banner.enabled_note}
+              </>
+            )}
+          </span>
+        ) : (
+          <>
+            <span>🔕 {waitingScreenTexts.sound_banner?.message}</span>
+            <button
+              type="button"
+              className={styles["sound-banner-btn"]}
+              onClick={enableSound}
+            >
+              {waitingScreenTexts.sound_banner?.enable_btn}
+            </button>
+          </>
+        )}
+      </div>
+
+      <div>
         {notificationState !== NOTIFICATION_STATE.IDLE
           ? waitingScreenTexts.notified_label_1 || waitingScreenTexts.label_1
           : waitingScreenTexts.label_1}
@@ -321,8 +210,8 @@ function WaitingScreen() {
 
           {/* 事前注文済みメニューの表示 */}
           {waitingDetails.menu_items && waitingDetails.menu_items.length > 0 && (
-            <div className={styles["menu-container"]} style={{ marginBottom: '24px' }}>
-              <div className={styles["preview-label"]} style={{ fontSize: '1.1em', marginBottom: '12px' }}>{waitingScreenTexts.pre_order}</div>
+            <div style={{ marginBottom: '24px' }}>
+              <div style={{ fontSize: '1.1em', marginBottom: '12px' }}>{waitingScreenTexts.pre_order}</div>
               <div className={styles["preview-menu-list"]}>
                 {waitingDetails.menu_items.map((item, index) => {
                   const fullMenu = menuList.find(m => m.menu_id === item.menu_id);
@@ -353,7 +242,10 @@ function WaitingScreen() {
             </div>
           )}
 
-          <MenuDisplay menuList={menuList} texts={waitingScreenTexts} selectedLanguageCode={selectedLanguageCode} />
+          {/* メニュー表示設定がONで、かつメニューが1件以上登録されている場合のみ表示 */}
+          {context.showMenu && menuList.length > 0 && (
+            <MenuDisplay menuList={menuList} texts={waitingScreenTexts} selectedLanguageCode={selectedLanguageCode} />
+          )}
 
           <button className={`${styles["confirmation-btn"]} ${styles["cancel-btn"]}`} onClick={() => setShowCancelPopup(true)}>
             {waitingScreenTexts.cancel_reservation}

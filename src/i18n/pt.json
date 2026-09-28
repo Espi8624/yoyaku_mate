@@ -74,6 +74,12 @@
             "message_2": "Por favor, compareça à loja.",
             "confirm": "Confirmar"
         },
+        "sound_banner": {
+            "message": "Para receber o som de chamada, ative o som e mantenha esta tela aberta.",
+            "enable_btn": "Ativar som",
+            "enabled_message": "Som ativado · Mantenha esta tela aberta",
+            "enabled_note": "O som de alerta pode não tocar dependendo das configurações do seu dispositivo."
+        },
         "completed_screen": {
             "title": "Obrigado pela visita!",
             "message": "A equipe irá guiá-lo."

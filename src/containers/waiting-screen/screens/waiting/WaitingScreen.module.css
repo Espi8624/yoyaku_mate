@@ -14,24 +14,6 @@
   transition: opacity 0.2s, box-shadow 0.3s;
 }
 
-.cancel-modal {
-  position: relative;
-}
-
-.congestion-close-btn {
-  position: absolute;
-  top: 8px;
-  right: 12px;
-  background: transparent;
-  border: none;
-  font-size: 1.5em;
-  cursor: pointer;
-}
-
-.cancel-actions {
-  justify-content: center;
-}
-
 /* waiting-sectionはグローバルの.page-containerに置き換え済み */
 /* 画面固有のスタイルのみここで定義する */
 
@@ -118,6 +100,29 @@ textarea {
   line-height: 1.1;
 }
 
+/* ★ この画面(待機ステータス画面)のみ背景を薄いグレーにし、
+   下の白いレシートカード(.preview-form)とのコントラストを出す。
+   他の画面(登録フォーム等)のpage-containerには影響しない、この画面専用の上書き。
+   page-containerはCSS Modules対象外のグローバルクラスなので :global() で囲む必要がある
+   (囲まないとハッシュ化されて実際のDOMクラスと一致せず、ルール自体が無効になる)。
+   値はbody(index.css)と同じ --color-background を使うこと — 別の色を指定すると
+   ページが100%埋まらない箇所(スクロールバウンス等)でbodyの色とズレて二重に見える */
+:global(.page-container).waiting-screen-page {
+  background: var(--color-background);
+}
+
+/* ★ 待機情報カード: 米国で流行っているレシート風デザイン
+   (白いカード + ドロップシャドウ + 各項目を点線で区切るスタイル) */
+.preview-form {
+  background: var(--color-card-background);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  border-radius: 20px;
+  /* 上部を厚めにして待機番号(先頭グループ)の上に余白を確保 */
+  padding: 40px 24px 20px;
+  margin-bottom: var(--space-5);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04), 0 12px 28px rgba(0, 0, 0, 0.08);
+}
+
 /* New Group Container */
 .preview-info-group {
   display: flex;
@@ -126,64 +131,24 @@ textarea {
   /* Clear separation between groups */
 }
 
-/* ポップアップのオーバーレイ */
-.congestion-popup-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: rgba(0, 0, 0, 0.3);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
+/* 待機番号(先頭グループ)の下に実線の区切り線を入れ、レシートの「見出し」感を出す */
+.preview-form > .preview-info-group:first-child {
+  /* 待機番号の下にも余白を厚めに取って大きく目立たせる */
+  padding-bottom: 40px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
 }
 
-/* ポップアップ本体 */
-.congestion-popup-modal {
-  position: relative;
-  background: var(--color-card-background);
-  border-radius: 12px;
-  padding: 32px 24px 24px 24px;
-  min-width: 320px;
-  max-width: 90vw;
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.18);
-  text-align: center;
+/* 各項目(先頭以外)は点線区切り = レシートの明細行風 */
+.preview-form > .preview-info-group:not(:first-child) {
+  padding-bottom: 14px;
+  margin-bottom: 0;
+  border-bottom: 1px dashed rgba(0, 0, 0, 0.15);
 }
 
-/* 閉じるボタン（右上×） */
-.congestion-popup-close-btn {
-  position: absolute;
-  top: 8px;
-  right: 8px;
-  background: transparent;
-  border: none;
-  font-size: 2rem;
-  color: var(--color-text-tertiary);
-  cursor: pointer;
-  transition: color 0.2s, transform 0.2s;
-  z-index: 10;
-}
-
-.congestion-popup-close-btn:hover {
-  color: var(--color-text-primary);
-  transform: scale(1.15);
-}
-
-/* メッセージ部分 */
-.congestion-popup-message {
-  margin: 24px 0 16px 0;
-  font-size: 1.1rem;
-  white-space: pre-line;
-}
-
-/* ボタン配置 */
-.congestion-popup-actions {
-  display: flex;
-  gap: 16px;
-  justify-content: center;
-  margin-top: 8px;
+.preview-form > .preview-info-group:not(:first-child):last-child {
+  border-bottom: none;
+  padding-bottom: 0;
 }
 
 .waiting-number-label {
@@ -236,6 +201,36 @@ textarea {
   font-weight: var(--font-weight-bold);
   line-height: 1.3;
   word-break: break-word;
+}
+
+.sound-banner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: var(--space-5);
+  padding: 10px 16px;
+  /* ページ背景を薄いグレーに変更したため、それに埋もれないよう白背景のカードにする */
+  background: var(--color-card-background);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  border-radius: var(--radius-lg);
+  box-sizing: border-box;
+  width: 100%;
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+.sound-banner-btn {
+  flex-shrink: 0;
+  background: var(--color-accent-primary);
+  color: var(--color-text-primary-light);
+  border: none;
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-weight: var(--font-weight-bold);
+  cursor: pointer;
+  white-space: nowrap;
 }
 
 .preview-menu-list {
@@ -299,43 +294,4 @@ textarea {
 .preview-menu-quantity {
   font-size: 14px;
   color: var(--color-text-primary);
-}
-
-/* Google Maps InfoWindow Scrollbar Removal */
-.gm-style-iw,
-.gm-style-iw-c,
-.gm-style-iw-d {
-  overflow: hidden !important;
-  padding: 0 !important;
-}
-
-/* For Webkit browsers - Hide Scrollbars */
-.gm-style-iw::-webkit-scrollbar,
-.gm-style-iw-c::-webkit-scrollbar,
-.gm-style-iw-d::-webkit-scrollbar {
-  display: none !important;
-  width: 0 !important;
-  height: 0 !important;
-}
-
-/* Remove focus outline on map elements */
-.gm-style :focus {
-  outline: none !important;
-  border: none !important;
-}
-
-.gm-style-iw-c:focus {
-  outline: none !important;
-}
-
-/* Ensure max-height doesn't clip prematurely */
-.gm-style-iw-d {
-  max-height: none !important;
-  overflow: hidden !important;
-  /* Allow negative margins to show content */
-}
-
-/* Hide default Google Maps InfoWindow Close Button */
-.gm-ui-hover-effect {
-  display: none !important;
 }

@@ -28,6 +28,7 @@ docs/
 |------|------|
 | [architecture.md](./implementation/architecture.ko.md) | 프로젝트 구조 및 데이터 흐름 |
 | [sse-client.md](./implementation/sse-client.ko.md) | SSE 구독 클라이언트 구현 |
+| [idempotency.ko.md](./implementation/idempotency.ko.md) | 등록 멱등성 — waiting_id를 "등록 1건"마다 발행하고 재시도에서 재사용 |
 
 ---
 
@@ -35,7 +36,8 @@ docs/
 
 | 문서 | 결정 내용 |
 |------|----------|
-| [ADR-001-vercel-proxy.md](./decisions/ADR-001-vercel-proxy.ko.md) | Vercel Rewrite 프록시 채택 이유 |
+| [ADR-001-vercel-proxy.md](./decisions/ADR-001-vercel-proxy.ko.md) | Vercel Rewrite 프록시 채택 이유 (폐기됨, ADR-002 참조) |
+| [ADR-002-remove-vercel-proxy.md](./decisions/ADR-002-remove-vercel-proxy.ko.md) | Vercel Rewrite 프록시 폐기 및 REACT_APP_API_URL 일원화 |
 
 ---
 

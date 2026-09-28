@@ -1,10 +1,14 @@
 import { useState, useEffect, useCallback } from "react";
-import { getWaitingDetails, getMenuList, subscribeToWaitingStatus } from "../../../api/waitingService";
+import { getWaitingDetails, getMenuList, subscribeToWaitingStatus } from "../../api/waitingService";
+import { debugLog } from "../../utils/debugLog";
 
 /**
- * 待機状況をポーリングで監視するカスタムフック。
- * WaitingScreen コンポーネントからポーリングロジックを分離し、
+ * 待機状況を監視するカスタムフック (初回取得 + SSE購読)。
  * 「何を表示するか」と「どうデータを取るか」を切り離す。
+ *
+ * ・WaitingScreenProvider から1回だけ呼ぶこと。
+ *   以前は WaitingScreen(step3) の内部にあり、FlowController も復元判定のために
+ *   同じ getWaitingDetails を別途叩いていたため、同じデータを2回取得していた
  *
  * @param {string} storeId - 店舗ID
  * @param {string} waitingId - 待機ID
@@ -76,6 +80,16 @@ function useWaitingStatus(storeId, waitingId, enabled) {
         }
     }, [storeId, waitingId]);
 
+    // 監視対象(待機)が切り替わったら、前の待機のステータスを必ず捨てる
+    // ・Provider側で保持するようになったため、このフックは画面遷移では破棄されない。
+    //   リセットして再登録した直後に前回の 'cancelled' が残っていると、
+    //   新しい待機なのに取消完了画面へ飛んでしまう
+    useEffect(() => {
+        setStatus(null);
+        setDetails({});
+        setError(null);
+    }, [storeId, waitingId]);
+
     useEffect(() => {
         // enabled=false の間は購読しない
         if (!enabled || !storeId || !waitingId) return;
@@ -88,7 +102,7 @@ function useWaitingStatus(storeId, waitingId, enabled) {
             storeId,
             waitingId,
             (updatedDetails) => {
-                console.log("[useWaitingStatus] SSE受信:", updatedDetails);
+                debugLog("[useWaitingStatus] SSE受信:", updatedDetails);
                 if (updatedDetails) {
                     setStatus(updatedDetails.status || null);
                     setDetails(updatedDetails);

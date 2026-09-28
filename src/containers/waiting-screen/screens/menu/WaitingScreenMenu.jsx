@@ -1,14 +1,12 @@
 import React, { useEffect, useState, useRef, useCallback } from "react";
-import { useWaitingScreen } from "../WaitingScreenContext";
-import useTranslation from "../../../hook/useTranslation";
-import { getTranslatedText } from "../../../utils/i18nHelper";
-import { getMenuList } from "../../../api/waitingService";
-import CommonPopup from "../../../components/CommonPopup";
-import BackButton from "../../../components/BackButton";
-import ChatbotButton from "../../chat-bot/ChatbotButton";
-import baseStyles from "../waiting-screen/WaitingScreen.module.css";
-import specificStyles from "./WaitingScreenMenu.module.css";
-const styles = { ...baseStyles, ...specificStyles };
+import { useWaitingScreen } from "../../WaitingScreenContext";
+import useTranslation from "../../../../hook/useTranslation";
+import { getTranslatedText } from "../../../../utils/i18nHelper";
+import { getMenuList } from "../../../../api/waitingService";
+import CommonPopup from "../../../../components/CommonPopup";
+import BackButton from "../../../../components/BackButton";
+import ChatbotButton from "../../../chat-bot/ChatbotButton";
+import styles from "./WaitingScreenMenu.module.css";
 
 function WaitingScreenMenu() {
     const {
@@ -33,13 +31,6 @@ function WaitingScreenMenu() {
     const handleNext = () => {
         // Calculate total quantity
         const totalQuantity = selectedMenus.reduce((sum, item) => sum + item.quantity, 0);
-
-        console.log("Validation Debug:", {
-            requireOneMenuPerPerson,
-            partySize: Number(partySize),
-            totalQuantity,
-            condition: requireOneMenuPerPerson && totalQuantity < Number(partySize)
-        });
 
         // 1. Basic check: at least one item
         if (totalQuantity === 0) {
@@ -247,8 +238,11 @@ function WaitingScreenMenu() {
                 onClose={() => setShowErrorPopup(false)}
                 message={popupMessage}
                 actions={
+                    // ボタンはglobals.cssの共通クラスを使う。
+                    // CSS Modulesのstylesから引くと、モジュール側の定義漏れや
+                    // キーの上書きでスタイルが当たらない事故が起きるため
                     <button
-                        className={styles["confirmation-btn"]}
+                        className="btn-primary"
                         onClick={() => setShowErrorPopup(false)}
                         type="button"
                     >

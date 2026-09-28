@@ -1,7 +1,7 @@
 # ADR-001: Vercel Rewrite 프록시 채택
 
 > 작성일: 2026-07-10  
-> 상태: 확정
+> 상태: 폐기 (2026-09-06, [ADR-002](./ADR-002-remove-vercel-proxy.ko.md) 참조)
 
 ## 컨텍스트
 

@@ -28,6 +28,7 @@ docs/
 |------|------|
 | [architecture.md](./implementation/architecture.md) | プロジェクト構造およびデータフロー |
 | [sse-client.md](./implementation/sse-client.md) | SSE購読クライアントの実装 |
+| [idempotency.md](./implementation/idempotency.md) | 登録の冪等性 — waiting_id を「登録1件」ごとに発行し再試行で再利用する |
 
 ---
 
@@ -35,7 +36,8 @@ docs/
 
 | ドキュメント | 決定内容 |
 |------|----------|
-| [ADR-001-vercel-proxy.md](./decisions/ADR-001-vercel-proxy.md) | Vercel Rewriteプロキシ採用の理由 |
+| [ADR-001-vercel-proxy.md](./decisions/ADR-001-vercel-proxy.md) | Vercel Rewriteプロキシ採用の理由 (廃止済み、ADR-002参照) |
+| [ADR-002-remove-vercel-proxy.md](./decisions/ADR-002-remove-vercel-proxy.md) | Vercel Rewriteプロキシの廃止とREACT_APP_API_URLへの一本化 |
 
 ---
 

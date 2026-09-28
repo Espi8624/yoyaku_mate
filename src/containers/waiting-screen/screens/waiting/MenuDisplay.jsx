@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from "react";
 import styles from "./MenuDisplay.module.css";
 
-import { getTranslatedText } from "../../../utils/i18nHelper";
+import { getTranslatedText } from "../../../../utils/i18nHelper";
 
 function MenuDisplay({ menuList, texts, selectedLanguageCode }) {
   // メニュー全体の表示/非表示を管理
@@ -15,6 +15,20 @@ function MenuDisplay({ menuList, texts, selectedLanguageCode }) {
   // カテゴリリストを計算
   const categories = useMemo(() => {
     return Array.isArray(menuList) ? Array.from(new Set(menuList.map(item => item.category))) : [];
+  }, [menuList]);
+
+  // カテゴリー名 → 翻訳マップ（同一カテゴリーの各アイテムは同じ値を持つ想定）
+  // - 空オブジェクト {} もJSではtruthyなため、翻訳を持たないアイテムが先頭に来ると
+  //   そのカテゴリーが未翻訳のまま固定されてしまっていた。中身のあるものだけ採用する
+  const categoryTranslations = useMemo(() => {
+    const map = {};
+    (menuList || []).forEach(item => {
+      const translations = item.category_translations;
+      if (translations && Object.keys(translations).length > 0 && !map[item.category]) {
+        map[item.category] = translations;
+      }
+    });
+    return map;
   }, [menuList]);
 
   // 初期カテゴリ設定
@@ -75,7 +89,7 @@ function MenuDisplay({ menuList, texts, selectedLanguageCode }) {
                 className={`${styles["menu-category-tab"]} ${activeCategory === category ? styles["active"] : ''}`}
                 onClick={() => setActiveCategory(category)}
               >
-                {category}
+                {getTranslatedText(category, categoryTranslations[category], selectedLanguageCode)}
               </button>
             ))}
           </div>
@@ -94,7 +108,9 @@ function MenuDisplay({ menuList, texts, selectedLanguageCode }) {
                 >
                   <div className={styles["menu-item-image"]}>
                     {item.menu_image_url ? (
-                      <img src={item.menu_image_url} alt={displayTitle} />
+                      // - メニュー一覧を開くと全アイテムの画像が一斉にダウンロード/デコードされ、
+                      //   スクロール中のカクつきや読み込み時のレイアウトジャンプの原因になっていた
+                      <img src={item.menu_image_url} alt={displayTitle} loading="lazy" decoding="async" />
                     ) : (
                       <div className={styles["menu-item-image-placeholder"]}>
                         <svg width="48" height="48" viewBox="0 0 24 24" fill="currentColor">
@@ -137,7 +153,7 @@ function MenuDisplay({ menuList, texts, selectedLanguageCode }) {
 
             <div className={styles["menu-detail-image-container"]}>
               {expandedItem.menu_image_url ? (
-                <img src={expandedItem.menu_image_url} alt={getTranslatedText(expandedItem.title, expandedItem.title_translations, selectedLanguageCode)} />
+                <img src={expandedItem.menu_image_url} alt={getTranslatedText(expandedItem.title, expandedItem.title_translations, selectedLanguageCode)} decoding="async" />
               ) : (
                 <div className={`${styles["menu-item-image-placeholder"]} ${styles["column-layout"]}`}>
                   <svg width="64" height="64" viewBox="0 0 24 24" fill="#999">
