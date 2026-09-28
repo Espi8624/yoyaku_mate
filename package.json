@@ -23,6 +23,7 @@
     "build:dev": "env-cmd -f .env.dev react-scripts build",
     "build:prod": "react-scripts build",
     "deploy:dev": "npm run build:dev && wrangler deploy",
+    "deploy:prod": "npm run build:prod && wrangler deploy --env production",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },

@@ -19,10 +19,10 @@ QRコードベースのリアルタイム待機列管理およびAI店舗案内�
 | Framework | React 19 |
 | Router | React Router DOM 7 |
 | HTTP / Stream | Axios, EventSource (SSE) |
-| Maps | Google Maps API |
-| AI | Gemini API |
+| Maps | Google Maps API (現在 `MAP_CHATBOT_ENABLED = false` で非表示) |
+| AI | Gemini API (バックエンド経由。APIキーはクライアントに持たない) |
 | i18n | 独自実装 (ja / en / ko / fr / de / ru / vi / th / zh / id / ar / es / it / pt) |
-| Deployment | Vercel (本番) / Cloudflare Workers Static Assets (開発) |
+| Deployment | Cloudflare Workers Static Assets (開発: `yoyaku-mate-dev` / 本番: `yoyaku-mate-prod`) |
 
 ## Getting Started
 
@@ -42,11 +42,14 @@ npm start
 | `npm start` | `.env.development` | `localhost:8080` | ローカル開発 |
 | `npm run start:dev` / `npm run build:dev` | `.env.dev` | `rusui-dev.fly.dev` | 共有の開発用サーバー。実機(スマートフォン等)からQRコード経由でアクセスする場合、`localhost`は端末自身を指してしまい通信エラーになるため、このティアを使う |
 | `npm run deploy:dev` | 〃 | 〃 | `build:dev` 後、Cloudflare Workers (`yoyaku-mate-dev`) へ手動デプロイ |
+| `npm run build` / `npm run build:prod` | `.env.production` | `rusui-prod.fly.dev` | 本番ビルド (両者は同一。`react-scripts build` は常にproductionモードで動くため) |
+| `npm run deploy:prod` | 〃 | 〃 | `build:prod` 後、Cloudflare Workers (`yoyaku-mate-prod`) へ手動デプロイ (`wrangler deploy --env production`) |
 
-`develop` への push 時は Cloudflare Workers Builds (Git連携) により**自動デプロイ**される。
+`develop` への push 時は Cloudflare Workers Builds (Git連携) により開発用へ**自動デプロイ**される。
 この設定は Cloudflare のダッシュボード側にあり、リポジトリ内のファイルには現れない。
 `npm run deploy:dev` は自動デプロイを待たず即座に反映したい場合の手動経路。
-| `npm run build` / `npm run build:prod` | `.env.production` | `rusui-prod.fly.dev` | 本番ビルド (両者は同一。`react-scripts build` は常にproductionモードで動くため) |
+
+`--env production` を付けない `wrangler deploy` は常に開発用 (`yoyaku-mate-dev`) へ出る。
 
 `yoyaku_mate_provider` 側は `--dart-define=APP_ENV=dev` で起動すると、このdevティアに接続する。
 
@@ -55,8 +58,9 @@ npm start
 ```env
 REACT_APP_API_URL=http://localhost:8080/api
 REACT_APP_GOOGLE_MAPS_API_KEY=your_google_maps_api_key
-REACT_APP_GEMINI_API_KEY=your_gemini_api_key
 ```
+
+- Gemini のAPIキーはここに置かない。`REACT_APP_*` はビルド時に公開JSバンドルへ埋め込まれ、誰でも読めるため。チャットボット・翻訳はバックエンド (`yoyaku_mate_server`) が代理で呼び出す
 
 ## Architecture
 
@@ -77,7 +81,7 @@ src/
 graph LR
     Browser["ブラウザ"] -->|"REACT_APP_API_URL (CORS)"| Server["Backend (fly.io)"]
     Server -->|"SSE Stream"| Browser
-    Browser -->|"AI Prompt"| Gemini["Gemini API"]
+    Server -->|"AI Prompt"| Gemini["Gemini API"]
 ```
 
 → 詳細構造: [`docs/implementation/architecture.md`](./docs/implementation/architecture.md)

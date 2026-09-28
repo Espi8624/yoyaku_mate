@@ -9,5 +9,13 @@
 		"directory": "build",
 		// SPA(React Router)のため、静的ファイルに一致しないパスは全て index.html を200で返す
 		"not_found_handling": "single-page-application"
+	},
+	// 本番用Worker。デプロイは wrangler deploy --env production (npm run deploy:prod)
+	// - トップレベルの "name" は開発用。--env を付けない wrangler deploy は常に開発用へ出る
+	// - assets はトップレベルの設定を継承する
+	"env": {
+		"production": {
+			"name": "yoyaku-mate-prod"
+		}
 	}
 }
